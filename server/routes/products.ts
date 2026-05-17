@@ -20,7 +20,7 @@ router.get('/compare', async (req, res) => {
       fetchNewWorldPrices(searchTerm),
     ])
     // console.log(pnsResults)
-    console.log(nwResults)
+    // console.log(nwResults)
 
     // 3. Combine all results and sort by price
     const combined = [...dbProducts, ...pnsResults, ...nwResults].sort(
