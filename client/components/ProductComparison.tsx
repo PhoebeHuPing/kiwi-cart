@@ -4,6 +4,7 @@ import { useDebounce } from 'use-debounce'
 import { getComparePrices } from '../apis/products'
 import StoreMap from './StoreMap'
 import { PriceComparisonData } from '../../models/products'
+import { useBasket } from '../contexts/BasketContext'
 
 interface GroupedProduct {
   product_name: string
@@ -16,6 +17,7 @@ function ProductComparison() {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
   const [showDropdown, setShowDropdown] = useState(false)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  const { basket, addToBasket, isInBasket, removeFromBasket } = useBasket()
 
   const {
     data: products,
@@ -28,7 +30,7 @@ function ProductComparison() {
     // REMOVED: enabled: debouncedSearchTerm.length > 0,
   })
 
-  // 将平铺的商品数组按名字分组
+  // Group the flat array of products by their name to show store comparisons per item
   const groupedProducts = products?.reduce((acc: GroupedProduct[], current) => {
     const existingProduct = acc.find(
       (p) => p.product_name === current.product_name,
@@ -36,6 +38,7 @@ function ProductComparison() {
 
     if (existingProduct) {
       existingProduct.options.push(current)
+      // Ensure options are always sorted by price within the group
       existingProduct.options.sort((a, b) => a.price - b.price)
     } else {
       acc.push({
@@ -58,7 +61,7 @@ function ProductComparison() {
   return (
     <div className="min-h-screen bg-background pb-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 搜索区域 */}
+        {/* Search and Navigation Header */}
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 focus-within:ring-2 focus-within:ring-kiwi/20 transition-all relative">
             <span className="text-2xl ml-2">🔍</span>
@@ -77,6 +80,7 @@ function ProductComparison() {
               <div className="w-6 h-6 border-2 border-kiwi border-t-transparent rounded-full animate-spin"></div>
             )}
 
+            {/* Quick Search Dropdown */}
             {showDropdown && searchTerm.length > 0 && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
                 {isLoading ? (
@@ -154,7 +158,7 @@ function ProductComparison() {
             )}
           </div>
 
-          {/* 点击外部关闭下拉框的遮罩 */}
+          {/* Overlay to close the dropdown when clicking outside */}
           {showDropdown && (
             <div
               role="button"
@@ -170,7 +174,7 @@ function ProductComparison() {
             ></div>
           )}
 
-          {/* 热门分类快捷标签 */}
+          {/* Trending Categories Quick Tags */}
           <div className="flex flex-wrap gap-2">
             {trendingCategories.map((cat) => (
               <button
@@ -186,7 +190,7 @@ function ProductComparison() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* 左侧结果列表 */}
+          {/* Main Comparison List */}
           <div className="lg:col-span-2 space-y-4">
             <h2 className="text-2xl font-bold text-kiwi-dark mb-4 flex items-center gap-2">
               {debouncedSearchTerm ? (
@@ -218,7 +222,7 @@ function ProductComparison() {
                       key={groupIdx}
                       className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all"
                     >
-                      {/* 商品头部（点击触发展开/收起） */}
+                      {/* Product Summary Header (Click to expand details) */}
                       <button
                         type="button"
                         onClick={() =>
@@ -238,9 +242,33 @@ function ProductComparison() {
                           <h3 className="text-lg font-bold text-kiwi-dark">
                             {group.product_name}
                           </h3>
-                          <p className="text-gray-400 text-sm mt-1">
-                            Available at {group.options.length} supermarkets
-                          </p>
+                          <div className="flex items-center gap-3 mt-1">
+                            <p className="text-gray-400 text-sm">
+                              Available at {group.options.length} supermarkets
+                            </p>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                if (isInBasket(group.product_name)) {
+                                  removeFromBasket(group.product_name)
+                                } else {
+                                  addToBasket({
+                                    name: group.product_name,
+                                    image_url: group.image_url,
+                                  })
+                                }
+                              }}
+                              className={`text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border transition-all ${
+                                isInBasket(group.product_name)
+                                  ? 'bg-red-50 text-red-500 border-red-100 hover:bg-red-100'
+                                  : 'bg-kiwi/10 text-kiwi border-kiwi/20 hover:bg-kiwi/20'
+                              }`}
+                            >
+                              {isInBasket(group.product_name)
+                                ? '✕ Remove'
+                                : '+ Add to Basket'}
+                            </button>
+                          </div>
                         </div>
 
                         <div className="flex flex-col items-center sm:items-end gap-1">
@@ -260,7 +288,7 @@ function ProductComparison() {
                         </div>
                       </button>
 
-                      {/* 下拉展开的价格对比区域 */}
+                      {/* Expanded Comparison Details */}
                       {isExpanded && (
                         <div className="bg-gray-50/50 border-t border-gray-100 p-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
                           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
@@ -274,7 +302,7 @@ function ProductComparison() {
                                 className="flex items-center justify-between bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:border-kiwi/30 transition-all"
                               >
                                 <div className="flex items-center gap-6">
-                                  {/* 进一步放大的 Logo：w-20 (80px) */}
+                                  {/* Supermarket Logo */}
                                   <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center p-1">
                                     <img
                                       src={option.logo_url}
@@ -306,7 +334,6 @@ function ProductComparison() {
                                     )}
                                   </div>
 
-                                  {/* 精致的 SELECT 按钮 */}
                                   <button className="bg-kiwi-dark text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-kiwi hover:scale-105 transition-all shadow-sm">
                                     SELECT
                                   </button>
@@ -321,7 +348,7 @@ function ProductComparison() {
                 },
               )}
 
-              {/* 空结果提示 */}
+              {/* Empty state when no results match the search */}
               {!isLoading && products?.length === 0 && debouncedSearchTerm && (
                 <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
                   <div className="text-5xl mb-4 text-center">🥝</div>
@@ -337,7 +364,7 @@ function ProductComparison() {
             </div>
           </div>
 
-          {/* 右侧地图侧边栏 */}
+          {/* Sticky Map and Sidebar Widgets */}
           <div className="lg:sticky lg:top-8 space-y-4">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-bold text-kiwi-dark mb-4 flex items-center gap-2">
@@ -348,7 +375,7 @@ function ProductComparison() {
               </div>
             </div>
 
-            {/* AI 购物建议小挂件（预留位） */}
+            {/* AI Insights Widget (Placeholder) */}
             <div className="bg-kiwi/5 rounded-2xl p-6 border border-kiwi/10">
               <h4 className="text-kiwi font-bold text-sm uppercase tracking-wider mb-2">
                 Kiwi Insight
@@ -361,6 +388,28 @@ function ProductComparison() {
           </div>
         </div>
       </div>
+
+      {/* Floating Basket Widget */}
+      {basket.length > 0 && (
+        <div className="fixed bottom-8 right-8 z-50 animate-in fade-in slide-in-from-bottom-4">
+          <button className="bg-kiwi-dark text-white p-4 rounded-2xl shadow-2xl flex items-center gap-3 hover:scale-105 transition-all group">
+            <div className="relative">
+              <div className="bg-kiwi p-2 rounded-lg group-hover:rotate-12 transition-transform">
+                🛒
+              </div>
+              <span className="absolute -top-2 -right-2 bg-price text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-kiwi-dark">
+                {basket.length}
+              </span>
+            </div>
+            <div className="text-left">
+              <p className="font-black text-sm">Compare Basket</p>
+              <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest">
+                Calculate Best Total
+              </p>
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   )
 }
