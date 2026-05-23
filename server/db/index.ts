@@ -1,10 +1,17 @@
 import db from './connection.ts'
 import { Product, PriceComparisonData } from '../../models/products'
 
+/**
+ * Fetches all base products from the database.
+ */
 export async function getProducts(): Promise<Product[]> {
   return db('products').select('*')
 }
 
+/**
+ * Executes a complex join to get price comparison data.
+ * Merges product info, supermarket info, and price info for a search term.
+ */
 export async function getComparePrices(
   searchTerm: string,
 ): Promise<PriceComparisonData[]> {
@@ -25,10 +32,16 @@ export async function getComparePrices(
     .orderBy('prices.price', 'asc')
 }
 
+/**
+ * Fetches all supermarkets.
+ */
 export async function getSupermarkets() {
   return db('supermarkets').select('*')
 }
 
+/**
+ * Finds supermarkets within a specific radius (in km) using the Haversine formula.
+ */
 export async function getNearbySupermarkets(
   lat: number,
   lng: number,
@@ -41,6 +54,9 @@ export async function getNearbySupermarkets(
   })
 }
 
+/**
+ * Haversine formula to calculate the great-circle distance between two points on a sphere.
+ */
 function calculateDistance(
   lat1: number,
   lon1: number,
@@ -62,6 +78,9 @@ function deg2rad(deg: number) {
   return deg * (Math.PI / 180)
 }
 
+/**
+ * Deletes a product by its ID.
+ */
 export async function deleteProductById(id: number): Promise<number> {
   return db('products').where('id', id).delete()
 }

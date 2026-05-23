@@ -3,13 +3,18 @@ import { Product, PriceComparisonData } from '../../models/products'
 
 const rootURL = '/api/v1/products'
 
-// 获取所有商品
+/**
+ * Fetches all products from the local database.
+ */
 export async function getProducts(): Promise<Product[]> {
   const response = await request.get(rootURL)
   return response.body
 }
 
-// 核心比价搜索接口
+/**
+ * Core price comparison search. Queries the backend to fetch real-time 
+ * and cached prices across different supermarket brands.
+ */
 export async function getComparePrices(
   searchTerm: string,
 ): Promise<PriceComparisonData[]> {
@@ -19,11 +24,17 @@ export async function getComparePrices(
   return response.body
 }
 
+/**
+ * Fetches a list of all supermarkets and their coordinates.
+ */
 export async function getSupermarkets() {
   const response = await request.get(`${rootURL}/supermarkets`)
   return response.body
 }
 
+/**
+ * Fetches supermarkets within a specific radius of a given coordinate.
+ */
 export async function getNearbySupermarkets(
   lat: number,
   lng: number,
@@ -35,7 +46,9 @@ export async function getNearbySupermarkets(
   return response.body
 }
 
-// 模拟获取单个商品的详细信息（目前为空）
+/**
+ * Fetches details for a single product by its ID.
+ */
 export async function getProductById(id: number): Promise<Product> {
   const response = await request.get(`${rootURL}/${id}`)
   return response.body

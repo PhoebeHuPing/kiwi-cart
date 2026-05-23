@@ -25,7 +25,7 @@ export default function StoreMap() {
   const [mapError, setMapError] = useState('')
   const userMarkerRef = useRef<any>(null)
 
-  // 0. Get User's current location on mount
+  // 1. Get User's current location via Browser Geolocation API
   useEffect(() => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -42,7 +42,7 @@ export default function StoreMap() {
     }
   }, [])
 
-  // 1. Dynamic script loading using Environment Variable
+  // 2. Dynamic script loading for Google Maps API using Environment Variable
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
     if (!apiKey) {
@@ -64,14 +64,14 @@ export default function StoreMap() {
     document.head.appendChild(script)
   }, [])
 
-  // 2. Fetch supermarket data
+  // 3. Fetch all supermarket store data from the local API
   useEffect(() => {
     getSupermarkets()
       .then(setSupermarkets)
       .catch((err) => console.error('Failed to fetch supermarkets:', err))
   }, [])
 
-  // 3. Initialize Map & Autocomplete
+  // 4. Initialize Google Map Instance & Places Autocomplete
   useEffect(() => {
     if (isLoaded && mapRef.current && !mapInstance) {
       const map = new window.google.maps.Map(mapRef.current, {
@@ -93,6 +93,7 @@ export default function StoreMap() {
         const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current)
         autocomplete.bindTo('bounds', map)
 
+        // Handle place selection from the autocomplete search box
         autocomplete.addListener('place_changed', () => {
           const place = autocomplete.getPlace()
           if (!place.geometry || !place.geometry.location) return
@@ -107,7 +108,7 @@ export default function StoreMap() {
     }
   }, [isLoaded, mapInstance])
 
-  // 4. Update user marker and center map
+  // 5. Update user marker position and center map when location changes
   useEffect(() => {
     if (mapInstance && userLocation && window.google) {
       const pos = new window.google.maps.LatLng(userLocation.lat, userLocation.lng)
@@ -117,6 +118,7 @@ export default function StoreMap() {
       if (userMarkerRef.current) {
         userMarkerRef.current.setPosition(pos)
       } else {
+        // Create a custom blue circle marker for the user
         userMarkerRef.current = new window.google.maps.Marker({
           position: pos,
           map: mapInstance,
@@ -135,7 +137,7 @@ export default function StoreMap() {
     }
   }, [mapInstance, userLocation])
 
-  // 5. Render supermarket markers
+  // 6. Render individual supermarket markers with brand logos
   useEffect(() => {
     if (mapInstance && supermarkets.length > 0) {
       supermarkets.forEach((store) => {
@@ -144,6 +146,7 @@ export default function StoreMap() {
           map: mapInstance,
           title: store.name,
           icon: {
+            // Select logo based on supermarket name
             url: store.name.toLowerCase().includes('pak') 
               ? '/images/pak-n-save.webp' 
               : store.name.toLowerCase().includes('new') 
@@ -153,6 +156,7 @@ export default function StoreMap() {
           }
         })
 
+        // Information window displayed upon clicking a store marker
         const infoWindow = new window.google.maps.InfoWindow({
           content: `<div style="color: #1a2e35; padding: 5px;">
                       <h4 style="margin: 0; font-weight: bold;">${store.name}</h4>

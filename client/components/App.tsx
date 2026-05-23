@@ -4,18 +4,16 @@ function App() {
   return (
     <>
       <header className="relative bg-kiwi text-white py-20 px-6 overflow-hidden shadow-2xl">
-        {/* 背景图片层 */}
         <div className="absolute inset-0 z-0">
           <img
             src="/images/supermarket.avif"
             alt="Supermarket Background"
             className="w-full h-full object-cover opacity-40 mix-blend-overlay scale-110"
           />
-          {/* 渐变遮罩：左侧深绿便于读字，右侧透明露出底图 */}
+
           <div className="absolute inset-0 bg-gradient-to-r from-kiwi via-kiwi/60 to-transparent" />
         </div>
 
-        {/* 内容层 */}
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="inline-block bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] mb-4 border border-white/30">
             🇳🇿 NZ's Community Price Tracker
