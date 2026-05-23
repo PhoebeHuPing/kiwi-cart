@@ -12,7 +12,7 @@ export async function getProducts(): Promise<Product[]> {
 }
 
 /**
- * Core price comparison search. Queries the backend to fetch real-time 
+ * Core price comparison search. Queries the backend to fetch real-time
  * and cached prices across different supermarket brands.
  */
 export async function getComparePrices(
