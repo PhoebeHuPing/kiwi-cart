@@ -16,7 +16,14 @@ interface BasketContextType {
 const BasketContext = createContext<BasketContextType | undefined>(undefined)
 
 export function BasketProvider({ children }: { children: ReactNode }) {
-  const [basket, setBasket] = useState<BasketItem[]>([])
+  const [basket, setBasket] = useState<BasketItem[]>(() => {
+    const saved = localStorage.getItem('kiwicart_basket')
+    return saved ? JSON.parse(saved) : []
+  })
+
+  React.useEffect(() => {
+    localStorage.setItem('kiwicart_basket', JSON.stringify(basket))
+  }, [basket])
 
   const addToBasket = (item: BasketItem) => {
     setBasket((prev) => {

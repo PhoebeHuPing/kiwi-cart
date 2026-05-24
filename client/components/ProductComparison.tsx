@@ -223,12 +223,18 @@ function ProductComparison() {
                       className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all"
                     >
                       {/* Product Summary Header (Click to expand details) */}
-                      <button
-                        type="button"
+                      <div
+                        role="button"
+                        tabIndex={0}
                         onClick={() =>
                           setExpandedIndex(isExpanded ? null : groupIdx)
                         }
-                        className="w-full flex flex-col sm:flex-row items-center gap-8 p-6 text-left hover:bg-gray-50/50 transition-colors"
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setExpandedIndex(isExpanded ? null : groupIdx)
+                          }
+                        }}
+                        className="w-full flex flex-col sm:flex-row items-center gap-8 p-6 text-left hover:bg-gray-50/50 transition-colors cursor-pointer"
                       >
                         <div className="w-40 h-40 flex-shrink-0 bg-gray-50 rounded-2xl p-4 shadow-inner">
                           <img
@@ -286,7 +292,7 @@ function ProductComparison() {
                             ▼
                           </div>
                         </div>
-                      </button>
+                      </div>
 
                       {/* Expanded Comparison Details */}
                       {isExpanded && (
