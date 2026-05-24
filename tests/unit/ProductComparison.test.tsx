@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import ProductComparison from '../../client/components/ProductComparison'
 import * as api from '../../client/apis/products'
 import React from 'react'
+import { BasketProvider } from '../../client/contexts/BasketContext'
 
 vi.mock('../../client/apis/products')
 
@@ -16,13 +17,16 @@ const queryClient = new QueryClient({
 })
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  <QueryClientProvider client={queryClient}>
+    <BasketProvider>{children}</BasketProvider>
+  </QueryClientProvider>
 )
 
 describe('ProductComparison Component', () => {
   beforeEach(() => {
     vi.resetAllMocks()
     queryClient.clear()
+    vi.mocked(api.getSupermarkets).mockResolvedValue([])
   })
 
   it('renders search input and daily essentials header', () => {
@@ -72,8 +76,8 @@ describe('ProductComparison Component', () => {
 
     render(<ProductComparison />, { wrapper })
 
-    const productButton = await screen.findByRole('button', { name: /Apple/i })
-    fireEvent.click(productButton)
+    const productHeading = await screen.findByText('Apple')
+    fireEvent.click(productHeading)
 
     expect(screen.getByText('Live Price Comparison')).toBeDefined()
     expect(screen.getByText('Woolworths')).toBeDefined()
