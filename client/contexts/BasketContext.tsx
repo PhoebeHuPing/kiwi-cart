@@ -3,12 +3,14 @@ import React, { createContext, useContext, useState, ReactNode } from 'react'
 export interface BasketItem {
   name: string
   image_url: string
+  quantity: number
 }
 
 interface BasketContextType {
   basket: BasketItem[]
-  addToBasket: (item: BasketItem) => void
+  addToBasket: (item: Omit<BasketItem, 'quantity'>) => void
   removeFromBasket: (name: string) => void
+  updateQuantity: (name: string, quantity: number) => void
   clearBasket: () => void
   isInBasket: (name: string) => boolean
 }
@@ -25,15 +27,28 @@ export function BasketProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('kiwicart_basket', JSON.stringify(basket))
   }, [basket])
 
-  const addToBasket = (item: BasketItem) => {
+  const addToBasket = (item: Omit<BasketItem, 'quantity'>) => {
     setBasket((prev) => {
-      if (prev.find((i) => i.name === item.name)) return prev
-      return [...prev, item]
+      const existing = prev.find((i) => i.name === item.name)
+      if (existing) {
+        return prev.map((i) =>
+          i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i,
+        )
+      }
+      return [...prev, { ...item, quantity: 1 }]
     })
   }
 
   const removeFromBasket = (name: string) => {
     setBasket((prev) => prev.filter((i) => i.name !== name))
+  }
+
+  const updateQuantity = (name: string, quantity: number) => {
+    setBasket((prev) =>
+      prev
+        .map((i) => (i.name === name ? { ...i, quantity: Math.max(0, quantity) } : i))
+        .filter((i) => i.quantity > 0),
+    )
   }
 
   const clearBasket = () => {
@@ -46,7 +61,14 @@ export function BasketProvider({ children }: { children: ReactNode }) {
 
   return (
     <BasketContext.Provider
-      value={{ basket, addToBasket, removeFromBasket, clearBasket, isInBasket }}
+      value={{
+        basket,
+        addToBasket,
+        removeFromBasket,
+        updateQuantity,
+        clearBasket,
+        isInBasket,
+      }}
     >
       {children}
     </BasketContext.Provider>
