@@ -37,6 +37,83 @@ router.get('/compare', async (req, res) => {
 })
 
 /**
+ * POST /api/v1/products/compare-basket
+ * Calculates the total cost of a basket across different supermarket brands.
+ */
+router.post('/compare-basket', async (req, res) => {
+  const { items } = req.body as { items: { name: string; quantity: number }[] }
+
+  if (!items || !Array.isArray(items)) {
+    return res.status(400).send('Invalid basket items')
+  }
+
+  try {
+    // 1. For each item in the basket, fetch prices across all supermarkets
+    const pricePromises = items.map(async (item) => {
+      // We search for the exact or similar name
+      const results = await db.getComparePrices(item.name)
+      // Filter results to only keep the best match per supermarket for this specific item
+      const bestPerSupermarket = results.reduce(
+        (acc: Record<string, any>, curr) => {
+          if (
+            !acc[curr.supermarket_name] ||
+            curr.price < acc[curr.supermarket_name].price
+          ) {
+            acc[curr.supermarket_name] = curr
+          }
+          return acc
+        },
+        {},
+      )
+      return { itemName: item.name, quantity: item.quantity, prices: bestPerSupermarket }
+    })
+
+    const basketPriceResults = await Promise.all(pricePromises)
+
+    // 2. Group by supermarket and calculate totals
+    const supermarketTotals: Record<string, any> = {}
+
+    basketPriceResults.forEach((result) => {
+      Object.keys(result.prices).forEach((sName) => {
+        const info = result.prices[sName]
+        if (!supermarketTotals[sName]) {
+          supermarketTotals[sName] = {
+            supermarket_name: sName,
+            logo_url: info.logo_url,
+            total_price: 0,
+            items_found: 0,
+            missing_items: [],
+            details: [],
+          }
+        }
+        supermarketTotals[sName].total_price += info.price * result.quantity
+        supermarketTotals[sName].items_found += 1
+        supermarketTotals[sName].details.push({
+          name: result.itemName,
+          price: info.price,
+          quantity: result.quantity,
+          subtotal: info.price * result.quantity,
+        })
+      })
+    })
+
+    // 3. Identify missing items for each supermarket
+    const allSupermarketNames = Object.keys(supermarketTotals)
+    allSupermarketNames.forEach((sName) => {
+      const foundItemNames = supermarketTotals[sName].details.map((d: any) => d.name)
+      supermarketTotals[sName].missing_items = items
+        .filter((item) => !foundItemNames.includes(item.name))
+        .map((item) => item.name)
+    })
+
+    res.json(Object.values(supermarketTotals))
+  } catch (error) {
+    console.error('Basket comparison failed:', error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+/**
  * GET /api/v1/products/supermarkets
  * Returns a list of all supermarkets in the system.
  */

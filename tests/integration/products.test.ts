@@ -47,3 +47,50 @@ describe('GET /api/v1/products/compare', () => {
     expect(response.body[2].price).toBe(3.5)
   })
 })
+
+describe('POST /api/v1/products/compare-basket', () => {
+  it('should calculate total cost across supermarkets and identify missing items', async () => {
+    const mockBasket = {
+      items: [
+        { name: 'Milk', quantity: 2 },
+        { name: 'Bread', quantity: 1 }
+      ]
+    }
+
+    // Mock search for Milk
+    vi.mocked(db.getComparePrices).mockImplementation((searchTerm: string) => {
+      if (searchTerm === 'Milk') {
+        return Promise.resolve([
+          { supermarket_name: 'PNS', price: 2.5, logo_url: 'pns.png' },
+          { supermarket_name: 'NW', price: 3.0, logo_url: 'nw.png' }
+        ] as any)
+      }
+      if (searchTerm === 'Bread') {
+        return Promise.resolve([
+          { supermarket_name: 'PNS', price: 4.0, logo_url: 'pns.png' }
+          // Bread missing in NW
+        ] as any)
+      }
+      return Promise.resolve([])
+    })
+
+    const response = await request(server)
+      .post('/api/v1/products/compare-basket')
+      .send(mockBasket)
+
+    expect(response.status).toBe(200)
+    
+    const pns = response.body.find((s: any) => s.supermarket_name === 'PNS')
+    const nw = response.body.find((s: any) => s.supermarket_name === 'NW')
+
+    // PNS: (2.5 * 2) + (4.0 * 1) = 9.0
+    expect(pns.total_price).toBe(9.0)
+    expect(pns.items_found).toBe(2)
+    expect(pns.missing_items).toHaveLength(0)
+
+    // NW: (3.0 * 2) = 6.0
+    expect(nw.total_price).toBe(6.0)
+    expect(nw.items_found).toBe(1)
+    expect(nw.missing_items).toContain('Bread')
+  })
+})
