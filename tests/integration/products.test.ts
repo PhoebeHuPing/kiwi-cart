@@ -29,10 +29,28 @@ describe('GET /api/v1/products/compare', () => {
       { product_name: 'Apple', price: 3.5, supermarket_name: 'Woolworths' }
     ]
     const mockPnsResults = [
-      { product_name: 'Apple', price: 2.9, supermarket_name: 'PaknSave' }
+      {
+        product_name: 'Apple',
+        price: 2.9,
+        supermarket_name: 'PaknSave',
+        image_url: 'apple.jpg',
+        logo_url: 'pns.png',
+        address: 'PNS Address',
+        lat: -36.0,
+        lng: 174.0,
+      },
     ]
     const mockNwResults = [
-      { product_name: 'Apple', price: 3.2, supermarket_name: 'New World' }
+      {
+        product_name: 'Apple',
+        price: 3.2,
+        supermarket_name: 'New World',
+        image_url: 'apple.jpg',
+        logo_url: 'nw.png',
+        address: 'NW Address',
+        lat: -36.1,
+        lng: 174.1,
+      },
     ]
 
     vi.mocked(db.getComparePrices).mockResolvedValue(mockDbResults as any)

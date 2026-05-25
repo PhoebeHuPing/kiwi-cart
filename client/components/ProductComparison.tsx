@@ -17,7 +17,8 @@ function ProductComparison() {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
   const [showDropdown, setShowDropdown] = useState(false)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
-  const { basket, addToBasket, isInBasket, removeFromBasket } = useBasket()
+  const { basket, addToBasket, isInBasket, removeFromBasket, setIsDrawerOpen } =
+    useBasket()
 
   const {
     data: products,
@@ -398,13 +399,16 @@ function ProductComparison() {
       {/* Floating Basket Widget */}
       {basket.length > 0 && (
         <div className="fixed bottom-8 right-8 z-50 animate-in fade-in slide-in-from-bottom-4">
-          <button className="bg-kiwi-dark text-white p-4 rounded-2xl shadow-2xl flex items-center gap-3 hover:scale-105 transition-all group">
+          <button
+            onClick={() => setIsDrawerOpen(true)}
+            className="bg-kiwi-dark text-white p-4 rounded-2xl shadow-2xl flex items-center gap-3 hover:scale-105 transition-all group border-none cursor-pointer"
+          >
             <div className="relative">
               <div className="bg-kiwi p-2 rounded-lg group-hover:rotate-12 transition-transform">
                 🛒
               </div>
               <span className="absolute -top-2 -right-2 bg-price text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-kiwi-dark">
-                {basket.length}
+                {basket.reduce((sum, item) => sum + item.quantity, 0)}
               </span>
             </div>
             <div className="text-left">

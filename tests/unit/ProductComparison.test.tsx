@@ -45,7 +45,9 @@ describe('ProductComparison Component', () => {
         supermarket_name: 'Woolworths',
         image_url: 'apple.jpg',
         logo_url: 'logo.png',
-        address: '123 Street'
+        address: '123 Street',
+        lat: -36.8485,
+        lng: 174.7633
       }
     ]
     vi.mocked(api.getComparePrices).mockResolvedValue(mockProducts)
@@ -69,7 +71,9 @@ describe('ProductComparison Component', () => {
         supermarket_name: 'Woolworths',
         image_url: 'apple.jpg',
         logo_url: 'logo.png',
-        address: '123 Street'
+        address: '123 Street',
+        lat: -36.8485,
+        lng: 174.7633
       }
     ]
     vi.mocked(api.getComparePrices).mockResolvedValue(mockProducts)
