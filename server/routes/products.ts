@@ -15,17 +15,14 @@ router.get('/compare', async (req, res) => {
   console.log(`Searching for: ${searchTerm}`)
 
   try {
-    // 1. Get existing database results (for historical or other stores)
-    const dbProducts = await db.getComparePrices(searchTerm)
-
     // 2. Fetch real-time prices from Foodstuffs brands in parallel
     const [pnsResults, nwResults] = await Promise.all([
       fetchPaknsavePrices(searchTerm),
       fetchNewWorldPrices(searchTerm),
     ])
 
-    // 3. Combine all results and sort by price (ascending)
-    const combined = [...dbProducts, ...pnsResults, ...nwResults].sort(
+    // 3. Combine only real-time results and sort by price (ascending)
+    const combined = [...pnsResults, ...nwResults].sort(
       (a, b) => a.price - b.price,
     )
 
@@ -48,10 +45,15 @@ router.post('/compare-basket', async (req, res) => {
   }
 
   try {
-    // 1. For each item in the basket, fetch prices across all supermarkets
+    // 1. For each item in the basket, fetch prices across all supermarkets in real-time
     const pricePromises = items.map(async (item) => {
-      // We search for the exact or similar name
-      const results = await db.getComparePrices(item.name)
+      const [pnsItems, nwItems] = await Promise.all([
+        fetchPaknsavePrices(item.name),
+        fetchNewWorldPrices(item.name),
+      ])
+
+      const results = [...pnsItems, ...nwItems]
+
       // Filter results to only keep the best match per supermarket for this specific item
       const bestPerSupermarket = results.reduce(
         (acc: Record<string, any>, curr) => {
@@ -65,7 +67,11 @@ router.post('/compare-basket', async (req, res) => {
         },
         {},
       )
-      return { itemName: item.name, quantity: item.quantity, prices: bestPerSupermarket }
+      return {
+        itemName: item.name,
+        quantity: item.quantity,
+        prices: bestPerSupermarket,
+      }
     })
 
     const basketPriceResults = await Promise.all(pricePromises)
