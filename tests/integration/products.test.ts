@@ -53,16 +53,15 @@ describe('GET /api/v1/products/compare', () => {
       },
     ]
 
-    vi.mocked(db.getComparePrices).mockResolvedValue(mockDbResults as any)
     vi.mocked(fetchPaknsavePrices).mockResolvedValue(mockPnsResults)
     vi.mocked(fetchNewWorldPrices).mockResolvedValue(mockNwResults)
 
     const response = await request(server).get('/api/v1/products/compare?q=Apple')
 
     expect(response.status).toBe(200)
-    expect(response.body).toHaveLength(3)
+    expect(response.body).toHaveLength(2)
     expect(response.body[0].price).toBe(2.9)
-    expect(response.body[2].price).toBe(3.5)
+    expect(response.body[1].price).toBe(3.2)
   })
 })
 
@@ -76,19 +75,27 @@ describe('POST /api/v1/products/compare-basket', () => {
     }
 
     // Mock search for Milk
-    vi.mocked(db.getComparePrices).mockImplementation((searchTerm: string) => {
+    vi.mocked(fetchPaknsavePrices).mockImplementation((searchTerm: string) => {
       if (searchTerm === 'Milk') {
         return Promise.resolve([
-          { supermarket_name: 'PNS', price: 2.5, logo_url: 'pns.png' },
-          { supermarket_name: 'NW', price: 3.0, logo_url: 'nw.png' }
+          { supermarket_name: 'PaknSave', price: 2.5, logo_url: 'pns.png' }
         ] as any)
       }
       if (searchTerm === 'Bread') {
         return Promise.resolve([
-          { supermarket_name: 'PNS', price: 4.0, logo_url: 'pns.png' }
-          // Bread missing in NW
+          { supermarket_name: 'PaknSave', price: 4.0, logo_url: 'pns.png' }
         ] as any)
       }
+      return Promise.resolve([])
+    })
+
+    vi.mocked(fetchNewWorldPrices).mockImplementation((searchTerm: string) => {
+      if (searchTerm === 'Milk') {
+        return Promise.resolve([
+          { supermarket_name: 'New World', price: 3.0, logo_url: 'nw.png' }
+        ] as any)
+      }
+      // Bread missing in NW
       return Promise.resolve([])
     })
 
@@ -98,15 +105,15 @@ describe('POST /api/v1/products/compare-basket', () => {
 
     expect(response.status).toBe(200)
     
-    const pns = response.body.find((s: any) => s.supermarket_name === 'PNS')
-    const nw = response.body.find((s: any) => s.supermarket_name === 'NW')
+    const pns = response.body.find((s: any) => s.supermarket_name === 'PaknSave')
+    const nw = response.body.find((s: any) => s.supermarket_name === 'New World')
 
-    // PNS: (2.5 * 2) + (4.0 * 1) = 9.0
+    // PaknSave: (2.5 * 2) + (4.0 * 1) = 9.0
     expect(pns.total_price).toBe(9.0)
     expect(pns.items_found).toBe(2)
     expect(pns.missing_items).toHaveLength(0)
 
-    // NW: (3.0 * 2) = 6.0
+    // New World: (3.0 * 2) = 6.0
     expect(nw.total_price).toBe(6.0)
     expect(nw.items_found).toBe(1)
     expect(nw.missing_items).toContain('Bread')
