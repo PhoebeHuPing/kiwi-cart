@@ -13,11 +13,14 @@ interface BasketContextType {
   updateQuantity: (name: string, quantity: number) => void
   clearBasket: () => void
   isInBasket: (name: string) => boolean
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (open: boolean) => void
 }
 
 const BasketContext = createContext<BasketContextType | undefined>(undefined)
 
 export function BasketProvider({ children }: { children: ReactNode }) {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [basket, setBasket] = useState<BasketItem[]>(() => {
     const saved = localStorage.getItem('kiwicart_basket')
     return saved ? JSON.parse(saved) : []
@@ -37,6 +40,7 @@ export function BasketProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, quantity: 1 }]
     })
+    setIsDrawerOpen(true) // Auto-open drawer when adding item
   }
 
   const removeFromBasket = (name: string) => {
@@ -68,6 +72,8 @@ export function BasketProvider({ children }: { children: ReactNode }) {
         updateQuantity,
         clearBasket,
         isInBasket,
+        isDrawerOpen,
+        setIsDrawerOpen,
       }}
     >
       {children}
