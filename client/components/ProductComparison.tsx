@@ -341,8 +341,27 @@ function ProductComparison() {
                                     )}
                                   </div>
 
-                                  <button className="bg-kiwi-dark text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-kiwi hover:scale-105 transition-all shadow-sm">
-                                    SELECT
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      if (isInBasket(group.product_name)) {
+                                        removeFromBasket(group.product_name)
+                                      } else {
+                                        addToBasket({
+                                          name: group.product_name,
+                                          image_url: group.image_url,
+                                        })
+                                      }
+                                    }}
+                                    className={`text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm border-none cursor-pointer ${
+                                      isInBasket(group.product_name)
+                                        ? 'bg-red-50 text-red-500 hover:bg-red-100'
+                                        : 'bg-kiwi-dark text-white hover:bg-kiwi hover:scale-105'
+                                    }`}
+                                  >
+                                    {isInBasket(group.product_name)
+                                      ? 'REMOVE'
+                                      : 'SELECT'}
                                   </button>
                                 </div>
                               </div>
