@@ -1,5 +1,9 @@
 import request from 'superagent'
-import { Product, PriceComparisonData } from '../../models/products'
+import {
+  Product,
+  PriceComparisonData,
+  BasketComparisonResult,
+} from '../../models/products'
 
 const rootURL = '/api/v1/products'
 
@@ -21,6 +25,16 @@ export async function getComparePrices(
   const response = await request
     .get(`${rootURL}/compare`)
     .query({ q: searchTerm })
+  return response.body
+}
+
+/**
+ * Compares the total price of a basket across different supermarkets.
+ */
+export async function compareBasket(
+  items: { name: string; quantity: number }[],
+): Promise<BasketComparisonResult[]> {
+  const response = await request.post(`${rootURL}/compare-basket`).send({ items })
   return response.body
 }
 
