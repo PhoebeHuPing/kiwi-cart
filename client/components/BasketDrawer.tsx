@@ -59,7 +59,7 @@ export default function BasketDrawer() {
                   <h2 className="text-2xl font-black text-kiwi-dark flex items-center gap-2">
                     <span>🛒</span> My Basket
                   </h2>
-                  <p className="text-xs font-bold text-kiwi/60 uppercase tracking-widest mt-1">
+                  <p className="text-xs font-bold text-kiwi-dark/80 uppercase tracking-widest mt-1">
                     {totalItems} Items to compare
                   </p>
                 </div>
@@ -74,12 +74,12 @@ export default function BasketDrawer() {
               {/* List */}
               <div className="flex-1 overflow-y-auto px-6 py-6">
                 {basket.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center opacity-40">
+                  <div className="h-full flex flex-col items-center justify-center text-center opacity-60">
                     <div className="text-6xl mb-4">🧺</div>
                     <h3 className="text-xl font-bold text-kiwi-dark">
                       Basket is empty
                     </h3>
-                    <p className="mt-2 text-sm max-w-[200px]">
+                    <p className="mt-2 text-sm max-w-[200px] text-gray-700">
                       Add products from the list to start comparing prices.
                     </p>
                   </div>
@@ -125,7 +125,7 @@ export default function BasketDrawer() {
                             </div>
                             <button
                               onClick={() => removeFromBasket(item.name)}
-                              className="text-[10px] font-bold text-red-400 hover:text-red-500 uppercase tracking-tighter border-none bg-transparent cursor-pointer"
+                              className="text-[10px] font-bold text-red-600 hover:text-red-700 uppercase tracking-tighter border-none bg-transparent cursor-pointer"
                             >
                               Remove
                             </button>
@@ -158,7 +158,7 @@ export default function BasketDrawer() {
                   </button>
                   <button
                     onClick={clearBasket}
-                    className="w-full py-2 text-xs font-bold text-gray-400 hover:text-red-500 transition-colors uppercase tracking-[0.2em] border-none bg-transparent cursor-pointer"
+                    className="w-full py-2 text-xs font-bold text-gray-600 hover:text-red-600 transition-colors uppercase tracking-[0.2em] border-none bg-transparent cursor-pointer"
                   >
                     Clear All Items
                   </button>

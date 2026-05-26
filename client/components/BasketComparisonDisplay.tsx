@@ -40,7 +40,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
             <h2 className="text-2xl font-black text-kiwi-dark">
               Price Comparison
             </h2>
-            <p className="text-xs font-bold text-kiwi/60 uppercase tracking-widest mt-1">
+            <p className="text-xs font-bold text-kiwi-dark/80 uppercase tracking-widest mt-1">
               Live results for your current basket
             </p>
           </div>
@@ -105,7 +105,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                         <h3 className="text-xl font-black text-kiwi-dark">
                           {store.supermarket_name}
                         </h3>
-                        <p className="text-sm font-bold text-gray-400">
+                        <p className="text-sm font-bold text-gray-600">
                           {store.items_found} items found
                           {store.missing_items.length > 0 &&
                             ` • ${store.missing_items.length} missing`}
@@ -117,7 +117,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                       <div className="text-3xl font-black text-price">
                         ${store.total_price.toFixed(2)}
                       </div>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
                         Total Estimated Cost
                       </p>
                     </div>
@@ -126,10 +126,10 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                   {/* Missing Items Alert */}
                   {store.missing_items.length > 0 && (
                     <div className="mt-4 bg-red-50 rounded-xl p-3 border border-red-100">
-                      <p className="text-[10px] font-black text-red-500 uppercase tracking-widest flex items-center gap-2">
+                      <p className="text-[10px] font-black text-red-600 uppercase tracking-widest flex items-center gap-2">
                         <span>⚠️</span> Missing items:
                       </p>
-                      <p className="text-xs text-red-400 mt-1 font-medium">
+                      <p className="text-xs text-red-600 mt-1 font-medium">
                         {store.missing_items.join(', ')}
                       </p>
                     </div>
@@ -142,7 +142,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                     }
                     className="w-full mt-4 pt-4 border-t border-gray-100/50 flex justify-between items-center bg-transparent border-none cursor-pointer group"
                   >
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.1em] group-hover:text-kiwi transition-colors">
+                    <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.1em] group-hover:text-kiwi transition-colors">
                       {isExpanded ? 'Hide' : 'View'} itemized breakdown
                     </span>
                     <span
@@ -157,7 +157,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                   {/* Expanded Item List */}
                   {isExpanded && (
                     <div className="mt-4 space-y-2 animate-in slide-in-from-top-2 duration-300">
-                      <div className="grid grid-cols-4 px-2 text-[9px] font-black text-gray-300 uppercase tracking-widest pb-1">
+                      <div className="grid grid-cols-4 px-2 text-[9px] font-black text-gray-600 uppercase tracking-widest pb-1">
                         <div className="col-span-2">Product</div>
                         <div className="text-center">Qty</div>
                         <div className="text-right">Price</div>
@@ -170,7 +170,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                           <div className="col-span-2 font-bold text-kiwi-dark truncate">
                             {item.name}
                           </div>
-                          <div className="text-center text-gray-400 font-medium">
+                          <div className="text-center text-gray-600 font-medium">
                             ×{item.quantity}
                           </div>
                           <div className="text-right font-black text-kiwi-dark">
