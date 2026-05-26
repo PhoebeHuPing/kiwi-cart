@@ -57,7 +57,7 @@ export default function BasketDrawer() {
               <div className="px-6 py-8 border-b border-gray-100 flex items-center justify-between bg-kiwi/5">
                 <div>
                   <h2 className="text-2xl font-black text-kiwi-dark flex items-center gap-2">
-                    <span>🛒</span> My Basket
+                    <span aria-hidden="true">🛒</span> My Basket
                   </h2>
                   <p className="text-xs font-bold text-kiwi-dark/80 uppercase tracking-widest mt-1">
                     {totalItems} Items to compare
@@ -66,6 +66,7 @@ export default function BasketDrawer() {
                 <button
                   onClick={() => setIsDrawerOpen(false)}
                   className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white hover:shadow-sm transition-all text-2xl border-none bg-transparent cursor-pointer"
+                  aria-label="Close basket"
                 >
                   ✕
                 </button>
@@ -75,7 +76,7 @@ export default function BasketDrawer() {
               <div className="flex-1 overflow-y-auto px-6 py-6">
                 {basket.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center opacity-60">
-                    <div className="text-6xl mb-4">🧺</div>
+                    <div className="text-6xl mb-4" aria-hidden="true">🧺</div>
                     <h3 className="text-xl font-bold text-kiwi-dark">
                       Basket is empty
                     </h3>
@@ -125,7 +126,7 @@ export default function BasketDrawer() {
                             </div>
                             <button
                               onClick={() => removeFromBasket(item.name)}
-                              className="text-[10px] font-bold text-red-600 hover:text-red-700 uppercase tracking-tighter border-none bg-transparent cursor-pointer"
+                              className="text-xs font-bold text-red-600 hover:text-red-700 uppercase tracking-tighter border-none bg-transparent cursor-pointer"
                             >
                               Remove
                             </button>

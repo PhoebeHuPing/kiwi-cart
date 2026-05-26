@@ -175,7 +175,7 @@ export default function StoreMap() {
     <div className="w-full h-full relative bg-gray-50 rounded-xl overflow-hidden shadow-inner border border-gray-100">
       <div className="absolute top-3 left-3 right-3 z-10">
         <div className="relative group">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-kiwi transition-colors">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-kiwi transition-colors" aria-hidden="true">
             📍
           </span>
           <input
@@ -194,9 +194,9 @@ export default function StoreMap() {
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-gray-100/90 backdrop-blur-[2px] z-20">
           {mapError ? (
             <>
-              <div className="text-3xl mb-3">⚠️</div>
+              <div className="text-3xl mb-3" aria-hidden="true">⚠️</div>
               <p className="text-red-600 font-bold text-sm">{mapError}</p>
-              <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest">Check your .env and API console</p>
+              <p className="text-xs text-gray-600 mt-2 uppercase tracking-widest">Check your .env and API console</p>
             </>
           ) : (
             <>

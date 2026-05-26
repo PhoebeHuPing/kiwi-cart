@@ -56,7 +56,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
         {potentialSavings > 0 && (
           <div className="bg-kiwi px-8 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <span className="text-xl">💡</span>
+              <span className="text-xl" aria-hidden="true">💡</span>
               <p className="text-sm font-bold text-white">
                 You can save up to{' '}
                 <span className="text-lg font-black underline underline-offset-4">
@@ -65,7 +65,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                  by shopping at {cheapest.supermarket_name}!
               </p>
             </div>
-            <span className="text-[10px] bg-white/20 px-2 py-1 rounded font-black text-white uppercase tracking-tighter">
+            <span className="text-xs bg-white/20 px-2 py-1 rounded font-black text-white uppercase tracking-tighter">
               Kiwi Insight
             </span>
           </div>
@@ -86,7 +86,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                 }`}
               >
                 {index === 0 && (
-                  <div className="absolute -top-3 left-6 bg-kiwi text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
+                  <div className="absolute -top-3 left-6 bg-kiwi text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest">
                     Best Value Choice
                   </div>
                 )}
@@ -97,7 +97,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                       <div className="w-16 h-16 bg-white rounded-xl p-2 shadow-sm border border-gray-100 flex-shrink-0">
                         <img
                           src={store.logo_url}
-                          alt={store.supermarket_name}
+                          alt=""
                           className="w-full h-full object-contain"
                         />
                       </div>
@@ -117,7 +117,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                       <div className="text-3xl font-black text-price">
                         ${store.total_price.toFixed(2)}
                       </div>
-                      <p className="text-[10px] font-bold text-gray-600 uppercase tracking-widest">
+                      <p className="text-xs font-bold text-gray-600 uppercase tracking-widest">
                         Total Estimated Cost
                       </p>
                     </div>
@@ -126,8 +126,8 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                   {/* Missing Items Alert */}
                   {store.missing_items.length > 0 && (
                     <div className="mt-4 bg-red-50 rounded-xl p-3 border border-red-100">
-                      <p className="text-[10px] font-black text-red-600 uppercase tracking-widest flex items-center gap-2">
-                        <span>⚠️</span> Missing items:
+                      <p className="text-xs font-black text-red-600 uppercase tracking-widest flex items-center gap-2">
+                        <span aria-hidden="true">⚠️</span> Missing items:
                       </p>
                       <p className="text-xs text-red-600 mt-1 font-medium">
                         {store.missing_items.join(', ')}
@@ -142,13 +142,14 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                     }
                     className="w-full mt-4 pt-4 border-t border-gray-100/50 flex justify-between items-center bg-transparent border-none cursor-pointer group"
                   >
-                    <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.1em] group-hover:text-kiwi transition-colors">
+                    <span className="text-xs font-bold text-gray-600 uppercase tracking-[0.1em] group-hover:text-kiwi transition-colors">
                       {isExpanded ? 'Hide' : 'View'} itemized breakdown
                     </span>
                     <span
                       className={`text-kiwi transition-transform duration-300 ${
                         isExpanded ? 'rotate-180' : ''
                       }`}
+                      aria-hidden="true"
                     >
                       ▼
                     </span>
@@ -157,7 +158,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                   {/* Expanded Item List */}
                   {isExpanded && (
                     <div className="mt-4 space-y-2 animate-in slide-in-from-top-2 duration-300">
-                      <div className="grid grid-cols-4 px-2 text-[9px] font-black text-gray-600 uppercase tracking-widest pb-1">
+                      <div className="grid grid-cols-4 px-2 text-xs font-black text-gray-600 uppercase tracking-widest pb-1">
                         <div className="col-span-2">Product</div>
                         <div className="text-center">Qty</div>
                         <div className="text-right">Price</div>
