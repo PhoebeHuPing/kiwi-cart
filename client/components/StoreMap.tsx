@@ -181,6 +181,7 @@ export default function StoreMap() {
           <input
             ref={searchInputRef}
             type="text"
+            aria-label="Search for a location"
             placeholder="Search for a location..."
             className="w-full pl-9 pr-4 py-2.5 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 focus:ring-2 focus:ring-kiwi/20 focus:border-kiwi outline-none text-sm transition-all"
           />

@@ -68,6 +68,7 @@ function ProductComparison() {
             <span className="text-2xl ml-2">🔍</span>
             <input
               type="text"
+              aria-label="Search for products"
               className="flex-1 bg-transparent border-none focus:ring-0 text-lg outline-none placeholder:text-gray-400"
               placeholder="Search for a product (e.g. Milk, Bread, Steak)..."
               value={searchTerm}
