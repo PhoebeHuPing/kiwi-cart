@@ -65,10 +65,11 @@ function ProductComparison() {
         {/* Search and Navigation Header */}
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 focus-within:ring-2 focus-within:ring-kiwi/20 transition-all relative">
-            <span className="text-2xl ml-2">🔍</span>
+            <span className="text-2xl ml-2" aria-hidden="true">🔍</span>
             <input
               type="text"
-              className="flex-1 bg-transparent border-none focus:ring-0 text-lg outline-none placeholder:text-gray-400"
+              aria-label="Search for products"
+              className="flex-1 bg-transparent border-none focus:ring-0 text-lg outline-none placeholder:text-gray-600"
               placeholder="Search for a product (e.g. Milk, Bread, Steak)..."
               value={searchTerm}
               onFocus={() => setShowDropdown(true)}
@@ -87,12 +88,12 @@ function ProductComparison() {
                 {isLoading ? (
                   <div className="p-8 text-center">
                     <div className="w-8 h-8 border-4 border-kiwi border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                    <p className="text-sm text-gray-500 font-medium">
+                    <p className="text-sm text-gray-700 font-medium">
                       Comparing prices from supermarkets...
                     </p>
                   </div>
                 ) : products?.length === 0 ? (
-                  <div className="p-8 text-center text-gray-500 text-sm">
+                  <div className="p-8 text-center text-gray-700 text-sm">
                     No products found for {searchTerm}
                   </div>
                 ) : (
@@ -125,7 +126,7 @@ function ProductComparison() {
                                 alt=""
                                 className="w-3 h-3 object-contain"
                               />
-                              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tight">
+                              <span className="text-xs text-gray-600 font-bold uppercase tracking-tight">
                                 {item.supermarket_name}
                               </span>
                             </div>
@@ -137,7 +138,7 @@ function ProductComparison() {
                             ${item.price.toFixed(2)}
                           </p>
                           {index === 0 && (
-                            <span className="text-[9px] bg-kiwi text-white px-1.5 py-0.5 rounded font-bold uppercase">
+                            <span className="text-xs bg-kiwi text-white px-1.5 py-0.5 rounded font-bold uppercase">
                               Cheapest
                             </span>
                           )}
@@ -147,7 +148,7 @@ function ProductComparison() {
 
                     <div className="p-2 bg-gray-50 text-center">
                       <button
-                        className="text-[10px] font-black text-kiwi tracking-widest uppercase hover:underline"
+                        className="text-xs font-black text-kiwi tracking-widest uppercase hover:underline"
                         onClick={() => setShowDropdown(false)}
                       >
                         View All Results
@@ -162,16 +163,10 @@ function ProductComparison() {
           {/* Overlay to close the dropdown when clicking outside */}
           {showDropdown && (
             <div
-              role="button"
-              aria-label="Close dropdown"
-              tabIndex={-1}
+              role="presentation"
+              aria-hidden="true"
               className="fixed inset-0 z-40 cursor-default"
               onClick={() => setShowDropdown(false)}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape' || e.key === 'Enter') {
-                  setShowDropdown(false)
-                }
-              }}
             ></div>
           )}
 
@@ -196,19 +191,19 @@ function ProductComparison() {
             <h2 className="text-2xl font-bold text-kiwi-dark mb-4 flex items-center gap-2">
               {debouncedSearchTerm ? (
                 <>
-                  <span className="text-xl">🔎</span> Results for &quot;
+                  <span className="text-xl" aria-hidden="true">🔎</span> Results for &quot;
                   {debouncedSearchTerm}&quot;
                 </>
               ) : (
                 <>
-                  <span className="text-xl">🔥</span> Daily Essentials
+                  <span className="text-xl" aria-hidden="true">🔥</span> Daily Essentials
                 </>
               )}
             </h2>
 
             {isError && (
               <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100">
-                ⚠️ Error: {error.message}
+                <span aria-hidden="true">⚠️</span> Error: {error.message}
               </div>
             )}
 
@@ -250,7 +245,7 @@ function ProductComparison() {
                             {group.product_name}
                           </h3>
                           <div className="flex items-center gap-3 mt-1">
-                            <p className="text-gray-400 text-sm">
+                            <p className="text-gray-600 text-sm">
                               Available at {group.options.length} supermarkets
                             </p>
                             <button
@@ -265,9 +260,9 @@ function ProductComparison() {
                                   })
                                 }
                               }}
-                              className={`text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border transition-all ${
+                              className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full border transition-all ${
                                 isInBasket(group.product_name)
-                                  ? 'bg-red-50 text-red-500 border-red-100 hover:bg-red-100'
+                                  ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100'
                                   : 'bg-kiwi/10 text-kiwi border-kiwi/20 hover:bg-kiwi/20'
                               }`}
                             >
@@ -279,7 +274,7 @@ function ProductComparison() {
                         </div>
 
                         <div className="flex flex-col items-center sm:items-end gap-1">
-                          <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                          <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">
                             Best Price
                           </span>
                           <span className="text-2xl font-black text-price">
@@ -289,6 +284,7 @@ function ProductComparison() {
                             className={`text-kiwi transition-transform duration-300 ${
                               isExpanded ? 'rotate-180' : ''
                             }`}
+                            aria-hidden="true"
                           >
                             ▼
                           </div>
@@ -298,7 +294,7 @@ function ProductComparison() {
                       {/* Expanded Comparison Details */}
                       {isExpanded && (
                         <div className="bg-gray-50/50 border-t border-gray-100 p-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2 ml-1">
+                          <p className="text-xs font-black text-gray-600 uppercase tracking-widest mb-2 ml-1">
                             Live Price Comparison
                           </p>
 
@@ -313,7 +309,7 @@ function ProductComparison() {
                                   <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center p-1">
                                     <img
                                       src={option.logo_url}
-                                      alt={option.supermarket_name}
+                                      alt=""
                                       className="w-full h-full object-contain filter drop-shadow-sm"
                                     />
                                   </div>
@@ -322,8 +318,8 @@ function ProductComparison() {
                                     <p className="font-black text-xl text-kiwi-dark tracking-tight">
                                       {option.supermarket_name}
                                     </p>
-                                    <p className="text-sm text-gray-400 mt-1 flex items-center gap-1">
-                                      <span className="text-xs">📍</span>{' '}
+                                    <p className="text-sm text-gray-600 mt-1 flex items-center gap-1">
+                                      <span className="text-xs" aria-hidden="true">📍</span>{' '}
                                       {option.address}
                                     </p>
                                   </div>
@@ -335,7 +331,7 @@ function ProductComparison() {
                                       ${option.price.toFixed(2)}
                                     </span>
                                     {optIdx === 0 && (
-                                      <p className="text-[9px] text-kiwi font-bold uppercase tracking-tighter">
+                                      <p className="text-xs text-kiwi font-bold uppercase tracking-tighter">
                                         Best Choice
                                       </p>
                                     )}
@@ -377,11 +373,11 @@ function ProductComparison() {
               {/* Empty state when no results match the search */}
               {!isLoading && products?.length === 0 && debouncedSearchTerm && (
                 <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
-                  <div className="text-5xl mb-4 text-center">🥝</div>
+                  <div className="text-5xl mb-4 text-center" aria-hidden="true">🥝</div>
                   <h3 className="text-xl font-bold text-kiwi-dark">
                     No products found
                   </h3>
-                  <p className="text-gray-500 mt-2">
+                  <p className="text-gray-700 mt-2">
                     We couldn&apos;t find {debouncedSearchTerm}. <br />
                     Try searching for something else!
                   </p>
@@ -394,7 +390,7 @@ function ProductComparison() {
           <div className="lg:sticky lg:top-8 space-y-4">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h3 className="text-lg font-bold text-kiwi-dark mb-4 flex items-center gap-2">
-                <span className="text-xl">🗺️</span> Nearby Stores
+                <span className="text-xl" aria-hidden="true">🗺️</span> Nearby Stores
               </h3>
               <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden relative border border-gray-100">
                 <StoreMap />
@@ -406,7 +402,7 @@ function ProductComparison() {
               <h4 className="text-kiwi font-bold text-sm uppercase tracking-wider mb-2">
                 Kiwi Insight
               </h4>
-              <p className="text-sm text-kiwi-dark/70 italic">
+              <p className="text-sm text-kiwi-dark/80 italic">
                 Milk prices in Auckland CBD have dropped by 5% this week. Keep
                 an eye on New World specials!
               </p>
@@ -426,13 +422,13 @@ function ProductComparison() {
               <div className="bg-kiwi p-2 rounded-lg group-hover:rotate-12 transition-transform">
                 🛒
               </div>
-              <span className="absolute -top-2 -right-2 bg-price text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-kiwi-dark">
+              <span className="absolute -top-2 -right-2 bg-price text-white text-xs font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-kiwi-dark">
                 {basket.reduce((sum, item) => sum + item.quantity, 0)}
               </span>
             </div>
             <div className="text-left">
               <p className="font-black text-sm">Compare Basket</p>
-              <p className="text-[10px] font-bold text-white/70 uppercase tracking-widest">
+              <p className="text-xs font-bold text-white/80 uppercase tracking-widest">
                 Calculate Best Total
               </p>
             </div>
