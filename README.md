@@ -1,113 +1,92 @@
-# 🥝 KiwiCart
+# 🥝 KiwiCart - NZ Supermarket Price Sharing
 
-KiwiCart is a full-stack price comparison application for New Zealand supermarkets. It helps users find the best deals by comparing prices across major retailers like Woolworths, New World, and Pak'nSave.
+KiwiCart is a community-driven platform designed to tackle the **New Zealand Cost of Living Crisis**. It empowers users to compare supermarket prices across major brands (Pak'nSave, New World, and Woolworths) using real-time data and location-based search.
 
-## 🚀 Features
+![Accessibility Status](https://img.shields.io/badge/Accessibility-WCAG%20AA-success)
+![React](https://img.shields.io/badge/Frontend-React%20%2B%20TS-blue)
+![Express](https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-green)
 
-- **Price Comparison:** Real-time lookup of product prices across different supermarkets.
-- **Store Locator:** Integrated map view showing supermarket locations (Auckland region).
-- **Search:** Quickly find specific products (e.g., "Milk", "Apple").
-- **Visual Feedback:** Highlights the cheapest option with a "Best Price!" badge.
+## 🎯 Project Mission
+In a market dominated by few players, KiwiCart aims to provide price transparency. We believe every Kiwi should have access to the best prices for their daily essentials without having to visit multiple websites or stores.
 
-## 🛠️ Tech Stack & Technologies
+## ✨ Features
 
-### 🖥️ Frontend (Visuals & State)
-- ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB) **React 18** - Component-based UI library
-- ![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white) **TypeScript** - Static typing for reliable code
-- ![React Query](https://img.shields.io/badge/React_Query-FF4154?style=flat-square&logo=react-query&logoColor=white) **TanStack Query** - Server-state management & caching
-- ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white) **Tailwind CSS** - Utility-first styling framework
-- ![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=vite&logoColor=white) **Vite** - Lightning fast build tool
+- **Multi-Store Price Comparison:** Compare items across Pak'nSave, New World, and Woolworths in a single view.
+- **Smart Basket Calculation:** Add multiple items to your basket and instantly see which supermarket offers the lowest total cost for your entire shop.
+- **Location-Aware Search:** Integrated Google Maps view to find the cheapest stores near your current location.
+- **Accessibility First:** Fully compliant with **WCAG AA standards**, featuring high-contrast themes, ARIA labels for screen readers, and keyboard-friendly navigation.
+- **Community Driven:** Focused on user-shared data and transparency (avoiding aggressive scraping).
 
-### ⚙️ Backend (Logic & APIs)
-- ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat-square&logo=node.js&logoColor=white) **Node.js** - JavaScript runtime
-- ![Express](https://img.shields.io/badge/Express.js-000000?style=flat-square&logo=express&logoColor=white) **Express** - Minimalist web framework
-- ![Superagent](https://img.shields.io/badge/Superagent-EF5350?style=flat-square&logo=javascript&logoColor=white) **Superagent** - HTTP client for supermarket API scraping
+## 🛠️ Tech Stack
 
-### 🗄️ Database (Storage)
-- ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white) **PostgreSQL** - Production relational database
-- ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=flat-square&logo=sqlite&logoColor=white) **SQLite3** - Lightweight development database
-- ![Knex.js](https://img.shields.io/badge/Knex.js-E84545?style=flat-square&logo=knex.js&logoColor=white) **Knex.js** - SQL query builder & migration management
+### Frontend
+- **React 18** with **TypeScript**
+- **Tailwind CSS** (Utility-first styling with custom accessibility-friendly colors)
+- **TanStack Query (React Query)** (Efficient data fetching and caching)
+- **Vite** (Modern build tool)
 
-### 🧪 Testing (Reliability)
-- ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat-square&logo=vitest&logoColor=white) **Vitest** - Modern Vite-native testing framework
-- ![Supertest](https://img.shields.io/badge/Supertest-41B883?style=flat-square&logo=node.js&logoColor=white) **Supertest** - Integration testing for HTTP endpoints
-- ![Testing Library](https://img.shields.io/badge/Testing_Library-E33332?style=flat-square&logo=testing-library&logoColor=white) **React Testing Library** - User-centric component testing
-- ![Nock](https://img.shields.io/badge/Nock-90A4AE?style=flat-square&logo=javascript&logoColor=white) **Nock** - HTTP request mocking for unit tests
+### Backend
+- **Node.js** & **Express**
+- **Knex.js** (Query builder)
+- **PostgreSQL** (Production database) / **SQLite** (Local development)
 
-### 🤖 AI Integration
-- ![Gemini](https://img.shields.io/badge/Gemini_AI-8E44AD?style=flat-square&logo=google-gemini&logoColor=white) **Gemini AI** - Smart shopping advice & receipt analysis (Planned/In Progress)
+### Services & AI
+- **Google Maps API** (Store location and autocomplete)
+- **Gemini AI** (Smart shopping insights and price trend analysis)
+- **Auth0** (Secure authentication)
 
 ## 🏁 Getting Started
 
 ### Prerequisites
-
-- Node.js (v18 or higher)
-- npm
+- Node.js (v18+)
+- A Google Maps API Key (for the store locator)
 
 ### Installation
 
-1. Clone the repository:
+1. **Clone the Repo:**
    ```bash
    git clone <repository-url>
    cd KiwiCart
    ```
 
-2. Install dependencies:
+2. **Install Dependencies:**
    ```bash
    npm install
    ```
 
-### Database Setup
+3. **Environment Variables:**
+   Create a `.env` file in the root:
+   ```env
+   VITE_GOOGLE_MAPS_API_KEY=your_key_here
+   ```
 
-Initialize the database with migrations and seed data:
+4. **Setup Database:**
+   ```bash
+   npm run knex migrate:latest
+   npm run knex seed:run
+   ```
 
-```bash
-npm run knex migrate:latest
-npm run knex seed:run
-```
-
-### Running the App
-
-Start both the client and server in development mode:
-
-```bash
-npm run dev
-```
-
-The app will be available at `http://localhost:5173`.
+5. **Run Development Server:**
+   ```bash
+   npm run dev
+   ```
+   Visit `http://localhost:5173` to see KiwiCart in action.
 
 ## 🧪 Testing
-
-Run the test suite:
-
+We maintain high code quality with automated tests:
 ```bash
-npm test
+npm test          # Run all tests (Vitest)
+npm run test:ui   # Run tests with a visual dashboard
 ```
 
-To run tests with a UI:
-
-```bash
-npm test -- --ui
-```
-
-## 📂 Project Structure
-
-- `client/`: React frontend application.
-  - `apis/`: API client functions.
-  - `components/`: UI components.
-  - `styles/`: Global and component styles.
-- `server/`: Express backend application.
-  - `db/`: Database configuration, migrations, and seeds.
-  - `routes/`: API endpoint definitions.
-- `models/`: Shared TypeScript interfaces and types.
-- `public/`: Static assets (images, etc.).
-
-## 🗺️ Configuration
-
-The map feature currently uses a placeholder API key. To enable the Google Maps integration:
-1. Obtain a Google Maps Embed API key.
-2. Update the `src` attribute in `client/components/ProductComparison.tsx`.
+## ♿ Accessibility Commitment
+KiwiCart is designed to be usable by everyone. Recent updates include:
+- **Contrast Ratios:** All text elements meet a minimum 4.5:1 ratio.
+- **Screen Readers:** Comprehensive ARIA labels and roles for all interactive elements.
+- **Keyboard Navigation:** Logic for focus management and skip-links.
 
 ## 📄 License
-
 ISC
+
+---
+*Helping Kiwis save money, one basket at a time.* 🥝🇳🇿
