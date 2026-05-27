@@ -2,6 +2,7 @@ import express from 'express'
 import * as db from '../db/index.ts'
 import { fetchPaknsavePrices } from '../services/paknsave.ts'
 import { fetchNewWorldPrices } from '../services/newworld.ts'
+import { fetchWoolworthsPrices } from '../services/woolworths.ts'
 
 const router = express.Router()
 
@@ -15,14 +16,15 @@ router.get('/compare', async (req, res) => {
   console.log(`Searching for: ${searchTerm}`)
 
   try {
-    // 2. Fetch real-time prices from Foodstuffs brands in parallel
-    const [pnsResults, nwResults] = await Promise.all([
+    // 2. Fetch real-time prices from all major brands in parallel
+    const [pnsResults, nwResults, wwResults] = await Promise.all([
       fetchPaknsavePrices(searchTerm),
       fetchNewWorldPrices(searchTerm),
+      fetchWoolworthsPrices(searchTerm),
     ])
 
-    // 3. Combine only real-time results and sort by price (ascending)
-    const combined = [...pnsResults, ...nwResults].sort(
+    // 3. Combine real-time results and sort by price (ascending)
+    const combined = [...pnsResults, ...nwResults, ...wwResults].sort(
       (a, b) => a.price - b.price,
     )
 
@@ -47,12 +49,13 @@ router.post('/compare-basket', async (req, res) => {
   try {
     // 1. For each item in the basket, fetch prices across all supermarkets in real-time
     const pricePromises = items.map(async (item) => {
-      const [pnsItems, nwItems] = await Promise.all([
+      const [pnsItems, nwItems, wwItems] = await Promise.all([
         fetchPaknsavePrices(item.name),
         fetchNewWorldPrices(item.name),
+        fetchWoolworthsPrices(item.name),
       ])
 
-      const results = [...pnsItems, ...nwItems]
+      const results = [...pnsItems, ...nwItems, ...wwItems]
 
       // Filter results to only keep the best match per supermarket for this specific item
       const bestPerSupermarket = results.reduce(

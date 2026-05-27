@@ -50,7 +50,7 @@ function App() {
 
         <div className="relative z-10 max-w-7xl mx-auto">
           <div className="inline-block bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-4 border border-white/30">
-            🇳🇿 NZ's Community Price Tracker
+            🇳🇿 NZ&apos;s Community Price Tracker
           </div>
           <h1 className="text-6xl md:text-8xl font-black tracking-tighter drop-shadow-2xl">
             KiwiCart
@@ -58,7 +58,7 @@ function App() {
           <p className="mt-6 text-xl md:text-2xl font-bold text-kiwi-light drop-shadow-lg max-w-2xl leading-tight">
             Stop overpaying. Compare prices across{' '}
             <span className="text-white underline decoration-kiwi-light/50 underline-offset-8">
-              Pak'nSave, New World, and Woolworths
+              Pak&apos;nSave, New World, and Woolworths
             </span>{' '}
             in real-time.
           </p>
