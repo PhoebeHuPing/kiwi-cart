@@ -33,20 +33,20 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
       />
 
       {/* Modal Content */}
-      <div className="relative bg-white w-full max-w-2xl max-h-[90vh] rounded-3xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in slide-in-from-bottom-8 duration-300">
+      <div className="relative bg-white w-full max-w-4xl max-h-[90vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in slide-in-from-bottom-8 duration-300">
         {/* Header */}
-        <div className="px-8 py-6 border-b border-gray-100 flex items-center justify-between bg-kiwi/5">
+        <div className="px-10 py-8 border-b border-gray-100 flex items-center justify-between bg-kiwi/5">
           <div>
-            <h2 className="text-2xl font-black text-kiwi-dark">
+            <h2 className="text-3xl font-black text-kiwi-dark">
               Price Comparison
             </h2>
-            <p className="text-xs font-bold text-kiwi-dark/80 uppercase tracking-widest mt-1">
+            <p className="text-sm font-black text-kiwi-dark/80 uppercase tracking-[0.2em] mt-2">
               Live results for your current basket
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white hover:shadow-sm transition-all text-2xl border-none bg-transparent cursor-pointer"
+            className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-white hover:shadow-sm transition-all text-3xl border-none bg-transparent cursor-pointer"
           >
             ✕
           </button>
@@ -54,47 +54,47 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
 
         {/* AI Insight / Savings Banner */}
         {potentialSavings > 0 && (
-          <div className="bg-kiwi px-8 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="text-xl" aria-hidden="true">💡</span>
-              <p className="text-sm font-bold text-white">
+          <div className="bg-kiwi px-10 py-6 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-3xl" aria-hidden="true">💡</span>
+              <p className="text-lg font-bold text-white leading-tight">
                 You can save up to{' '}
-                <span className="text-lg font-black underline underline-offset-4">
+                <span className="text-2xl font-black underline underline-offset-8 decoration-white/50">
                   ${potentialSavings.toFixed(2)}
                 </span>{' '}
                  by shopping at {cheapest.supermarket_name}!
               </p>
             </div>
-            <span className="text-xs bg-white/20 px-2 py-1 rounded font-black text-white uppercase tracking-tighter">
+            <span className="text-sm bg-white/20 px-3 py-1.5 rounded-lg font-black text-white uppercase tracking-widest">
               Kiwi Insight
             </span>
           </div>
         )}
 
         {/* Results List */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-6">
+        <div className="flex-1 overflow-y-auto p-10 space-y-10">
           {sortedResults.map((store, index) => {
             const isExpanded = expandedStore === store.supermarket_name
 
             return (
               <div
                 key={store.supermarket_name}
-                className={`relative border-2 rounded-2xl transition-all ${
+                className={`relative border-2 rounded-[2rem] transition-all ${
                   index === 0
-                    ? 'border-kiwi bg-kiwi/5 ring-4 ring-kiwi/10'
+                    ? 'border-kiwi bg-kiwi/5 ring-8 ring-kiwi/5'
                     : 'border-gray-100 bg-white hover:border-gray-200'
                 }`}
               >
                 {index === 0 && (
-                  <div className="absolute -top-3 left-6 bg-kiwi text-white text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest">
+                  <div className="absolute -top-4 left-10 bg-kiwi text-white text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-lg shadow-kiwi/20">
                     Best Value Choice
                   </div>
                 )}
 
-                <div className="p-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-white rounded-xl p-2 shadow-sm border border-gray-100 flex-shrink-0">
+                <div className="p-8">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                    <div className="flex items-center gap-6">
+                      <div className="w-24 h-24 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex-shrink-0">
                         <img
                           src={store.logo_url}
                           alt=""
@@ -102,10 +102,10 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                         />
                       </div>
                       <div>
-                        <h3 className="text-xl font-black text-kiwi-dark">
+                        <h3 className="text-3xl font-black text-kiwi-dark tracking-tight">
                           {store.supermarket_name}
                         </h3>
-                        <p className="text-sm font-bold text-gray-600">
+                        <p className="text-lg font-bold text-gray-500 mt-1">
                           {store.items_found} items found
                           {store.missing_items.length > 0 &&
                             ` • ${store.missing_items.length} missing`}
@@ -113,11 +113,11 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                       </div>
                     </div>
 
-                    <div className="text-left sm:text-right">
-                      <div className="text-3xl font-black text-price">
+                    <div className="text-left md:text-right">
+                      <div className="text-5xl font-black text-price tracking-tighter">
                         ${store.total_price.toFixed(2)}
                       </div>
-                      <p className="text-xs font-bold text-gray-600 uppercase tracking-widest">
+                      <p className="text-sm font-black text-gray-400 uppercase tracking-widest mt-1">
                         Total Estimated Cost
                       </p>
                     </div>

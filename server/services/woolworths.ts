@@ -15,6 +15,7 @@ interface WoolworthsProduct {
   }
   images: {
     small: string
+    big: string
   }
   type: string
 }
@@ -58,16 +59,21 @@ export async function fetchWoolworthsPrices(searchTerm: string): Promise<PriceCo
 
     return items
       .filter(item => item.type === 'Product') // Filter out non-product items (like banners)
-      .map((p) => ({
-        product_name: p.name,
-        image_url: p.images?.small,
-        supermarket_name: 'Woolworths',
-        logo_url: '/images/woolworths.webp',
-        address: 'Grey Lynn, Auckland', // Default for now
-        lat: -36.8645,
-        lng: 174.7431,
-        price: p.price?.salePrice || 0,
-      }))
+      .map((p) => {
+        // Use the 'big' image and boost quality to 400x400 to match Foodstuffs UI
+        const highResImage = p.images?.big?.replace('w=200&h=200', 'w=400&h=400') || p.images?.small
+        
+        return {
+          product_name: p.name,
+          image_url: highResImage,
+          supermarket_name: 'Woolworths',
+          logo_url: '/images/woolworths.webp',
+          address: 'Grey Lynn, Auckland', // Default for now
+          lat: -36.8645,
+          lng: 174.7431,
+          price: p.price?.salePrice || 0,
+        }
+      })
   } catch (error: any) {
     console.error('Woolworths Real-time API failed:', error.message)
     return []
