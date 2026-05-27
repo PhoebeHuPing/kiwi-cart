@@ -61,15 +61,15 @@ function ProductComparison() {
 
   return (
     <div className="min-h-screen bg-background pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="py-8">
         {/* Search and Navigation Header */}
-        <div className="flex flex-col gap-4 mb-8">
-          <div className="flex items-center gap-4 bg-white p-4 rounded-2xl shadow-sm border border-gray-100 focus-within:ring-2 focus-within:ring-kiwi/20 transition-all relative">
-            <span className="text-2xl ml-2" aria-hidden="true">🔍</span>
+        <div className="flex flex-col gap-6 mb-12">
+          <div className="flex items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 focus-within:ring-4 focus-within:ring-kiwi/10 transition-all relative">
+            <span className="text-3xl ml-2" aria-hidden="true">🔍</span>
             <input
               type="text"
               aria-label="Search for products"
-              className="flex-1 bg-transparent border-none focus:ring-0 text-lg outline-none placeholder:text-gray-600"
+              className="flex-1 bg-transparent border-none focus:ring-0 text-xl font-medium outline-none placeholder:text-gray-400"
               placeholder="Search for a product (e.g. Milk, Bread, Steak)..."
               value={searchTerm}
               onFocus={() => setShowDropdown(true)}
@@ -171,32 +171,32 @@ function ProductComparison() {
           )}
 
           {/* Trending Categories Quick Tags */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-4">
             {trendingCategories.map((cat) => (
               <button
                 key={cat.name}
                 onClick={() => setSearchTerm(cat.name)}
-                className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2"
+                className="px-6 py-3 bg-white rounded-2xl text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105"
               >
-                <span>{cat.icon}</span>
+                <span className="text-xl">{cat.icon}</span>
                 {cat.name}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
           {/* Main Comparison List */}
-          <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-2xl font-bold text-kiwi-dark mb-4 flex items-center gap-2">
+          <div className="lg:col-span-2 space-y-6">
+            <h2 className="text-3xl font-black text-kiwi-dark mb-6 flex items-center gap-3">
               {debouncedSearchTerm ? (
                 <>
-                  <span className="text-xl" aria-hidden="true">🔎</span> Results for &quot;
+                  <span className="text-2xl" aria-hidden="true">🔎</span> Results for &quot;
                   {debouncedSearchTerm}&quot;
                 </>
               ) : (
                 <>
-                  <span className="text-xl" aria-hidden="true">🔥</span> Daily Essentials
+                  <span className="text-2xl" aria-hidden="true">🔥</span> Daily Essentials
                 </>
               )}
             </h2>
@@ -230,9 +230,9 @@ function ProductComparison() {
                             setExpandedIndex(isExpanded ? null : groupIdx)
                           }
                         }}
-                        className="w-full flex flex-col sm:flex-row items-center gap-8 p-6 text-left hover:bg-gray-50/50 transition-colors cursor-pointer"
+                        className="w-full flex flex-col sm:flex-row items-center gap-10 p-8 text-left hover:bg-gray-50/50 transition-colors cursor-pointer"
                       >
-                        <div className="w-40 h-40 flex-shrink-0 bg-gray-50 rounded-2xl p-4 shadow-inner">
+                        <div className="w-48 h-48 flex-shrink-0 bg-gray-50 rounded-3xl p-6 shadow-inner">
                           <img
                             src={group.image_url}
                             alt=""
@@ -241,11 +241,11 @@ function ProductComparison() {
                         </div>
 
                         <div className="flex-1">
-                          <h3 className="text-lg font-bold text-kiwi-dark">
+                          <h3 className="text-2xl font-black text-kiwi-dark tracking-tight">
                             {group.product_name}
                           </h3>
-                          <div className="flex items-center gap-3 mt-1">
-                            <p className="text-gray-600 text-sm">
+                          <div className="flex items-center gap-4 mt-2">
+                            <p className="text-gray-500 font-medium">
                               Available at {group.options.length} supermarkets
                             </p>
                             <button
@@ -274,10 +274,10 @@ function ProductComparison() {
                         </div>
 
                         <div className="flex flex-col items-center sm:items-end gap-1">
-                          <span className="text-xs font-bold text-gray-600 uppercase tracking-widest">
+                          <span className="text-sm font-black text-gray-400 uppercase tracking-widest">
                             Best Price
                           </span>
-                          <span className="text-2xl font-black text-price">
+                          <span className="text-4xl font-black text-price tracking-tighter">
                             ${bestOption.price.toFixed(2)}
                           </span>
                           <div
@@ -293,8 +293,8 @@ function ProductComparison() {
 
                       {/* Expanded Comparison Details */}
                       {isExpanded && (
-                        <div className="bg-gray-50/50 border-t border-gray-100 p-6 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                          <p className="text-xs font-black text-gray-600 uppercase tracking-widest mb-2 ml-1">
+                        <div className="bg-gray-50/50 border-t border-gray-100 p-10 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <p className="text-sm font-black text-gray-400 uppercase tracking-[0.2em] mb-4 ml-1">
                             Live Price Comparison
                           </p>
 
@@ -302,11 +302,11 @@ function ProductComparison() {
                             (option: PriceComparisonData, optIdx: number) => (
                               <div
                                 key={optIdx}
-                                className="flex items-center justify-between bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:border-kiwi/30 transition-all"
+                                className="flex items-center justify-between bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:border-kiwi/30 transition-all"
                               >
-                                <div className="flex items-center gap-6">
+                                <div className="flex items-center gap-10">
                                   {/* Supermarket Logo */}
-                                  <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center p-1">
+                                  <div className="w-24 h-24 flex-shrink-0 flex items-center justify-center p-2">
                                     <img
                                       src={option.logo_url}
                                       alt=""
@@ -315,23 +315,23 @@ function ProductComparison() {
                                   </div>
 
                                   <div>
-                                    <p className="font-black text-xl text-kiwi-dark tracking-tight">
+                                    <p className="font-black text-2xl text-kiwi-dark tracking-tight">
                                       {option.supermarket_name}
                                     </p>
-                                    <p className="text-sm text-gray-600 mt-1 flex items-center gap-1">
-                                      <span className="text-xs" aria-hidden="true">📍</span>{' '}
+                                    <p className="text-base text-gray-500 mt-1 flex items-center gap-2">
+                                      <span className="text-xl" aria-hidden="true">📍</span>{' '}
                                       {option.address}
                                     </p>
                                   </div>
                                 </div>
 
-                                <div className="flex items-center gap-6">
+                                <div className="flex items-center gap-10">
                                   <div className="text-right">
-                                    <span className="text-2xl font-black text-kiwi-dark">
+                                    <span className="text-4xl font-black text-kiwi-dark tracking-tighter">
                                       ${option.price.toFixed(2)}
                                     </span>
                                     {optIdx === 0 && (
-                                      <p className="text-xs text-kiwi font-bold uppercase tracking-tighter">
+                                      <p className="text-sm text-kiwi font-black uppercase tracking-widest mt-1">
                                         Best Choice
                                       </p>
                                     )}
@@ -349,10 +349,10 @@ function ProductComparison() {
                                         })
                                       }
                                     }}
-                                    className={`text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm border-none cursor-pointer ${
+                                    className={`text-sm font-black px-8 py-4 rounded-2xl transition-all shadow-lg border-none cursor-pointer ${
                                       isInBasket(group.product_name)
-                                        ? 'bg-red-50 text-red-500 hover:bg-red-100'
-                                        : 'bg-kiwi-dark text-white hover:bg-kiwi hover:scale-105'
+                                        ? 'bg-red-50 text-red-500 hover:bg-red-100 shadow-red-100'
+                                        : 'bg-kiwi-dark text-white hover:bg-kiwi hover:scale-105 shadow-kiwi-dark/20'
                                     }`}
                                   >
                                     {isInBasket(group.product_name)
@@ -387,22 +387,22 @@ function ProductComparison() {
           </div>
 
           {/* Sticky Map and Sidebar Widgets */}
-          <div className="lg:sticky lg:top-8 space-y-4">
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h3 className="text-lg font-bold text-kiwi-dark mb-4 flex items-center gap-2">
-                <span className="text-xl" aria-hidden="true">🗺️</span> Nearby Stores
+          <div className="lg:sticky lg:top-8 space-y-6">
+            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+              <h3 className="text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
+                <span className="text-2xl" aria-hidden="true">🗺️</span> Nearby Stores
               </h3>
-              <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden relative border border-gray-100">
+              <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-100">
                 <StoreMap />
               </div>
             </div>
 
             {/* AI Insights Widget (Placeholder) */}
-            <div className="bg-kiwi/5 rounded-2xl p-6 border border-kiwi/10">
-              <h4 className="text-kiwi font-bold text-sm uppercase tracking-wider mb-2">
+            <div className="bg-kiwi/5 rounded-3xl p-8 border border-kiwi/10">
+              <h4 className="text-kiwi font-black text-sm uppercase tracking-widest mb-4">
                 Kiwi Insight
               </h4>
-              <p className="text-sm text-kiwi-dark/80 italic">
+              <p className="text-lg text-kiwi-dark/80 italic leading-relaxed">
                 Milk prices in Auckland CBD have dropped by 5% this week. Keep
                 an eye on New World specials!
               </p>
