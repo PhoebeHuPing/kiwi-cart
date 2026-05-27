@@ -47,8 +47,16 @@ async function fetchFoodstuffsStores(brand: 'paknsave' | 'newworld') {
 async function fetchWoolworthsStores() {
   console.log('Fetching Woolworths stores...')
   try {
-    // Woolworths might work with just a user agent now
-    const response = await request
+    const agent = request.agent()
+    
+    // Establish session
+    await agent
+      .post('https://www.woolworths.co.nz/api/v1/session')
+      .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+      .set('X-Requested-With', 'OnlineShopping.WebApp')
+      .send({})
+
+    const response = await agent
       .get('https://www.woolworths.co.nz/api/v1/fulfilment/my/pickup-addresses')
       .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
       .set('X-Requested-With', 'OnlineShopping.WebApp')
