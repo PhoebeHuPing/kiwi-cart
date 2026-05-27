@@ -30,11 +30,19 @@ interface WoolworthsSearchResponse {
  */
 export async function fetchWoolworthsPrices(searchTerm: string): Promise<PriceComparisonData[]> {
   try {
-    // 1. Establish session (if needed, though simple GET might work for public search)
-    // For simplicity in this first iteration, we'll try a direct search.
-    // Woolworths often requires a User-Agent and certain headers.
+    // 1. Establish session
+    // Woolworths NZ requires a session to be established via /api/v1/session
+    // and maintaining cookies for subsequent requests.
+    const agent = request.agent()
     
-    const response = await request
+    await agent
+      .post('https://www.woolworths.co.nz/api/v1/session')
+      .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+      .set('X-Requested-With', 'OnlineShopping.WebApp')
+      .send({})
+
+    // 2. Search for products
+    const response = await agent
       .get('https://www.woolworths.co.nz/api/v1/products')
       .query({ 
         target: 'search', 
@@ -42,6 +50,7 @@ export async function fetchWoolworthsPrices(searchTerm: string): Promise<PriceCo
         inStockProductsOnly: true 
       })
       .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+      .set('X-Requested-With', 'OnlineShopping.WebApp')
       .set('Accept', 'application/json')
 
     const body = response.body as WoolworthsSearchResponse
