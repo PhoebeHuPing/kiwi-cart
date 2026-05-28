@@ -62,128 +62,138 @@ function ProductComparison() {
   return (
     <div className="min-h-screen bg-background pb-12">
       <div className="py-8">
-        {/* Search and Navigation Header */}
-        <div className="flex flex-col gap-6 mb-12">
-          <div className="flex items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 focus-within:ring-4 focus-within:ring-kiwi/10 transition-all relative">
-            <span className="text-3xl ml-2" aria-hidden="true">🔍</span>
-            <input
-              type="text"
-              aria-label="Search for products"
-              className="flex-1 bg-transparent border-none focus:ring-0 text-xl font-medium outline-none placeholder:text-gray-400"
-              placeholder="Search for a product (e.g. Milk, Bread, Steak)..."
-              value={searchTerm}
-              onFocus={() => setShowDropdown(true)}
-              onChange={(e) => {
-                ;(setSearchTerm(e.target.value), setShowDropdown(true))
-              }}
-            />
+        {/* Search and Navigation Header (Sticky) */}
+        <div className="sticky top-0 z-40 -mx-4 px-4 py-4 mb-12 bg-background/95 backdrop-blur-md border-b border-transparent transition-all data-[stuck]:border-gray-100">
+          <div className="flex flex-col gap-6">
+            <div className="flex items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 focus-within:ring-4 focus-within:ring-kiwi/10 transition-all relative">
+              <span className="text-3xl ml-2" aria-hidden="true">
+                🔍
+              </span>
+              <input
+                type="text"
+                aria-label="Search for products"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-xl font-medium outline-none placeholder:text-gray-400"
+                placeholder="Search for a product (e.g. Milk, Bread, Steak)..."
+                value={searchTerm}
+                onFocus={() => setShowDropdown(true)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
+                  setShowDropdown(true)
+                }}
+              />
 
-            {isLoading && (
-              <div className="w-6 h-6 border-2 border-kiwi border-t-transparent rounded-full animate-spin"></div>
-            )}
+              {isLoading && (
+                <div className="w-6 h-6 border-2 border-kiwi border-t-transparent rounded-full animate-spin"></div>
+              )}
 
-            {/* Quick Search Dropdown */}
-            {showDropdown && searchTerm.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
-                {isLoading ? (
-                  <div className="p-8 text-center">
-                    <div className="w-8 h-8 border-4 border-kiwi border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                    <p className="text-sm text-gray-700 font-medium">
-                      Comparing prices from supermarkets...
-                    </p>
-                  </div>
-                ) : products?.length === 0 ? (
-                  <div className="p-8 text-center text-gray-700 text-sm">
-                    No products found for {searchTerm}
-                  </div>
-                ) : (
-                  <div className="divide-y divide-gray-50">
-                    {products?.slice(0, 5).map((item, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        className="w-full text-left p-4 hover:bg-gray-50 flex items-center justify-between cursor-pointer transition-colors border-none bg-transparent"
-                        onClick={() => {
-                          setSearchTerm(item.product_name)
-                          setShowDropdown(false)
-                        }}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-gray-50 rounded-lg p-1 flex-shrink-0">
-                            <img
-                              src={item.image_url}
-                              alt=""
-                              className="w-full h-full object-contain"
-                            />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-sm text-kiwi-dark line-clamp-1">
-                              {item.product_name}
-                            </h4>
-                            <div className="flex items-center gap-1.5 mt-0.5">
+              {/* Quick Search Dropdown */}
+              {showDropdown && searchTerm.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+                  {isLoading ? (
+                    <div className="p-8 text-center">
+                      <div className="w-8 h-8 border-4 border-kiwi border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                      <p className="text-sm text-gray-700 font-medium">
+                        Comparing prices from supermarkets...
+                      </p>
+                    </div>
+                  ) : products?.length === 0 ? (
+                    <div className="p-8 text-center text-gray-700 text-sm">
+                      No products found for {searchTerm}
+                    </div>
+                  ) : (
+                    <div className="divide-y divide-gray-50">
+                      {products?.slice(0, 5).map((item, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          className="w-full text-left p-4 hover:bg-gray-50 flex items-center justify-between cursor-pointer transition-colors border-none bg-transparent"
+                          onClick={() => {
+                            setSearchTerm(item.product_name)
+                            setShowDropdown(false)
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 bg-gray-50 rounded-lg p-1 flex-shrink-0">
                               <img
-                                src={item.logo_url}
+                                src={item.image_url}
                                 alt=""
-                                className="w-3 h-3 object-contain"
+                                className="w-full h-full object-contain"
                               />
-                              <span className="text-xs text-gray-600 font-bold uppercase tracking-tight">
-                                {item.supermarket_name}
-                              </span>
+                            </div>
+                            <div>
+                              <h4 className="font-bold text-sm text-kiwi-dark line-clamp-1">
+                                {item.product_name}
+                              </h4>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <img
+                                  src={item.logo_url}
+                                  alt=""
+                                  className="w-3 h-3 object-contain"
+                                />
+                                <span className="text-xs text-gray-600 font-bold uppercase tracking-tight">
+                                  {item.supermarket_name}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div className="text-right flex-shrink-0">
-                          <p className="font-black text-price text-lg">
-                            ${item.price.toFixed(2)}
-                          </p>
-                          {index === 0 && (
-                            <span className="text-xs bg-kiwi text-white px-1.5 py-0.5 rounded font-bold uppercase">
-                              Cheapest
-                            </span>
-                          )}
-                        </div>
-                      </button>
-                    ))}
+                          <div className="text-right flex-shrink-0">
+                            <p className="font-black text-price text-lg">
+                              ${item.price.toFixed(2)}
+                            </p>
+                            {item.unit_price && (
+                              <p className="text-[10px] text-gray-400 font-black uppercase tracking-tighter -mt-1">
+                                {item.unit_price}
+                              </p>
+                            )}
+                            {index === 0 && (
+                              <span className="text-[10px] bg-kiwi text-white px-1.5 py-0.5 rounded font-bold uppercase">
+                                Cheapest
+                              </span>
+                            )}
+                          </div>
+                        </button>
+                      ))}
 
-                    <div className="p-2 bg-gray-50 text-center">
-                      <button
-                        className="text-xs font-black text-kiwi tracking-widest uppercase hover:underline"
-                        onClick={() => setShowDropdown(false)}
-                      >
-                        View All Results
-                      </button>
+                      <div className="p-2 bg-gray-50 text-center">
+                        <button
+                          className="text-xs font-black text-kiwi tracking-widest uppercase hover:underline"
+                          onClick={() => setShowDropdown(false)}
+                        >
+                          View All Results
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                  )}
+                </div>
+              )}
+            </div>
 
-          {/* Overlay to close the dropdown when clicking outside */}
-          {showDropdown && (
-            <div
-              role="presentation"
-              aria-hidden="true"
-              className="fixed inset-0 z-40 cursor-default"
-              onClick={() => setShowDropdown(false)}
-            ></div>
-          )}
-
-          {/* Trending Categories Quick Tags */}
-          <div className="flex flex-wrap gap-4">
-            {trendingCategories.map((cat) => (
-              <button
-                key={cat.name}
-                onClick={() => setSearchTerm(cat.name)}
-                className="px-6 py-3 bg-white rounded-2xl text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105"
-              >
-                <span className="text-xl">{cat.icon}</span>
-                {cat.name}
-              </button>
-            ))}
+            {/* Trending Categories Quick Tags */}
+            <div className="flex flex-wrap gap-4">
+              {trendingCategories.map((cat) => (
+                <button
+                  key={cat.name}
+                  onClick={() => setSearchTerm(cat.name)}
+                  className="px-6 py-3 bg-white rounded-2xl text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105"
+                >
+                  <span className="text-xl">{cat.icon}</span>
+                  {cat.name}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Overlay to close the dropdown when clicking outside */}
+        {showDropdown && (
+          <div
+            role="presentation"
+            aria-hidden="true"
+            className="fixed inset-0 z-40 cursor-default"
+            onClick={() => setShowDropdown(false)}
+          ></div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
           {/* Main Comparison List */}
@@ -191,12 +201,18 @@ function ProductComparison() {
             <h2 className="text-3xl font-black text-kiwi-dark mb-6 flex items-center gap-3">
               {debouncedSearchTerm ? (
                 <>
-                  <span className="text-2xl" aria-hidden="true">🔎</span> Results for &quot;
+                  <span className="text-2xl" aria-hidden="true">
+                    🔎
+                  </span>{' '}
+                  Results for &quot;
                   {debouncedSearchTerm}&quot;
                 </>
               ) : (
                 <>
-                  <span className="text-2xl" aria-hidden="true">🔥</span> Daily Essentials
+                  <span className="text-2xl" aria-hidden="true">
+                    🔥
+                  </span>{' '}
+                  Daily Essentials
                 </>
               )}
             </h2>
@@ -273,13 +289,18 @@ function ProductComparison() {
                           </div>
                         </div>
 
-                        <div className="flex flex-col items-center sm:items-end gap-1">
+                        <div className="flex flex-col items-center sm:items-end gap-0">
                           <span className="text-sm font-black text-gray-400 uppercase tracking-widest">
                             Best Price
                           </span>
                           <span className="text-4xl font-black text-price tracking-tighter">
                             ${bestOption.price.toFixed(2)}
                           </span>
+                          {bestOption.unit_price && (
+                            <span className="text-xs font-black text-kiwi uppercase tracking-widest -mt-1 mb-2">
+                              {bestOption.unit_price}
+                            </span>
+                          )}
                           <div
                             className={`text-kiwi transition-transform duration-300 ${
                               isExpanded ? 'rotate-180' : ''
@@ -319,7 +340,9 @@ function ProductComparison() {
                                       {option.supermarket_name}
                                     </p>
                                     <p className="text-base text-gray-500 mt-1 flex items-center gap-2">
-                                      <span className="text-xl" aria-hidden="true">📍</span>{' '}
+                                      <span className="text-xl" aria-hidden="true">
+                                        📍
+                                      </span>{' '}
                                       {option.address}
                                     </p>
                                   </div>
@@ -330,6 +353,11 @@ function ProductComparison() {
                                     <span className="text-4xl font-black text-kiwi-dark tracking-tighter">
                                       ${option.price.toFixed(2)}
                                     </span>
+                                    {option.unit_price && (
+                                      <p className="text-sm text-gray-400 font-black uppercase tracking-widest -mt-1">
+                                        {option.unit_price}
+                                      </p>
+                                    )}
                                     {optIdx === 0 && (
                                       <p className="text-sm text-kiwi font-black uppercase tracking-widest mt-1">
                                         Best Choice
