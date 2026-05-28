@@ -31,14 +31,25 @@ function ProductComparison() {
     // REMOVED: enabled: debouncedSearchTerm.length > 0,
   })
 
-  // Group the flat array of products by their name to show store comparisons per item
+  // Group the flat array of products by their name and ensure one lowest price per supermarket
   const groupedProducts = products?.reduce((acc: GroupedProduct[], current) => {
     const existingProduct = acc.find(
       (p) => p.product_name === current.product_name,
     )
 
     if (existingProduct) {
-      existingProduct.options.push(current)
+      const existingOptionIndex = existingProduct.options.findIndex(
+        (opt) => opt.supermarket_name === current.supermarket_name,
+      )
+
+      if (existingOptionIndex !== -1) {
+        // If this supermarket already has a price for this product, keep the cheapest one
+        if (current.price < existingProduct.options[existingOptionIndex].price) {
+          existingProduct.options[existingOptionIndex] = current
+        }
+      } else {
+        existingProduct.options.push(current)
+      }
       // Ensure options are always sorted by price within the group
       existingProduct.options.sort((a, b) => a.price - b.price)
     } else {
