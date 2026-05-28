@@ -23,6 +23,7 @@ export interface PriceComparisonData {
   lat: number
   lng: number
   price: number
+  unit_price?: string
 }
 
 export interface BasketComparisonResult {
