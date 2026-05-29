@@ -10,7 +10,8 @@ export async function getProducts(): Promise<Product[]> {
 
 /**
  * Executes a complex join to get price comparison data.
- * Merges product info, supermarket info, and price info for a search term.
+ * Merges product info, supermarket info, and price info for a specific search term.
+ * Results are sorted by price in ascending order to show the cheapest first.
  */
 export async function getComparePrices(
   searchTerm: string,
@@ -41,6 +42,7 @@ export async function getSupermarkets() {
 
 /**
  * Finds supermarkets within a specific radius (in km) using the Haversine formula.
+ * This is used for location-based store discovery.
  */
 export async function getNearbySupermarkets(
   lat: number,
@@ -56,6 +58,7 @@ export async function getNearbySupermarkets(
 
 /**
  * Haversine formula to calculate the great-circle distance between two points on a sphere.
+ * Returns distance in kilometers.
  */
 function calculateDistance(
   lat1: number,
