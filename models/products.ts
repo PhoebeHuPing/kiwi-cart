@@ -1,3 +1,6 @@
+/**
+ * Represents a base product entity in the system.
+ */
 export interface Product {
   id: number
   name: string
@@ -5,6 +8,9 @@ export interface Product {
   image_url: string
 }
 
+/**
+ * Represents a supermarket brand and its physical location details.
+ */
 export interface Supermarket {
   id: number
   name: string
@@ -14,6 +20,10 @@ export interface Supermarket {
   lng: number
 }
 
+/**
+ * Data structure for a single product price at a specific supermarket.
+ * Used for the main search results list.
+ */
 export interface PriceComparisonData {
   product_name: string
   image_url: string
@@ -23,9 +33,12 @@ export interface PriceComparisonData {
   lat: number
   lng: number
   price: number
-  unit_price?: string
+  unit_price?: string // Calculated value (e.g., "$2.50/kg")
 }
 
+/**
+ * Summary of a full basket's cost at a specific supermarket.
+ */
 export interface BasketComparisonResult {
   supermarket_name: string
   logo_url: string
