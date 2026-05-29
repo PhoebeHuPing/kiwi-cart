@@ -420,29 +420,6 @@ function ProductComparison() {
                                       </p>
                                     )}
                                   </div>
-
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      if (isInBasket(group.product_name)) {
-                                        removeFromBasket(group.product_name)
-                                      } else {
-                                        addToBasket({
-                                          name: group.product_name,
-                                          image_url: group.image_url,
-                                        })
-                                      }
-                                    }}
-                                    className={`text-sm font-black px-8 py-4 rounded-2xl transition-all shadow-lg border-none cursor-pointer ${
-                                      isInBasket(group.product_name)
-                                        ? 'bg-red-50 text-red-500 hover:bg-red-100 shadow-red-100'
-                                        : 'bg-kiwi-dark text-white hover:bg-kiwi hover:scale-105 shadow-kiwi-dark/20'
-                                    }`}
-                                  >
-                                    {isInBasket(group.product_name)
-                                      ? 'REMOVE'
-                                      : 'SELECT'}
-                                  </button>
                                 </div>
                               </div>
                             ),
