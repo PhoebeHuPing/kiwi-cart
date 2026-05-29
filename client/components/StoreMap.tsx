@@ -15,6 +15,13 @@ declare global {
   }
 }
 
+/**
+ * StoreMap Component: Renders a Google Map with user location and supermarket markers.
+ * Features:
+ * - Browser Geolocation to find the user.
+ * - Places Autocomplete for location searching.
+ * - Custom brand markers for major NZ supermarkets.
+ */
 export default function StoreMap() {
   const mapRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)

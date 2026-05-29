@@ -21,11 +21,14 @@ const BasketContext = createContext<BasketContextType | undefined>(undefined)
 
 export function BasketProvider({ children }: { children: ReactNode }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  
+  // Initialize basket state from LocalStorage for persistence across page refreshes.
   const [basket, setBasket] = useState<BasketItem[]>(() => {
     const saved = localStorage.getItem('kiwicart_basket')
     return saved ? JSON.parse(saved) : []
   })
 
+  // Synchronize basket state to LocalStorage whenever it changes.
   React.useEffect(() => {
     localStorage.setItem('kiwicart_basket', JSON.stringify(basket))
   }, [basket])
