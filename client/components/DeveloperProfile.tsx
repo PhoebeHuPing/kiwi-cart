@@ -1,6 +1,9 @@
 import { Link } from 'react-router'
+import { useAuth0 } from '@auth0/auth0-react'
 
 function DeveloperProfile() {
+  const { user, isAuthenticated } = useAuth0()
+
   return (
     <div className="max-w-5xl mx-auto py-16 px-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-gray-100">
@@ -8,8 +11,12 @@ function DeveloperProfile() {
         <div className="h-64 bg-gradient-to-r from-kiwi to-kiwi-dark relative">
           <div className="absolute -bottom-20 left-16">
             <div className="w-40 h-40 rounded-[2.5rem] bg-white p-3 shadow-2xl border-4 border-white overflow-hidden">
-              <div className="w-full h-full bg-gray-100 rounded-[2rem] flex items-center justify-center text-7xl">
-                👨‍💻
+              <div className="w-full h-full bg-gray-100 rounded-[2rem] flex items-center justify-center overflow-hidden">
+                {isAuthenticated && user?.picture ? (
+                  <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-7xl">👨‍💻</span>
+                )}
               </div>
             </div>
           </div>
@@ -19,9 +26,11 @@ function DeveloperProfile() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
             <div>
               <h2 className="text-5xl font-black text-kiwi-dark tracking-tighter">
-                Phoebe
+                {isAuthenticated ? (user?.nickname || user?.name) : 'Phoebe'}
               </h2>
-              <p className="text-kiwi font-black text-2xl mt-2">Full-Stack Developer & KiwiCart Creator</p>
+              <p className="text-kiwi font-black text-2xl mt-2">
+                {isAuthenticated ? 'Authenticated Kiwi Enthusiast' : 'Full-Stack Developer & KiwiCart Creator'}
+              </p>
             </div>
             <div className="flex gap-4">
               <a 

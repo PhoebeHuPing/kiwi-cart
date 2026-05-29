@@ -1,12 +1,17 @@
 import { Outlet, Link, useLocation } from 'react-router'
+import { useAuth0 } from '@auth0/auth0-react'
 import { useBasket } from '../contexts/BasketContext'
 import BasketDrawer from './BasketDrawer'
 
 function App() {
   const { basket, setIsDrawerOpen } = useBasket()
+  const { loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0()
   const location = useLocation()
   const totalItems = basket.reduce((sum, item) => sum + item.quantity, 0)
   const isHomePage = location.pathname === '/'
+
+  const handleLogin = () => loginWithRedirect()
+  const handleLogout = () => logout({ logoutParams: { returnTo: window.location.origin } })
 
   return (
     <>
@@ -19,15 +24,45 @@ function App() {
             </span>
           </Link>
 
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-6">
             <Link 
               to="/developer" 
-              className={`text-base font-bold transition-colors no-underline ${
+              className={`text-base font-bold transition-colors no-underline hidden md:block ${
                 location.pathname === '/developer' ? 'text-kiwi' : 'text-gray-600 hover:text-kiwi'
               }`}
             >
               Meet the Dev
             </Link>
+
+            <div className="h-8 w-px bg-gray-100 hidden md:block" />
+
+            {isLoading ? (
+              <div className="w-8 h-8 border-2 border-kiwi border-t-transparent rounded-full animate-spin" />
+            ) : isAuthenticated ? (
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col items-end hidden sm:flex">
+                  <span className="text-sm font-black text-kiwi-dark">{user?.nickname || user?.name}</span>
+                  <button 
+                    onClick={handleLogout}
+                    className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-red-500 transition-colors bg-transparent border-none cursor-pointer p-0"
+                  >
+                    Logout
+                  </button>
+                </div>
+                <img 
+                  src={user?.picture} 
+                  alt={user?.name} 
+                  className="w-10 h-10 rounded-xl border-2 border-kiwi shadow-sm"
+                />
+              </div>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="text-base font-black text-kiwi hover:text-kiwi-dark transition-colors bg-transparent border-none cursor-pointer"
+              >
+                Sign In
+              </button>
+            )}
 
             <button
               onClick={() => setIsDrawerOpen(true)}

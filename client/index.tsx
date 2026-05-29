@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router/dom'
+import { Auth0Provider } from '@auth0/auth0-react'
 import { routes } from './routes'
 import { BasketProvider } from './contexts/BasketContext'
 
@@ -11,15 +12,25 @@ const queryClient = new QueryClient()
 
 /**
  * Main application entry point.
- * Initializes React Query for state management and sets up the router.
+ * Initializes React Query for state management, sets up Auth0 for authentication,
+ * and configures the router.
  */
 document.addEventListener('DOMContentLoaded', () => {
   createRoot(document.getElementById('app') as HTMLElement).render(
-    <QueryClientProvider client={queryClient}>
-      <BasketProvider>
-        <RouterProvider router={routes} />
-      </BasketProvider>
-      <ReactQueryDevtools />
-    </QueryClientProvider>,
+    <Auth0Provider
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+        audience: import.meta.env.VITE_AUTH0_AUDIENCE,
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <BasketProvider>
+          <RouterProvider router={routes} />
+        </BasketProvider>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    </Auth0Provider>,
   )
 })

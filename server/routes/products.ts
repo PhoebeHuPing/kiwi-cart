@@ -3,6 +3,7 @@ import * as db from '../db/index.ts'
 import { fetchPaknsavePrices } from '../services/paknsave.ts'
 import { fetchNewWorldPrices } from '../services/newworld.ts'
 import { fetchWoolworthsPrices } from '../services/woolworths.ts'
+import { checkJwt } from '../auth0.ts'
 
 const router = express.Router()
 
@@ -245,8 +246,9 @@ router.get('/', async (req, res) => {
 /**
  * DELETE /api/v1/products/:id
  * Removes a product from the database by its ID.
+ * Protected: Requires a valid Auth0 Access Token.
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkJwt, async (req, res) => {
   try {
     const id = Number(req.params.id)
     await db.deleteProductById(id)
