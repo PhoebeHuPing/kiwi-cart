@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
-import { getComparePrices } from '../apis/products'
+import { useAuth0 } from '@auth0/auth0-react'
+import { getComparePrices, getFavorites, toggleFavorite } from '../apis/products'
 import StoreMap from './StoreMap'
 import { PriceComparisonData } from '../../models/products'
 import { useBasket } from '../contexts/BasketContext'
@@ -13,6 +14,8 @@ interface GroupedProduct {
 }
 
 function ProductComparison() {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -28,8 +31,29 @@ function ProductComparison() {
   } = useQuery({
     queryKey: ['compare', debouncedSearchTerm],
     queryFn: () => getComparePrices(debouncedSearchTerm),
-    // REMOVED: enabled: debouncedSearchTerm.length > 0,
   })
+
+  // Fetch favorites only if authenticated
+  const { data: favorites = [] } = useQuery({
+    queryKey: ['favorites'],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently()
+      return getFavorites(token)
+    },
+    enabled: isAuthenticated,
+  })
+
+  const favoriteMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const token = await getAccessTokenSilently()
+      return toggleFavorite(name, token)
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['favorites'] })
+    },
+  })
+
+  const isFavorite = (name: string) => favorites.includes(name)
 
   // Group the flat array of products by their name and ensure one lowest price per supermarket.
   // This prevents multiple results for the same product at different locations of the same brand.
@@ -276,28 +300,48 @@ function ProductComparison() {
                             <p className="text-gray-500 font-medium">
                               Available at {group.options.length} supermarkets
                             </p>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                if (isInBasket(group.product_name)) {
-                                  removeFromBasket(group.product_name)
-                                } else {
-                                  addToBasket({
-                                    name: group.product_name,
-                                    image_url: group.image_url,
-                                  })
-                                }
-                              }}
-                              className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full border transition-all ${
-                                isInBasket(group.product_name)
-                                  ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100'
-                                  : 'bg-kiwi/10 text-kiwi border-kiwi/20 hover:bg-kiwi/20'
-                              }`}
-                            >
-                              {isInBasket(group.product_name)
-                                ? '✕ Remove'
-                                : '+ Add to Basket'}
-                            </button>
+                            
+                            <div className="flex items-center gap-2">
+                              {isAuthenticated && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    favoriteMutation.mutate(group.product_name)
+                                  }}
+                                  className={`w-8 h-8 flex items-center justify-center rounded-full transition-all border-none cursor-pointer text-xl ${
+                                    isFavorite(group.product_name)
+                                      ? 'text-red-500 bg-red-50'
+                                      : 'text-gray-300 bg-gray-50 hover:text-red-300'
+                                  }`}
+                                  title={isFavorite(group.product_name) ? "Remove from Kitchen" : "Add to Kitchen"}
+                                >
+                                  {isFavorite(group.product_name) ? '❤️' : '🤍'}
+                                </button>
+                              )}
+
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  if (isInBasket(group.product_name)) {
+                                    removeFromBasket(group.product_name)
+                                  } else {
+                                    addToBasket({
+                                      name: group.product_name,
+                                      image_url: group.image_url,
+                                    })
+                                  }
+                                }}
+                                className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full border transition-all ${
+                                  isInBasket(group.product_name)
+                                    ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100'
+                                    : 'bg-kiwi/10 text-kiwi border-kiwi/20 hover:bg-kiwi/20'
+                                }`}
+                              >
+                                {isInBasket(group.product_name)
+                                  ? '✕ Remove'
+                                  : '+ Add to Basket'}
+                              </button>
+                            </div>
                           </div>
                         </div>
 
