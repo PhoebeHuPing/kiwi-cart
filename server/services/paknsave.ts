@@ -29,6 +29,9 @@ async function getPaknsaveToken(): Promise<string> {
   }
 }
 
+/**
+ * Represents the raw product structure returned by Pak'nSave's internal API.
+ */
 interface PaknsaveProduct {
   productId: string
   name: string
@@ -68,6 +71,7 @@ export async function fetchPaknsavePrices(searchTerm: string): Promise<PriceComp
     const products = body.products || []
     
     return products.map((p) => {
+      // Pak'nSave uses the same backend structure as New World (Foodstuffs)
       const simpleId = p.productId.split('-')[0]
       return {
         product_name: p.name,
@@ -77,7 +81,7 @@ export async function fetchPaknsavePrices(searchTerm: string): Promise<PriceComp
         address: 'Henderson, West Auckland', 
         lat: -36.8819,
         lng: 174.6336,
-        price: (p.singlePrice?.price || 0) / 100,
+        price: (p.singlePrice?.price || 0) / 100, // Price is in cents, convert to dollars
       }
     })
 
