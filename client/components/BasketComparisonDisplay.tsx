@@ -9,7 +9,8 @@ interface Props {
 export default function BasketComparisonDisplay({ results, onClose }: Props) {
   const [expandedStore, setExpandedStore] = useState<string | null>(null)
 
-  // Sort results by items found (primary) and total price (secondary)
+  // Sort results by the number of items found (primary) and then by total price (secondary).
+  // This ensures that stores with the most matching items are shown first.
   const sortedResults = [...results].sort((a, b) => {
     if (a.items_found !== b.items_found) {
       return b.items_found - a.items_found
@@ -17,6 +18,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
     return a.total_price - b.total_price
   })
 
+  // Calculate potential savings by comparing the cheapest and most expensive store results.
   const cheapest = sortedResults[0]
   const expensive = sortedResults[sortedResults.length - 1]
   const potentialSavings = expensive.total_price - cheapest.total_price

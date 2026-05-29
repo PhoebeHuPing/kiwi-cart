@@ -32,8 +32,10 @@
     ]
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.17.0",
     "@devacademy/eslint-config": "^1.10.2",
     "express": "^4.22.1",
+    "express-oauth2-jwt-bearer": "^1.9.0",
     "knex": "^2.5.1",
     "pg": "^8.20.0",
     "sqlite3": "^5.1.7",

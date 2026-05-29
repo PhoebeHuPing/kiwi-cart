@@ -8,6 +8,9 @@ import { PriceComparisonData } from '../../models/products'
  * It typically requires a session established via /api/v1/session.
  */
 
+/**
+ * Represents the product structure returned by Woolworths NZ (formerly Countdown).
+ */
 interface WoolworthsProduct {
   name: string
   price: {
@@ -58,9 +61,9 @@ export async function fetchWoolworthsPrices(searchTerm: string): Promise<PriceCo
     const items = body.products?.items || []
 
     return items
-      .filter(item => item.type === 'Product') // Filter out non-product items (like banners)
+      .filter(item => item.type === 'Product') // Filter out non-product items (like banners or ads)
       .map((p) => {
-        // Use the 'big' image and boost quality to 400x400 to match Foodstuffs UI
+        // Use the 'big' image and boost resolution to 400x400 to match Foodstuffs UI quality
         const highResImage = p.images?.big?.replace('w=200&h=200', 'w=400&h=400') || p.images?.small
         
         return {

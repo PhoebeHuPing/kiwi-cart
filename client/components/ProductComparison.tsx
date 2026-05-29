@@ -31,7 +31,8 @@ function ProductComparison() {
     // REMOVED: enabled: debouncedSearchTerm.length > 0,
   })
 
-  // Group the flat array of products by their name and ensure one lowest price per supermarket
+  // Group the flat array of products by their name and ensure one lowest price per supermarket.
+  // This prevents multiple results for the same product at different locations of the same brand.
   const groupedProducts = products?.reduce((acc: GroupedProduct[], current) => {
     const existingProduct = acc.find(
       (p) => p.product_name === current.product_name,

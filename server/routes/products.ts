@@ -36,6 +36,10 @@ function calculateUnitPrice(name: string, price: number): string | null {
   return null
 }
 
+/**
+ * Formats the price based on quantity and unit (e.g., /100g, /kg, /100ml, /L).
+ * Standardizes units for consistent price comparison.
+ */
 function formatPriceByUnit(
   qty: number,
   unit: string,
@@ -238,6 +242,10 @@ router.get('/', async (req, res) => {
   }
 })
 
+/**
+ * DELETE /api/v1/products/:id
+ * Removes a product from the database by its ID.
+ */
 router.delete('/:id', async (req, res) => {
   try {
     const id = Number(req.params.id)

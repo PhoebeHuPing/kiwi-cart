@@ -32,6 +32,9 @@ async function getNewWorldToken(): Promise<string> {
   }
 }
 
+/**
+ * Represents the raw product structure returned by New World's internal API.
+ */
 interface NewWorldProduct {
   productId: string
   name: string
@@ -72,6 +75,7 @@ export async function fetchNewWorldPrices(
     const products = body.products || []
 
     return products.map((p) => {
+      // New World uses long UUIDs; the first part is often used for simple image lookups
       const simpleId = p.productId.split('-')[0]
       return {
         product_name: p.name,
@@ -83,7 +87,7 @@ export async function fetchNewWorldPrices(
         address: 'Victoria Park, Auckland',
         lat: -36.8485,
         lng: 174.7523,
-        price: (p.singlePrice?.price || 0) / 100,
+        price: (p.singlePrice?.price || 0) / 100, // Price is in cents, convert to dollars
       }
     })
   } catch (error: any) {
