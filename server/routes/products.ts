@@ -258,4 +258,50 @@ router.delete('/:id', checkJwt, async (req, res) => {
   }
 })
 
+/**
+ * GET /api/v1/products/favorites
+ * Returns a list of product names favorited by the current authenticated user.
+ */
+router.get('/favorites', checkJwt, async (req, res) => {
+  try {
+    const userId = req.auth?.payload.sub
+    if (!userId) return res.status(401).send('Unauthorized')
+
+    const favorites = await db.getFavorites(userId)
+    res.json(favorites.map((f) => f.product_name))
+  } catch (error) {
+    console.error('Failed to fetch favorites:', error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
+/**
+ * POST /api/v1/products/favorites
+ * Toggles a product in the user's favorites list.
+ * Expects { name: string } in request body.
+ */
+router.post('/favorites', checkJwt, async (req, res) => {
+  try {
+    const userId = req.auth?.payload.sub
+    const { name } = req.body
+    
+    if (!userId) return res.status(401).send('Unauthorized')
+    if (!name) return res.status(400).send('Product name is required')
+
+    const existing = await db.getFavorites(userId)
+    const isAlreadyFavorite = existing.some((f) => f.product_name === name)
+
+    if (isAlreadyFavorite) {
+      await db.removeFavorite(userId, name)
+      res.json({ action: 'removed', name })
+    } else {
+      await db.addFavorite(userId, name)
+      res.json({ action: 'added', name })
+    }
+  } catch (error) {
+    console.error('Failed to toggle favorite:', error)
+    res.status(500).send('Something went wrong')
+  }
+})
+
 export default router
