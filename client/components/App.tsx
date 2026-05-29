@@ -25,6 +25,17 @@ function App() {
           </Link>
 
           <div className="flex items-center gap-6">
+            {isAuthenticated && (
+              <Link 
+                to="/kitchen" 
+                className={`text-base font-bold transition-colors no-underline ${
+                  location.pathname === '/kitchen' ? 'text-kiwi' : 'text-gray-600 hover:text-kiwi'
+                }`}
+              >
+                My Kitchen
+              </Link>
+            )}
+
             <Link 
               to="/developer" 
               className={`text-base font-bold transition-colors no-underline hidden md:block ${

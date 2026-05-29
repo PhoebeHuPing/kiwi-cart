@@ -67,3 +67,27 @@ export async function getProductById(id: number): Promise<Product> {
   const response = await request.get(`${rootURL}/${id}`)
   return response.body
 }
+
+/**
+ * Fetches the list of favorited product names for the current user.
+ */
+export async function getFavorites(token: string): Promise<string[]> {
+  const response = await request
+    .get(`${rootURL}/favorites`)
+    .set('Authorization', `Bearer ${token}`)
+  return response.body
+}
+
+/**
+ * Toggles a product in the user's favorites list.
+ */
+export async function toggleFavorite(
+  name: string,
+  token: string,
+): Promise<{ action: 'added' | 'removed'; name: string }> {
+  const response = await request
+    .post(`${rootURL}/favorites`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({ name })
+  return response.body
+}
