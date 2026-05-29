@@ -87,3 +87,35 @@ function deg2rad(deg: number) {
 export async function deleteProductById(id: number): Promise<number> {
   return db('products').where('id', id).delete()
 }
+
+/**
+ * Fetches all favorited product names for a specific user.
+ */
+export async function getFavorites(userId: string): Promise<{ product_name: string }[]> {
+  return db('favorites')
+    .where('user_id', userId)
+    .select('product_name')
+    .orderBy('created_at', 'desc')
+}
+
+/**
+ * Adds a product to the user's favorites.
+ * Uses a raw insert or simple check to handle unique constraint gracefully if needed, 
+ * but here we assume the unique constraint will handle duplicates.
+ */
+export async function addFavorite(userId: string, productName: string): Promise<void> {
+  await db('favorites').insert({
+    user_id: userId,
+    product_name: productName,
+  })
+}
+
+/**
+ * Removes a product from the user's favorites.
+ */
+export async function removeFavorite(userId: string, productName: string): Promise<void> {
+  await db('favorites')
+    .where('user_id', userId)
+    .andWhere('product_name', productName)
+    .delete()
+}
