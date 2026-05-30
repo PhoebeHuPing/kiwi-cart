@@ -12,11 +12,11 @@ function DeveloperProfile() {
           <div className="absolute -bottom-20 left-16">
             <div className="w-40 h-40 rounded-[2.5rem] bg-white p-3 shadow-2xl border-4 border-white overflow-hidden">
               <div className="w-full h-full bg-gray-100 rounded-[2rem] flex items-center justify-center overflow-hidden">
-                {isAuthenticated && user?.picture ? (
-                  <img src={user.picture} alt={user.name} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-7xl">👨‍💻</span>
-                )}
+                <img 
+                  src="/images/phoebe.jpg" 
+                  alt="Phoebe" 
+                  className="w-full h-full object-cover scale-105" 
+                />
               </div>
             </div>
           </div>
@@ -26,10 +26,10 @@ function DeveloperProfile() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
             <div>
               <h2 className="text-5xl font-black text-kiwi-dark tracking-tighter">
-                {isAuthenticated ? (user?.nickname || user?.name) : 'Phoebe'}
+                Phoebe
               </h2>
               <p className="text-kiwi font-black text-2xl mt-2">
-                {isAuthenticated ? 'Authenticated Kiwi Enthusiast' : 'Full-Stack Developer & KiwiCart Creator'}
+                Full-Stack Developer & KiwiCart Creator
               </p>
             </div>
             <div className="flex gap-4">
