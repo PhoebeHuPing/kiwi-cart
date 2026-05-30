@@ -115,12 +115,15 @@ function DeveloperProfile() {
                 </ul>
               </div>
 
-              <div className="bg-price/5 rounded-[2rem] p-10 border border-price/10">
-                <h4 className="text-price font-black text-sm uppercase tracking-[0.2em] mb-6">Contact</h4>
+              <div className="bg-kiwi/5 rounded-[2rem] p-10 border border-kiwi/10">
+                <h4 className="text-kiwi font-black text-sm uppercase tracking-[0.2em] mb-6">Contact</h4>
                 <p className="text-lg text-gray-700 mb-6 font-bold leading-tight">Interested in collaborating?</p>
-                <button className="w-full bg-price text-white py-5 rounded-2xl font-black text-lg hover:scale-[1.02] active:scale-[0.98] transition-all border-none cursor-pointer shadow-xl shadow-price/20">
-                  SEND MESSAGE
-                </button>
+                <a 
+                  href="mailto:phoebe.ping.hu@gmail.com?subject=Inquiry from KiwiCart"
+                  className="group block w-full bg-kiwi text-white py-5 rounded-2xl font-black text-lg hover:scale-[1.02] active:scale-[0.98] transition-all border-none cursor-pointer shadow-xl shadow-kiwi/20 text-center no-underline flex items-center justify-center gap-3"
+                >
+                  Say Hi! <span className="text-2xl group-hover:rotate-12 transition-transform inline-block">👋</span>
+                </a>
               </div>
             </div>
           </div>
