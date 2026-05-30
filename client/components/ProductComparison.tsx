@@ -264,9 +264,9 @@ function ProductComparison() {
           ></div>
         )}
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-12 items-start">
-          {/* Main Comparison List */}
-          <div className="xl:col-span-3 space-y-8">
+        <div className="flex flex-col xl:flex-row gap-12 items-start">
+          {/* Main Comparison List - Now in a flexible container to maximize width */}
+          <div className="flex-1 space-y-8 w-full">
             <h2 className="text-3xl font-black text-kiwi-dark mb-6 flex items-center gap-3">
               {debouncedSearchTerm ? (
                 <>
@@ -292,7 +292,7 @@ function ProductComparison() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {groupedProducts?.map(
                 (group: GroupedProduct, groupIdx: number) => {
                   const isExpanded = expandedIndex === groupIdx
@@ -335,11 +335,18 @@ function ProductComparison() {
                           <h3 className="text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2">
                             {group.product_name}
                           </h3>
-                          <div className="flex items-center gap-2 mb-4">
-                            <img src={bestOption.logo_url} alt="" className="w-4 h-4 object-contain opacity-70" />
-                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                              Best at {bestOption.supermarket_name}
-                            </span>
+                          <div className="flex items-center gap-3 mb-4 bg-gray-50/50 p-2 rounded-xl border border-gray-100/50">
+                            <div className="w-10 h-10 bg-white rounded-lg p-1.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+                              <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-black text-kiwi uppercase tracking-[0.15em] leading-none mb-1">
+                                Best Price At
+                              </span>
+                              <span className="text-sm font-bold text-gray-700 leading-none">
+                                {bestOption.supermarket_name}
+                              </span>
+                            </div>
                           </div>
                         </div>
 
@@ -470,8 +477,8 @@ function ProductComparison() {
             </div>
           </div>
 
-          {/* Sticky Sidebar */}
-          <div className="lg:sticky lg:top-8 space-y-6">
+          {/* Sticky Sidebar - Now with a fixed width on XL screens to give more room to cards */}
+          <div className="xl:w-80 space-y-6 flex-shrink-0">
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
               <h3 className="text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
                 <span className="text-2xl" aria-hidden="true">🗺️</span> Nearby Stores
