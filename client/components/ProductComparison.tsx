@@ -238,15 +238,15 @@ function ProductComparison() {
               )}
             </div>
 
-            {/* Trending Categories Quick Tags */}
-            <div className="flex flex-wrap gap-4">
+            {/* Trending Categories Quick Tags - Optimized for Mobile */}
+            <div className="flex flex-nowrap md:flex-wrap gap-2 md:gap-4 overflow-x-auto pb-2 md:pb-0 scrollbar-hide -mx-2 px-2 md:mx-0 md:px-0">
               {trendingCategories.map((cat) => (
                 <button
                   key={cat.name}
                   onClick={() => setSearchTerm(cat.name)}
-                  className="px-6 py-3 bg-white rounded-2xl text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105"
+                  className="px-4 py-2 md:px-6 md:py-3 bg-white rounded-xl md:rounded-2xl text-sm md:text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105 whitespace-nowrap flex-shrink-0"
                 >
-                  <span className="text-xl">{cat.icon}</span>
+                  <span className="text-lg md:text-xl">{cat.icon}</span>
                   {cat.name}
                 </button>
               ))}
@@ -264,9 +264,9 @@ function ProductComparison() {
           ></div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-          {/* Main Comparison List */}
-          <div className="lg:col-span-2 space-y-8">
+        <div className="flex flex-col xl:flex-row gap-12 items-start">
+          {/* Main Comparison List - Now in a flexible container to maximize width */}
+          <div className="flex-1 space-y-8 w-full">
             <h2 className="text-3xl font-black text-kiwi-dark mb-6 flex items-center gap-3">
               {debouncedSearchTerm ? (
                 <>
@@ -292,7 +292,7 @@ function ProductComparison() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {groupedProducts?.map(
                 (group: GroupedProduct, groupIdx: number) => {
                   const isExpanded = expandedIndex === groupIdx
@@ -335,11 +335,18 @@ function ProductComparison() {
                           <h3 className="text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2">
                             {group.product_name}
                           </h3>
-                          <div className="flex items-center gap-2 mb-4">
-                            <img src={bestOption.logo_url} alt="" className="w-4 h-4 object-contain opacity-70" />
-                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                              Best at {bestOption.supermarket_name}
-                            </span>
+                          <div className="flex items-center gap-3 mb-4 bg-gray-50/50 p-2 rounded-xl border border-gray-100/50">
+                            <div className="w-10 h-10 bg-white rounded-lg p-1.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+                              <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-black text-kiwi uppercase tracking-[0.15em] leading-none mb-1">
+                                Best Price At
+                              </span>
+                              <span className="text-sm font-bold text-gray-700 leading-none">
+                                {bestOption.supermarket_name}
+                              </span>
+                            </div>
                           </div>
                         </div>
 
@@ -396,29 +403,54 @@ function ProductComparison() {
                         </div>
                       </div>
 
-                      {/* Expanded Pricing Table (Overlay/Slide-down style) */}
+                      {/* Expanded Pricing Table - High Legibility & Responsive Fix */}
                       {isExpanded && (
-                        <div className="bg-gray-50/80 border-t border-gray-100 p-4 space-y-3 animate-in fade-in slide-in-from-top-2">
+                        <div className="bg-gray-50/80 border-t border-gray-100 p-4 sm:p-6 space-y-4 animate-in fade-in slide-in-from-top-2">
+                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">
+                            Available Store Prices
+                          </p>
                           {group.options.map((option, optIdx) => (
                             <div
                               key={optIdx}
-                              className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-100 shadow-sm"
+                              className={`flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 sm:p-5 rounded-2xl border transition-all gap-4 ${
+                                optIdx === 0 
+                                  ? 'border-kiwi/30 shadow-md ring-1 ring-kiwi/5' 
+                                  : 'border-gray-100 shadow-sm'
+                              }`}
                             >
-                              <div className="flex items-center gap-3">
-                                <img src={option.logo_url} alt="" className="w-8 h-8 object-contain" />
-                                <span className="text-xs font-bold text-kiwi-dark truncate max-w-[80px]">
-                                  {option.supermarket_name}
-                                </span>
+                              <div className="flex items-center gap-4 min-w-0">
+                                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded-xl p-2 flex items-center justify-center flex-shrink-0">
+                                  <img src={option.logo_url} alt="" className="w-full h-full object-contain" />
+                                </div>
+                                <div className="min-w-0">
+                                  <span className="block font-black text-base sm:text-lg text-kiwi-dark leading-tight truncate">
+                                    {option.supermarket_name}
+                                  </span>
+                                  <span className="text-[11px] sm:text-sm text-gray-500 font-medium flex items-center gap-1 mt-0.5 truncate">
+                                    📍 {option.address.split(',')[0]}
+                                  </span>
+                                </div>
                               </div>
-                              <div className="text-right">
-                                <span className="font-black text-sm text-kiwi-dark">
-                                  ${option.price.toFixed(2)}
-                                </span>
-                                {optIdx === 0 && (
-                                  <p className="text-[8px] text-kiwi font-black uppercase tracking-widest">
-                                    Cheapest
-                                  </p>
-                                )}
+                              
+                              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0">
+                                <span className="sm:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest">Price</span>
+                                <div className="text-right">
+                                  <div className="flex flex-col items-end">
+                                    <span className="font-black text-xl sm:text-2xl text-kiwi-dark tracking-tighter">
+                                      ${option.price.toFixed(2)}
+                                    </span>
+                                    {option.unit_price && (
+                                      <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-tighter -mt-1">
+                                        {option.unit_price}
+                                      </span>
+                                    )}
+                                    {optIdx === 0 && (
+                                      <span className="mt-1 px-2 py-0.5 bg-kiwi text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded">
+                                        Cheapest
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           ))}
@@ -445,8 +477,8 @@ function ProductComparison() {
             </div>
           </div>
 
-          {/* Sticky Sidebar */}
-          <div className="lg:sticky lg:top-8 space-y-6">
+          {/* Sticky Sidebar - Now with a fixed width on XL screens to give more room to cards */}
+          <div className="xl:w-80 space-y-6 flex-shrink-0">
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
               <h3 className="text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
                 <span className="text-2xl" aria-hidden="true">🗺️</span> Nearby Stores
