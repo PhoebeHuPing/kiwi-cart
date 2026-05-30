@@ -19,12 +19,24 @@ function App() {
       <Toaster position="bottom-center" />
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-6">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 no-underline group">
-            <span className="text-4xl group-hover:scale-110 transition-transform" aria-hidden="true">🥝</span>
-            <span className="text-2xl font-black tracking-tighter text-kiwi-dark">
-              KiwiCart
-            </span>
-          </Link>
+          <div className="flex flex-col">
+            <Link to="/" className="flex items-center gap-3 no-underline group">
+              <span className="text-4xl group-hover:scale-110 transition-transform" aria-hidden="true">🥝</span>
+              <span className="text-2xl font-black tracking-tighter text-kiwi-dark">
+                KiwiCart
+              </span>
+            </Link>
+            <Link 
+              to="/developer" 
+              className="group/dev relative inline-flex items-center no-underline ml-[52px] -mt-1 w-fit"
+            >
+              <span className="text-xs font-black text-gray-500 uppercase tracking-[0.15em] transition-all duration-300 group-hover/dev:text-kiwi group-hover/dev:scale-105">
+                by phoebe
+              </span>
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-kiwi transition-all duration-300 group-hover/dev:w-full opacity-50"></span>
+              <span className="absolute inset-x-[-8px] inset-y-[-4px] bg-kiwi/0 rounded-lg transition-all duration-300 group-hover/dev:bg-kiwi/5 -z-10"></span>
+            </Link>
+          </div>
 
           <div className="flex items-center gap-6">
             {isAuthenticated && (
@@ -37,15 +49,6 @@ function App() {
                 My Kitchen
               </Link>
             )}
-
-            <Link 
-              to="/developer" 
-              className={`text-base font-bold transition-colors no-underline hidden md:block ${
-                location.pathname === '/developer' ? 'text-kiwi' : 'text-gray-600 hover:text-kiwi'
-              }`}
-            >
-              Meet the Dev
-            </Link>
 
             <div className="h-8 w-px bg-gray-100 hidden md:block" />
 
