@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
 import { useAuth0 } from '@auth0/auth0-react'
+import toast from 'react-hot-toast'
 import { getComparePrices, getFavorites, toggleFavorite } from '../apis/products'
 import StoreMap from './StoreMap'
 import { PriceComparisonData } from '../../models/products'
@@ -14,7 +15,7 @@ interface GroupedProduct {
 }
 
 function ProductComparison() {
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0()
   const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
@@ -54,6 +55,38 @@ function ProductComparison() {
   })
 
   const isFavorite = (name: string) => favorites.includes(name)
+
+  const handleFavoriteClick = (e: React.MouseEvent, productName: string) => {
+    e.stopPropagation()
+    if (!isAuthenticated) {
+      toast((t) => (
+        <span className="flex items-center gap-3 font-bold text-kiwi-dark">
+          Please sign in to save favorites!
+          <button
+            onClick={() => {
+              toast.dismiss(t.id)
+              loginWithRedirect()
+            }}
+            className="bg-kiwi text-white px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider border-none cursor-pointer hover:bg-kiwi-dark transition-colors"
+          >
+            Sign In
+          </button>
+        </span>
+      ), {
+        duration: 4000,
+        icon: '🔑',
+        style: {
+          borderRadius: '16px',
+          background: '#fff',
+          color: '#333',
+          border: '2px solid #e2e8f0',
+          padding: '12px 20px',
+        },
+      })
+      return
+    }
+    favoriteMutation.mutate(productName)
+  }
 
   // Group the flat array of products by their name and ensure one lowest price per supermarket.
   // This prevents multiple results for the same product at different locations of the same brand.
@@ -302,22 +335,17 @@ function ProductComparison() {
                             </p>
                             
                             <div className="flex items-center gap-2">
-                              {isAuthenticated && (
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    favoriteMutation.mutate(group.product_name)
-                                  }}
-                                  className={`w-8 h-8 flex items-center justify-center rounded-full transition-all border-none cursor-pointer text-xl ${
-                                    isFavorite(group.product_name)
-                                      ? 'text-red-500 bg-red-50'
-                                      : 'text-gray-300 bg-gray-50 hover:text-red-300'
-                                  }`}
-                                  title={isFavorite(group.product_name) ? "Remove from Kitchen" : "Add to Kitchen"}
-                                >
-                                  {isFavorite(group.product_name) ? '❤️' : '🤍'}
-                                </button>
-                              )}
+                              <button
+                                onClick={(e) => handleFavoriteClick(e, group.product_name)}
+                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all border-none cursor-pointer text-xl ${
+                                  isAuthenticated && isFavorite(group.product_name)
+                                    ? 'text-red-500 bg-red-50'
+                                    : 'text-gray-300 bg-gray-50 hover:text-red-300'
+                                }`}
+                                title={isAuthenticated && isFavorite(group.product_name) ? "Remove from Kitchen" : "Add to Kitchen"}
+                              >
+                                {isAuthenticated && isFavorite(group.product_name) ? '❤️' : '🤍'}
+                              </button>
 
                               <button
                                 onClick={(e) => {

@@ -1,5 +1,6 @@
 import { Outlet, Link, useLocation } from 'react-router'
 import { useAuth0 } from '@auth0/auth0-react'
+import { Toaster } from 'react-hot-toast'
 import { useBasket } from '../contexts/BasketContext'
 import BasketDrawer from './BasketDrawer'
 
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <>
+      <Toaster position="bottom-center" />
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-6">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 no-underline group">
