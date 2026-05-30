@@ -266,7 +266,7 @@ function ProductComparison() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
           {/* Main Comparison List */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
             <h2 className="text-3xl font-black text-kiwi-dark mb-6 flex items-center gap-3">
               {debouncedSearchTerm ? (
                 <>
@@ -292,7 +292,7 @@ function ProductComparison() {
               </div>
             )}
 
-            <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {groupedProducts?.map(
                 (group: GroupedProduct, groupIdx: number) => {
                   const isExpanded = expandedIndex === groupIdx
@@ -301,157 +301,127 @@ function ProductComparison() {
                   return (
                     <div
                       key={groupIdx}
-                      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all"
+                      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 group"
                     >
-                      {/* Product Summary Header (Click to expand details) */}
-                      <div
-                        role="button"
-                        tabIndex={0}
-                        onClick={() =>
-                          setExpandedIndex(isExpanded ? null : groupIdx)
-                        }
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') {
-                            setExpandedIndex(isExpanded ? null : groupIdx)
-                          }
-                        }}
-                        className="w-full flex flex-col sm:flex-row items-center gap-10 p-8 text-left hover:bg-gray-50/50 transition-colors cursor-pointer"
-                      >
-                        <div className="w-48 h-48 flex-shrink-0 bg-gray-50 rounded-3xl p-6 shadow-inner">
-                          <img
-                            src={group.image_url}
-                            alt=""
-                            className="w-full h-full object-contain mix-blend-multiply"
-                          />
+                      {/* Flowbite-style Image Header */}
+                      <div className="relative aspect-square bg-gray-50/50 p-8 flex items-center justify-center overflow-hidden">
+                        <img
+                          src={group.image_url}
+                          alt={group.product_name}
+                          className="w-full h-full object-contain mix-blend-multiply group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute top-4 left-4 flex flex-col gap-2">
+                          <button
+                            onClick={(e) => handleFavoriteClick(e, group.product_name)}
+                            className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all border-none cursor-pointer text-xl shadow-sm ${
+                              isAuthenticated && isFavorite(group.product_name)
+                                ? 'text-red-500 bg-white'
+                                : 'text-gray-300 bg-white/80 hover:text-red-300'
+                            }`}
+                          >
+                            {isAuthenticated && isFavorite(group.product_name) ? '❤️' : '🤍'}
+                          </button>
                         </div>
+                        {group.options.length > 1 && (
+                          <div className="absolute top-4 right-4 bg-kiwi/90 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-sm">
+                            {group.options.length} Stores
+                          </div>
+                        )}
+                      </div>
 
+                      {/* Content Area */}
+                      <div className="p-6 flex flex-col flex-1">
                         <div className="flex-1">
-                          <h3 className="text-2xl font-black text-kiwi-dark tracking-tight">
+                          <h3 className="text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2">
                             {group.product_name}
                           </h3>
-                          <div className="flex items-center gap-4 mt-2">
-                            <p className="text-gray-500 font-medium">
-                              Available at {group.options.length} supermarkets
-                            </p>
-                            
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={(e) => handleFavoriteClick(e, group.product_name)}
-                                className={`w-8 h-8 flex items-center justify-center rounded-full transition-all border-none cursor-pointer text-xl ${
-                                  isAuthenticated && isFavorite(group.product_name)
-                                    ? 'text-red-500 bg-red-50'
-                                    : 'text-gray-300 bg-gray-50 hover:text-red-300'
-                                }`}
-                                title={isAuthenticated && isFavorite(group.product_name) ? "Remove from Kitchen" : "Add to Kitchen"}
-                              >
-                                {isAuthenticated && isFavorite(group.product_name) ? '❤️' : '🤍'}
-                              </button>
-
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  if (isInBasket(group.product_name)) {
-                                    removeFromBasket(group.product_name)
-                                  } else {
-                                    addToBasket({
-                                      name: group.product_name,
-                                      image_url: group.image_url,
-                                    })
-                                  }
-                                }}
-                                className={`text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full border transition-all ${
-                                  isInBasket(group.product_name)
-                                    ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100'
-                                    : 'bg-kiwi/10 text-kiwi border-kiwi/20 hover:bg-kiwi/20'
-                                }`}
-                              >
-                                {isInBasket(group.product_name)
-                                  ? '✕ Remove'
-                                  : '+ Add to Basket'}
-                              </button>
-                            </div>
+                          <div className="flex items-center gap-2 mb-4">
+                            <img src={bestOption.logo_url} alt="" className="w-4 h-4 object-contain opacity-70" />
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                              Best at {bestOption.supermarket_name}
+                            </span>
                           </div>
                         </div>
 
-                        <div className="flex flex-col items-center sm:items-end gap-0">
-                          <span className="text-sm font-black text-gray-400 uppercase tracking-widest">
-                            Best Price
-                          </span>
-                          <span className="text-4xl font-black text-price tracking-tighter">
-                            ${bestOption.price.toFixed(2)}
-                          </span>
-                          {bestOption.unit_price && (
-                            <span className="text-xs font-black text-kiwi uppercase tracking-widest -mt-1 mb-2">
-                              {bestOption.unit_price}
-                            </span>
-                          )}
-                          <div
-                            className={`text-kiwi transition-transform duration-300 ${
-                              isExpanded ? 'rotate-180' : ''
-                            }`}
-                            aria-hidden="true"
-                          >
-                            ▼
+                        {/* Pricing & Actions */}
+                        <div className="mt-auto space-y-4">
+                          <div className="flex items-end justify-between">
+                            <div>
+                              <p className="text-sm font-black text-gray-400 uppercase tracking-widest leading-none mb-1">
+                                From
+                              </p>
+                              <div className="flex items-center gap-1">
+                                <span className="text-3xl font-black text-price tracking-tighter">
+                                  ${bestOption.price.toFixed(2)}
+                                </span>
+                                {bestOption.unit_price && (
+                                  <span className="text-[10px] font-black text-kiwi uppercase tracking-tighter">
+                                    {bestOption.unit_price}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                if (isInBasket(group.product_name)) {
+                                  removeFromBasket(group.product_name)
+                                } else {
+                                  addToBasket({
+                                    name: group.product_name,
+                                    image_url: group.image_url,
+                                  })
+                                }
+                              }}
+                              className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-all border shadow-sm ${
+                                isInBasket(group.product_name)
+                                  ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100'
+                                  : 'bg-kiwi text-white border-kiwi shadow-kiwi/20 hover:bg-kiwi-dark'
+                              }`}
+                              title={isInBasket(group.product_name) ? "Remove" : "Add to Basket"}
+                            >
+                              {isInBasket(group.product_name) ? '✕' : '🛒'}
+                            </button>
                           </div>
+
+                          <button
+                            onClick={() => setExpandedIndex(isExpanded ? null : groupIdx)}
+                            className="w-full py-3 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-sm font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 border-none cursor-pointer"
+                          >
+                            {isExpanded ? 'Close Prices' : 'View All Prices'}
+                            <span className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
+                              ▼
+                            </span>
+                          </button>
                         </div>
                       </div>
 
-                      {/* Expanded Comparison Details */}
+                      {/* Expanded Pricing Table (Overlay/Slide-down style) */}
                       {isExpanded && (
-                        <div className="bg-gray-50/50 border-t border-gray-100 p-10 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                          <p className="text-sm font-black text-gray-400 uppercase tracking-[0.2em] mb-4 ml-1">
-                            Live Price Comparison
-                          </p>
-
-                          {group.options.map(
-                            (option: PriceComparisonData, optIdx: number) => (
-                              <div
-                                key={optIdx}
-                                className="flex items-center justify-between bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:border-kiwi/30 transition-all"
-                              >
-                                <div className="flex items-center gap-10">
-                                  {/* Supermarket Logo */}
-                                  <div className="w-24 h-24 flex-shrink-0 flex items-center justify-center p-2">
-                                    <img
-                                      src={option.logo_url}
-                                      alt=""
-                                      className="w-full h-full object-contain filter drop-shadow-sm"
-                                    />
-                                  </div>
-
-                                  <div>
-                                    <p className="font-black text-2xl text-kiwi-dark tracking-tight">
-                                      {option.supermarket_name}
-                                    </p>
-                                    <p className="text-base text-gray-500 mt-1 flex items-center gap-2">
-                                      <span className="text-xl" aria-hidden="true">
-                                        📍
-                                      </span>{' '}
-                                      {option.address}
-                                    </p>
-                                  </div>
-                                </div>
-
-                                <div className="flex items-center gap-10">
-                                  <div className="text-right">
-                                    <span className="text-4xl font-black text-kiwi-dark tracking-tighter">
-                                      ${option.price.toFixed(2)}
-                                    </span>
-                                    {option.unit_price && (
-                                      <p className="text-sm text-gray-400 font-black uppercase tracking-widest -mt-1">
-                                        {option.unit_price}
-                                      </p>
-                                    )}
-                                    {optIdx === 0 && (
-                                      <p className="text-sm text-kiwi font-black uppercase tracking-widest mt-1">
-                                        Best Choice
-                                      </p>
-                                    )}
-                                  </div>
-                                </div>
+                        <div className="bg-gray-50/80 border-t border-gray-100 p-4 space-y-3 animate-in fade-in slide-in-from-top-2">
+                          {group.options.map((option, optIdx) => (
+                            <div
+                              key={optIdx}
+                              className="flex items-center justify-between bg-white p-3 rounded-xl border border-gray-100 shadow-sm"
+                            >
+                              <div className="flex items-center gap-3">
+                                <img src={option.logo_url} alt="" className="w-8 h-8 object-contain" />
+                                <span className="text-xs font-bold text-kiwi-dark truncate max-w-[80px]">
+                                  {option.supermarket_name}
+                                </span>
                               </div>
-                            ),
-                          )}
+                              <div className="text-right">
+                                <span className="font-black text-sm text-kiwi-dark">
+                                  ${option.price.toFixed(2)}
+                                </span>
+                                {optIdx === 0 && (
+                                  <p className="text-[8px] text-kiwi font-black uppercase tracking-widest">
+                                    Cheapest
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
@@ -461,7 +431,7 @@ function ProductComparison() {
 
               {/* Empty state when no results match the search */}
               {!isLoading && products?.length === 0 && debouncedSearchTerm && (
-                <div className="bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
+                <div className="col-span-full bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
                   <div className="text-5xl mb-4 text-center" aria-hidden="true">🥝</div>
                   <h3 className="text-xl font-bold text-kiwi-dark">
                     No products found
@@ -475,7 +445,7 @@ function ProductComparison() {
             </div>
           </div>
 
-          {/* Sticky Map and Sidebar Widgets */}
+          {/* Sticky Sidebar */}
           <div className="lg:sticky lg:top-8 space-y-6">
             <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
               <h3 className="text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
@@ -486,46 +456,65 @@ function ProductComparison() {
               </div>
             </div>
 
-            {/* AI Insights Widget (Placeholder) */}
+            {/* AI Insights Widget */}
             <div className="bg-kiwi/5 rounded-3xl p-8 border border-kiwi/10">
-              <h4 className="text-kiwi font-black text-sm uppercase tracking-widest mb-4">
-                Kiwi Insight
+              <h4 className="text-kiwi font-black text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
+                <span>🥝</span> Kiwi Insight
               </h4>
               <p className="text-lg text-kiwi-dark/80 italic leading-relaxed">
                 Milk prices in Auckland CBD have dropped by 5% this week. Keep
                 an eye on New World specials!
               </p>
             </div>
+
+            {/* Sidebar Basket Widget */}
+            {basket.length > 0 && (
+              <div className="bg-kiwi-dark rounded-3xl p-8 text-white shadow-xl shadow-kiwi-dark/20 animate-in fade-in slide-in-from-right-4">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-kiwi p-3 rounded-2xl text-2xl">
+                    🛒
+                  </div>
+                  <div>
+                    <h4 className="font-black text-xl leading-none">Your Basket</h4>
+                    <p className="text-kiwi-light text-xs font-bold uppercase tracking-widest mt-1">
+                      {basket.reduce((sum, item) => sum + item.quantity, 0)} Items Selected
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4 mb-8">
+                  {basket.slice(0, 3).map((item, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-white/10 rounded-lg p-1">
+                        <img src={item.image_url} alt="" className="w-full h-full object-contain mix-blend-screen" />
+                      </div>
+                      <span className="text-sm font-bold truncate flex-1">{item.name}</span>
+                      <span className="text-xs font-black text-kiwi">×{item.quantity}</span>
+                    </div>
+                  ))}
+                  {basket.length > 3 && (
+                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest text-center">
+                      + {basket.length - 3} more items
+                    </p>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => setIsDrawerOpen(true)}
+                  className="w-full py-4 bg-kiwi text-white rounded-2xl font-black text-base shadow-lg hover:bg-kiwi-dark border border-kiwi-light/20 transition-all cursor-pointer"
+                >
+                  Compare Total Prices
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Floating Basket Widget */}
-      {basket.length > 0 && (
-        <div className="fixed bottom-8 right-8 z-50 animate-in fade-in slide-in-from-bottom-4">
-          <button
-            onClick={() => setIsDrawerOpen(true)}
-            className="bg-kiwi-dark text-white p-4 rounded-2xl shadow-2xl flex items-center gap-3 hover:scale-105 transition-all group border-none cursor-pointer"
-          >
-            <div className="relative">
-              <div className="bg-kiwi p-2 rounded-lg group-hover:rotate-12 transition-transform">
-                🛒
-              </div>
-              <span className="absolute -top-2 -right-2 bg-price text-white text-xs font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-kiwi-dark">
-                {basket.reduce((sum, item) => sum + item.quantity, 0)}
-              </span>
-            </div>
-            <div className="text-left">
-              <p className="font-black text-sm">Compare Basket</p>
-              <p className="text-xs font-bold text-white/80 uppercase tracking-widest">
-                Calculate Best Total
-              </p>
-            </div>
-          </button>
-        </div>
-      )}
+      {/* Floating Basket Widget (Removed as per request, now in sidebar) */}
     </div>
   )
 }
+
 
 export default ProductComparison
