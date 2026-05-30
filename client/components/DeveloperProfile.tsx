@@ -32,18 +32,26 @@ function DeveloperProfile() {
                 Full-Stack Developer & KiwiCart Creator
               </p>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
               <a 
-                href="https://github.com" 
+                href="https://github.com/PhoebeHuPing" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="bg-gray-900 text-white px-8 py-4 rounded-2xl font-black text-base hover:bg-black transition-all shadow-xl border-none"
+                className="bg-gray-900 text-white px-8 py-4 rounded-2xl font-black text-base hover:bg-black transition-all shadow-xl border-none flex items-center gap-2 no-underline"
               >
                 GitHub
               </a>
+              <a 
+                href="https://www.linkedin.com/in/phoebe-hu-ping/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="bg-[#0077b5] text-white px-8 py-4 rounded-2xl font-black text-base hover:brightness-110 transition-all shadow-xl border-none flex items-center gap-2 no-underline"
+              >
+                LinkedIn
+              </a>
               <Link 
                 to="/"
-                className="bg-kiwi-light text-kiwi-dark px-8 py-4 rounded-2xl font-black text-base hover:bg-kiwi/20 transition-all border-none"
+                className="bg-kiwi-light text-kiwi-dark px-8 py-4 rounded-2xl font-black text-base hover:bg-kiwi/20 transition-all border-none no-underline"
               >
                 Back to Search
               </Link>
