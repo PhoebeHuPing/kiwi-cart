@@ -238,15 +238,15 @@ function ProductComparison() {
               )}
             </div>
 
-            {/* Trending Categories Quick Tags */}
-            <div className="flex flex-wrap gap-4">
+            {/* Trending Categories Quick Tags - Optimized for Mobile */}
+            <div className="flex flex-nowrap md:flex-wrap gap-2 md:gap-4 overflow-x-auto pb-2 md:pb-0 scrollbar-hide -mx-2 px-2 md:mx-0 md:px-0">
               {trendingCategories.map((cat) => (
                 <button
                   key={cat.name}
                   onClick={() => setSearchTerm(cat.name)}
-                  className="px-6 py-3 bg-white rounded-2xl text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105"
+                  className="px-4 py-2 md:px-6 md:py-3 bg-white rounded-xl md:rounded-2xl text-sm md:text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105 whitespace-nowrap flex-shrink-0"
                 >
-                  <span className="text-xl">{cat.icon}</span>
+                  <span className="text-lg md:text-xl">{cat.icon}</span>
                   {cat.name}
                 </button>
               ))}
