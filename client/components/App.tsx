@@ -18,7 +18,7 @@ function App() {
     <>
       <Toaster position="bottom-center" />
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 no-underline group">
             <span className="text-4xl group-hover:scale-110 transition-transform" aria-hidden="true">🥝</span>
             <span className="text-2xl font-black tracking-tighter text-kiwi-dark">
@@ -110,7 +110,7 @@ function App() {
             <div className="absolute inset-0 bg-gradient-to-r from-kiwi via-kiwi/60 to-transparent" />
           </div>
 
-          <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="relative z-10 max-w-[1440px] mx-auto">
             <div className="inline-block bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-[0.2em] mb-6 border border-white/30">
               🇳🇿 NZ&apos;s Community Price Tracker
             </div>
@@ -143,7 +143,7 @@ function App() {
           </div>
         </header>
       )}
-      <main className="max-w-6xl mx-auto py-12 px-6 md:px-12">
+      <main className="max-w-[1440px] mx-auto py-12 px-6 md:px-12">
         <Outlet />
       </main>
 
