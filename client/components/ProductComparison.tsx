@@ -355,15 +355,15 @@ function ProductComparison() {
                           <h3 className="text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2">
                             {group.product_name}
                           </h3>
-                          <div className="flex items-center gap-3 mb-4 bg-gray-50/50 p-2 rounded-xl border border-gray-100/50">
-                            <div className="w-10 h-10 bg-white rounded-lg p-1.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+                          <div className="flex items-center gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
+                            <div className="w-20 h-20 bg-white rounded-xl p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
                               <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-[10px] font-black text-kiwi uppercase tracking-[0.15em] leading-none mb-1">
+                              <span className="text-xs font-black text-kiwi uppercase tracking-[0.2em] leading-none mb-2">
                                 Best Price At
                               </span>
-                              <span className="text-sm font-bold text-gray-700 leading-none">
+                              <span className="text-lg font-black text-kiwi-dark leading-tight">
                                 {bestOption.supermarket_name}
                               </span>
                             </div>
