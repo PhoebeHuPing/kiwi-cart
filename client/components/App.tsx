@@ -16,7 +16,7 @@ function App() {
 
   return (
     <>
-      <Toaster position="bottom-center" />
+      <Toaster position="top-center" />
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-6">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">

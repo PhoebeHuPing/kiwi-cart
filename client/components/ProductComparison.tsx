@@ -49,8 +49,27 @@ function ProductComparison() {
       const token = await getAccessTokenSilently()
       return toggleFavorite(name, token)
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] })
+      toast(
+        data.action === 'added' 
+          ? `✅ Added "${data.name}" to favorites!` 
+          : `🗑️ Removed "${data.name}" from favorites!`,
+        {
+          duration: 3000,
+          style: {
+            borderRadius: '24px',
+            background: '#333',
+            color: '#fff',
+            padding: '24px 48px',
+            fontSize: '20px',
+            fontWeight: 'bold',
+            minWidth: '600px',
+            textAlign: 'center',
+            boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.5)',
+          },
+        }
+      )
     },
   })
 
@@ -60,27 +79,28 @@ function ProductComparison() {
     e.stopPropagation()
     if (!isAuthenticated) {
       toast((t) => (
-        <span className="flex items-center gap-3 font-bold text-kiwi-dark">
-          Please sign in to save favorites!
+        <span className="flex items-center justify-between w-full font-bold text-kiwi-dark text-xl">
+          <span>Please sign in to save favorites!</span>
           <button
             onClick={() => {
               toast.dismiss(t.id)
               loginWithRedirect()
             }}
-            className="bg-kiwi text-white px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider border-none cursor-pointer hover:bg-kiwi-dark transition-colors"
+            className="bg-kiwi text-white px-8 py-3 rounded-2xl text-base font-black uppercase tracking-wider border-none cursor-pointer hover:bg-kiwi-dark hover:scale-105 transition-all shadow-lg"
           >
-            Sign In
+            Sign In Now
           </button>
         </span>
       ), {
-        duration: 4000,
-        icon: '🔑',
+        duration: 6000,
         style: {
-          borderRadius: '16px',
+          borderRadius: '32px',
           background: '#fff',
           color: '#333',
-          border: '2px solid #e2e8f0',
-          padding: '12px 20px',
+          border: '4px solid #f1f5f9',
+          padding: '32px 60px',
+          minWidth: '800px',
+          boxShadow: '0 35px 60px -15px rgb(0 0 0 / 0.3)',
         },
       })
       return
