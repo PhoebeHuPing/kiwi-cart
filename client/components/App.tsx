@@ -19,12 +19,20 @@ function App() {
       <Toaster position="bottom-center" />
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-6">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 no-underline group">
-            <span className="text-4xl group-hover:scale-110 transition-transform" aria-hidden="true">🥝</span>
-            <span className="text-2xl font-black tracking-tighter text-kiwi-dark">
-              KiwiCart
-            </span>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link to="/" className="text-4xl hover:scale-110 transition-transform no-underline" aria-label="KiwiCart Home">🥝</Link>
+            <div className="flex flex-col">
+              <Link to="/" className="text-2xl font-black tracking-tighter text-kiwi-dark no-underline leading-none">
+                KiwiCart
+              </Link>
+              <Link 
+                to="/developer" 
+                className="text-xs font-black text-kiwi hover:text-kiwi-dark hover:scale-105 transition-all no-underline mt-1 tracking-widest"
+              >
+                By Phoebe
+              </Link>
+            </div>
+          </div>
 
           <div className="flex items-center gap-6">
             {isAuthenticated && (
@@ -37,17 +45,6 @@ function App() {
                 My Kitchen
               </Link>
             )}
-
-            <Link 
-              to="/developer" 
-              className={`text-base font-bold transition-colors no-underline hidden md:block ${
-                location.pathname === '/developer' ? 'text-kiwi' : 'text-gray-600 hover:text-kiwi'
-              }`}
-            >
-              Meet the Dev
-            </Link>
-
-            <div className="h-8 w-px bg-gray-100 hidden md:block" />
 
             {isLoading ? (
               <div className="w-8 h-8 border-2 border-kiwi border-t-transparent rounded-full animate-spin" />
@@ -114,9 +111,17 @@ function App() {
             <div className="inline-block bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-[0.2em] mb-6 border border-white/30">
               🇳🇿 NZ&apos;s Community Price Tracker
             </div>
-            <h1 className="text-7xl md:text-9xl font-black tracking-tighter drop-shadow-2xl">
-              KiwiCart
-            </h1>
+            <div className="flex flex-col items-start">
+              <h1 className="text-7xl md:text-9xl font-black tracking-tighter drop-shadow-2xl leading-none">
+                KiwiCart
+              </h1>
+              <Link 
+                to="/developer" 
+                className="mt-4 text-2xl md:text-4xl font-black text-white hover:text-kiwi-light hover:scale-105 hover:underline decoration-white/30 underline-offset-8 transition-all no-underline drop-shadow-2xl"
+              >
+                By Phoebe
+              </Link>
+            </div>
             <p className="mt-8 text-2xl md:text-3xl font-bold text-kiwi-light drop-shadow-lg max-w-3xl leading-tight">
               Stop overpaying. Compare prices across{' '}
               <span className="text-white underline decoration-kiwi-light/50 underline-offset-8">
