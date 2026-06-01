@@ -3,7 +3,7 @@ import { PriceComparisonData } from '../../models/products'
 
 /**
  * Woolworths (formerly Countdown) Service
- * 
+ *
  * Note: Woolworths NZ uses a more traditional REST API than Foodstuffs.
  * It typically requires a session established via /api/v1/session.
  */
@@ -32,28 +32,36 @@ interface WoolworthsSearchResponse {
 /**
  * Fetches real-time prices from Woolworths.
  */
-export async function fetchWoolworthsPrices(searchTerm: string): Promise<PriceComparisonData[]> {
+export async function fetchWoolworthsPrices(
+  searchTerm: string,
+): Promise<PriceComparisonData[]> {
   try {
     // 1. Establish session
     // Woolworths NZ requires a session to be established via /api/v1/session
     // and maintaining cookies for subsequent requests.
     const agent = request.agent()
-    
+
     await agent
       .post('https://www.woolworths.co.nz/api/v1/session')
-      .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+      .set(
+        'User-Agent',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      )
       .set('X-Requested-With', 'OnlineShopping.WebApp')
       .send({})
 
     // 2. Search for products
     const response = await agent
       .get('https://www.woolworths.co.nz/api/v1/products')
-      .query({ 
-        target: 'search', 
+      .query({
+        target: 'search',
         search: searchTerm,
-        inStockProductsOnly: true 
+        inStockProductsOnly: true,
       })
-      .set('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+      .set(
+        'User-Agent',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      )
       .set('X-Requested-With', 'OnlineShopping.WebApp')
       .set('Accept', 'application/json')
 
@@ -61,11 +69,13 @@ export async function fetchWoolworthsPrices(searchTerm: string): Promise<PriceCo
     const items = body.products?.items || []
 
     return items
-      .filter(item => item.type === 'Product') // Filter out non-product items (like banners or ads)
+      .filter((item) => item.type === 'Product') // Filter out non-product items (like banners or ads)
       .map((p) => {
         // Use the 'big' image and boost resolution to 400x400 to match Foodstuffs UI quality
-        const highResImage = p.images?.big?.replace('w=200&h=200', 'w=400&h=400') || p.images?.small
-        
+        const highResImage =
+          p.images?.big?.replace('w=200&h=200', 'w=400&h=400') ||
+          p.images?.small
+
         return {
           product_name: p.name,
           image_url: highResImage,
