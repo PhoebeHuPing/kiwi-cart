@@ -15,7 +15,7 @@ export async function getProducts(): Promise<Product[]> {
  */
 export async function getComparePrices(
   searchTerm: string,
-): Promise<PriceComparisonData[]> {
+): Promise<(PriceComparisonData & { updated_at: string | null })[]> {
   return db('products')
     .join('prices', 'products.id', 'prices.product_id')
     .join('supermarkets', 'supermarkets.id', 'prices.supermarket_id')
@@ -28,9 +28,67 @@ export async function getComparePrices(
       'supermarkets.lat',
       'supermarkets.lng',
       'prices.price',
+      'prices.updated_at',
     )
     .where('products.name', 'like', `%${searchTerm}%`)
     .orderBy('prices.price', 'asc')
+}
+
+/**
+ * Updates or inserts a price record for a product at a specific supermarket.
+ * This is the core of our cache/community-driven data system.
+ */
+export async function upsertPrice(data: {
+  product_name: string
+  image_url: string
+  supermarket_name: string
+  price: number
+}): Promise<void> {
+  // 1. Ensure the supermarket exists (or get its ID)
+  const supermarket = await db('supermarkets')
+    .where('name', 'like', `%${data.supermarket_name}%`)
+    .first()
+  
+  if (!supermarket) {
+    console.warn(`Supermarket ${data.supermarket_name} not found in DB`)
+    return
+  }
+
+  // 2. Ensure the product exists (or create it)
+  let product = await db('products')
+    .where('name', data.product_name)
+    .first()
+  
+  if (!product) {
+    const [id] = await db('products').insert({
+      name: data.product_name,
+      image_url: data.image_url,
+      category: 'General',
+    })
+    product = { id }
+  }
+
+  // 3. Upsert the price
+  const existingPrice = await db('prices')
+    .where('product_id', product.id)
+    .andWhere('supermarket_id', supermarket.id)
+    .first()
+
+  if (existingPrice) {
+    await db('prices')
+      .where('id', existingPrice.id)
+      .update({
+        price: data.price,
+        updated_at: new Date().toISOString(),
+      })
+  } else {
+    await db('prices').insert({
+      product_id: product.id,
+      supermarket_id: supermarket.id,
+      price: data.price,
+      updated_at: new Date().toISOString(),
+    })
+  }
 }
 
 /**
