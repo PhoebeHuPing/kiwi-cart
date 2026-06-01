@@ -4,86 +4,38 @@ import { fetchPaknsavePrices } from '../services/paknsave.ts'
 import { fetchNewWorldPrices } from '../services/newworld.ts'
 import { fetchWoolworthsPrices } from '../services/woolworths.ts'
 import { checkJwt } from '../auth0.ts'
+import { calculateUnitPrice } from '../utils/price-calculator.ts'
 
 const router = express.Router()
 
 /**
- * Extracts quantity and unit from product names and calculates unit price.
- * Handles patterns like "1kg", "500g", "2L", "750ml", "12 x 330ml".
- */
-function calculateUnitPrice(name: string, price: number): string | null {
-  if (!price || price <= 0) return null
-
-  const normalized = name.toLowerCase()
-
-  // Case 1: Multi-packs (e.g., "12 x 330ml")
-  const multipackMatch = normalized.match(/(\d+)\s*x\s*(\d+(?:\.\d+)?)\s*(ml|l|g|kg)/)
-  if (multipackMatch) {
-    const packCount = parseInt(multipackMatch[1])
-    const qty = parseFloat(multipackMatch[2])
-    const unit = multipackMatch[3]
-    const totalQty = packCount * qty
-    return formatPriceByUnit(totalQty, unit, price)
-  }
-
-  // Case 2: Standard single units (e.g., "500g", "2L", "1.5kg")
-  const singleMatch = normalized.match(/(\d+(?:\.\d+)?)\s*(ml|l|g|kg)/)
-  if (singleMatch) {
-    const qty = parseFloat(singleMatch[1])
-    const unit = singleMatch[2]
-    return formatPriceByUnit(qty, unit, price)
-  }
-
-  return null
-}
-
-/**
- * Formats the price based on quantity and unit (e.g., /100g, /kg, /100ml, /L).
- * Standardizes units for consistent price comparison.
- */
-function formatPriceByUnit(
-  qty: number,
-  unit: string,
-  totalPrice: number,
-): string | null {
-  if (qty <= 0) return null
-
-  switch (unit) {
-    case 'g': {
-      // Standardize to price per 100g
-      const pricePer100g = (totalPrice / qty) * 100
-      return `$${pricePer100g.toFixed(2)}/100g`
-    }
-    case 'kg': {
-      // Standardize to price per kg
-      const pricePerKg = totalPrice / qty
-      return `$${pricePerKg.toFixed(2)}/kg`
-    }
-    case 'ml': {
-      // Standardize to price per 100ml
-      const pricePer100ml = (totalPrice / qty) * 100
-      return `$${pricePer100ml.toFixed(2)}/100ml`
-    }
-    case 'l': {
-      // Standardize to price per L
-      const pricePerL = totalPrice / qty
-      return `$${pricePerL.toFixed(2)}/L`
-    }
-    default:
-      return null
-  }
-}
-
-/**
  * GET /api/v1/products/compare
  * Core endpoint for price comparison. It fetches cached results from the DB
- * and real-time results from supermarket scrapers/APIs in parallel.
+ * and fallback to real-time results if cache is missing or stale (> 24h).
  */
 router.get('/compare', async (req, res) => {
   const searchTerm = (req.query.q as string) || 'Milk'
   console.log(`Searching for: ${searchTerm}`)
 
   try {
+    // 1. Try to fetch from local cache (Database)
+    const cachedResults = await db.getComparePrices(searchTerm)
+    const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000 // 24 hours
+
+    const isCacheFresh = 
+      cachedResults.length > 0 && 
+      cachedResults.every(r => r.updated_at && (Date.now() - new Date(r.updated_at).getTime() < CACHE_EXPIRY_MS))
+
+    if (isCacheFresh) {
+      console.log('Serving from cache...')
+      return res.json(cachedResults.map(item => ({
+        ...item,
+        unit_price: calculateUnitPrice(item.product_name, item.price)
+      })))
+    }
+
+    console.log('Cache missing or stale. Fetching real-time prices...')
+
     // 2. Fetch real-time prices from all major brands in parallel
     const [pnsResults, nwResults, wwResults] = await Promise.all([
       fetchPaknsavePrices(searchTerm),
@@ -91,13 +43,24 @@ router.get('/compare', async (req, res) => {
       fetchWoolworthsPrices(searchTerm),
     ])
 
-    // 3. Combine real-time results, calculate unit prices, and sort
+    // 3. Combine real-time results
     const combined = [...pnsResults, ...nwResults, ...wwResults]
       .map((item) => ({
         ...item,
         unit_price: calculateUnitPrice(item.product_name, item.price),
       }))
       .sort((a, b) => a.price - b.price)
+
+    // 4. Update the cache in the background (don't block the response)
+    // We only upsert the top results or unique items to keep the DB clean
+    combined.forEach(item => {
+      db.upsertPrice({
+        product_name: item.product_name,
+        image_url: item.image_url,
+        supermarket_name: item.supermarket_name,
+        price: item.price
+      }).catch(err => console.error('Failed to background update cache:', err))
+    })
 
     res.json(combined)
   } catch (error) {

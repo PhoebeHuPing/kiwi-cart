@@ -55,6 +55,8 @@ describe('GET /api/v1/products/compare', () => {
     vi.mocked(fetchPaknsavePrices).mockResolvedValue(mockPnsResults)
     vi.mocked(fetchNewWorldPrices).mockResolvedValue(mockNwResults)
     vi.mocked(fetchWoolworthsPrices).mockResolvedValue([])
+    vi.mocked(db.getComparePrices).mockResolvedValue([])
+    vi.mocked(db.upsertPrice).mockResolvedValue()
 
     const response = await request(server).get('/api/v1/products/compare?q=Milk')
 
