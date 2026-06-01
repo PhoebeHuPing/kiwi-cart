@@ -5,6 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import toast from 'react-hot-toast'
 import { getComparePrices, getFavorites, toggleFavorite } from '../apis/products'
 import StoreMap from './StoreMap'
+import PriceDisplay from './ui/PriceDisplay'
 import { PriceComparisonData } from '../../models/products'
 import { useBasket } from '../contexts/BasketContext'
 
@@ -373,21 +374,12 @@ function ProductComparison() {
                         {/* Pricing & Actions */}
                         <div className="mt-auto space-y-4">
                           <div className="flex items-end justify-between">
-                            <div>
-                              <p className="text-sm font-black text-gray-400 uppercase tracking-widest leading-none mb-1">
-                                From
-                              </p>
-                              <div className="flex items-center gap-1">
-                                <span className="text-3xl font-black text-price tracking-tighter">
-                                  ${bestOption.price.toFixed(2)}
-                                </span>
-                                {bestOption.unit_price && (
-                                  <span className="text-[10px] font-black text-kiwi uppercase tracking-tighter">
-                                    {bestOption.unit_price}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
+                            <PriceDisplay 
+                              price={bestOption.price}
+                              unitPrice={bestOption.unit_price}
+                              isCheapest={true}
+                              size="lg"
+                            />
                             <button
                               onClick={(e) => {
                                 e.stopPropagation()

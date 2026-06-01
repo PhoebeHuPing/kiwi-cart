@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { BasketComparisonResult } from '../../models/products'
+import PriceDisplay from './ui/PriceDisplay'
 
 interface Props {
+
   results: BasketComparisonResult[]
   onClose: () => void
 }
@@ -116,9 +118,11 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                     </div>
 
                     <div className="text-left md:text-right">
-                      <div className="text-5xl font-black text-price tracking-tighter">
-                        ${store.total_price.toFixed(2)}
-                      </div>
+                      <PriceDisplay 
+                        price={store.total_price}
+                        size="lg"
+                        isCheapest={isCheapest}
+                      />
                       <p className="text-sm font-black text-gray-400 uppercase tracking-widest mt-1">
                         Total Estimated Cost
                       </p>
