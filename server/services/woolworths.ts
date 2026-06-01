@@ -34,11 +34,11 @@ interface WoolworthsSearchResponse {
  */
 export async function fetchWoolworthsPrices(
   searchTerm: string,
+  options?: { lat?: number; lng?: number; address?: string },
 ): Promise<PriceComparisonData[]> {
   try {
     // 1. Establish session
-    // Woolworths NZ requires a session to be established via /api/v1/session
-    // and maintaining cookies for subsequent requests.
+    // ... rest of logic
     const agent = request.agent()
 
     await agent
@@ -81,9 +81,9 @@ export async function fetchWoolworthsPrices(
           image_url: highResImage,
           supermarket_name: 'Woolworths',
           logo_url: '/images/woolworths.webp',
-          address: 'Grey Lynn, Auckland', // Default for now
-          lat: -36.8645,
-          lng: 174.7431,
+          address: options?.address || 'Grey Lynn, Auckland', // Use provided address or default
+          lat: options?.lat ?? -36.8645,
+          lng: options?.lng ?? 174.7431,
           price: p.price?.salePrice || 0,
         }
       })

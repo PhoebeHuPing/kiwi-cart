@@ -1,4 +1,4 @@
-import { fetchFoodstuffsPrices, FoodstuffsConfig } from './foodstuffs-base.ts'
+import { fetchFoodstuffsPrices, FoodstuffsConfig, FetchOptions } from './foodstuffs-base.ts'
 import { PriceComparisonData } from '../../models/products'
 
 const config: FoodstuffsConfig = {
@@ -15,6 +15,9 @@ const config: FoodstuffsConfig = {
 /**
  * Fetches real-time prices from New World using the shared Foodstuffs base.
  */
-export async function fetchNewWorldPrices(searchTerm: string): Promise<PriceComparisonData[]> {
-  return fetchFoodstuffsPrices(searchTerm, config)
+export async function fetchNewWorldPrices(
+  searchTerm: string,
+  options?: FetchOptions,
+): Promise<PriceComparisonData[]> {
+  return fetchFoodstuffsPrices(searchTerm, config, options)
 }

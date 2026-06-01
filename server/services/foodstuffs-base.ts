@@ -16,6 +16,16 @@ export interface FoodstuffsConfig {
 }
 
 /**
+ * Optional overrides for a specific fetch request.
+ */
+export interface FetchOptions {
+  storeId?: string
+  lat?: number
+  lng?: number
+  address?: string
+}
+
+/**
  * Shared state for tokens to avoid redundant refreshes across requests.
  */
 const tokenCache: Record<string, string | null> = {}
@@ -48,7 +58,9 @@ async function getFoodstuffsToken(domain: string): Promise<string> {
 /**
  * Helper to perform the actual HTTP POST to the Foodstuffs edge search API.
  */
-async function makeSearchRequest(searchTerm: string, token: string, config: FoodstuffsConfig) {
+async function makeSearchRequest(searchTerm: string, token: string, config: FoodstuffsConfig, options?: FetchOptions) {
+  const storeId = options?.storeId || config.storeId
+  
   return request
     .post(`https://${config.apiDomain}/v1/edge/search/paginated/products`)
     .set('Authorization', `Bearer ${token}`)
@@ -59,7 +71,7 @@ async function makeSearchRequest(searchTerm: string, token: string, config: Food
       algoliaQuery: {
         query: searchTerm,
       },
-      storeId: config.storeId,
+      storeId,
       hitsPerPage: 50,
       page: 0,
       sortOrder: 'NI_POPULARITY_ASC'
@@ -71,18 +83,19 @@ async function makeSearchRequest(searchTerm: string, token: string, config: Food
  */
 export async function fetchFoodstuffsPrices(
   searchTerm: string,
-  config: FoodstuffsConfig
+  config: FoodstuffsConfig,
+  options?: FetchOptions
 ): Promise<PriceComparisonData[]> {
   try {
     let token = await getFoodstuffsToken(config.domain)
-    let response = await makeSearchRequest(searchTerm, token, config)
+    let response = await makeSearchRequest(searchTerm, token, config, options)
 
     // Handle token expiration (retry once)
     if (response.status === 401) {
       console.warn(`Token for ${config.domain} expired, refreshing...`)
       tokenCache[config.domain] = null
       token = await getFoodstuffsToken(config.domain)
-      response = await makeSearchRequest(searchTerm, token, config)
+      response = await makeSearchRequest(searchTerm, token, config, options)
     }
 
     const products = response.body.products || []
@@ -94,9 +107,9 @@ export async function fetchFoodstuffsPrices(
         image_url: p.images?.primaryImages?.['400px'] || `https://a.fsimg.co.nz/product/retail/fan/image/400x400/${simpleId}.png`,
         supermarket_name: config.supermarketName,
         logo_url: config.logoUrl,
-        address: config.defaultAddress,
-        lat: config.defaultLat,
-        lng: config.defaultLng,
+        address: options?.address || config.defaultAddress,
+        lat: options?.lat ?? config.defaultLat,
+        lng: options?.lng ?? config.defaultLng,
         price: (p.singlePrice?.price || 0) / 100,
       }
     })
