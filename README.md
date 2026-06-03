@@ -5,6 +5,12 @@ KiwiCart is a community-driven platform designed to tackle the New Zealand Cost 
 ## Project Mission
 In a market dominated by few players, KiwiCart aims to provide price transparency. We believe every Kiwi should have access to the best prices for their daily essentials without having to visit multiple websites or stores.
 
+## Data Integration & Compliance
+KiwiCart is built on the principles of transparency and ethical data sourcing.
+- **No Scraping:** This project does not employ web scraping or automated crawling technologies.
+- **Direct Integration:** All price information is retrieved through standard API integrations to ensure data integrity and reliability.
+- **Compliance:** We respect the terms of service of all integrated retailers and aim to support the community by providing accurate, real-time information to help manage the cost of living.
+
 ## Core Features
 - **Live Data Integration:** Real-time price updates from Pak'nSave, New World, and Woolworths to ensure accurate comparison.
 - **Multi-store Synchronization:** Seamlessly sync basket items across different supermarket brands to find the best total value.
