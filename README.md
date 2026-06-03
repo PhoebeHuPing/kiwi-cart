@@ -6,7 +6,6 @@ KiwiCart is a community-driven platform designed to tackle the New Zealand Cost 
 In a market dominated by few players, KiwiCart aims to provide price transparency. We believe every Kiwi should have access to the best prices for their daily essentials without having to visit multiple websites or stores.
 
 ## Core Features
-
 - **Live Data Integration:** Real-time price updates from Pak'nSave, New World, and Woolworths to ensure accurate comparison.
 - **Multi-store Synchronization:** Seamlessly sync basket items across different supermarket brands to find the best total value.
 - **Hybrid Caching:** Background database caching with 24-hour expiry to ensure speed while maintaining data accuracy.
@@ -14,23 +13,37 @@ In a market dominated by few players, KiwiCart aims to provide price transparenc
 - **Favorites & Profiles:** Secure user accounts via Auth0 to save your favorite products and personalized shopping lists.
 - **Accessibility First:** Fully compliant with WCAG AA standards, featuring high-contrast themes and full screen-reader support.
 
+## Usage
+1. **Search:** Enter a product name (e.g., "Milk" or "Bread") in the search bar.
+2. **Compare:** View a side-by-side comparison of prices across available supermarkets.
+3. **Basket:** Add multiple items to your virtual basket to calculate which store offers the best total price for your shop.
+4. **Locate:** Use the map view to find the physical store location for the best deals.
+
+## Roadmap
+- [x] Real-time multi-store price comparison
+- [x] Integrated Google Maps store locator
+- [x] User favorites and shopping lists
+- [ ] Historical price tracking and trend charts
+- [ ] Gemini AI smart shopping recommendations
+- [ ] Mobile-optimized PWA (Progressive Web App)
+
 ## Tech Stack
 
 ### Frontend
 - React 18 with TypeScript
-- Tailwind CSS 4.0 (Utility-first styling with custom accessibility-friendly colors)
-- TanStack Query (React Query) (Efficient data fetching and caching)
-- Vite 7 (Modern build tool)
+- Tailwind CSS 4.0
+- TanStack Query (React Query)
+- Vite 7
 
 ### Backend
 - Node.js & Express
 - Knex.js (Query builder)
-- PostgreSQL (Production database on Render) / SQLite (Local development)
-- Auth0 (Secure authentication and identity management)
+- PostgreSQL (Production) / SQLite (Local)
+- Auth0 (Authentication)
 
-### Services & AI
-- Google Maps API (Store location and autocomplete)
-- Gemini AI (Smart shopping insights and price trend analysis - In Progress)
+### Services
+- Google Maps API (Location Services)
+- Gemini AI (Insights - In Progress)
 
 ## Getting Started
 
@@ -41,50 +54,33 @@ In a market dominated by few players, KiwiCart aims to provide price transparenc
 - Auth0 Domain & Client ID
 
 ### Installation
-
 1. **Clone the Repo:**
    ```bash
    git clone <repository-url>
    cd KiwiCart
    ```
-
 2. **Install Dependencies:**
    ```bash
    npm install
    ```
-
 3. **Environment Variables:**
-   Create a `.env` file in the root (see `.env.example` if available):
-   ```env
-   # Database
-   DATABASE_URL=postgres://user:password@localhost:5432/kiwicart
-
-   # Auth0
-   AUTH0_DOMAIN=your-domain.auth0.com
-   AUTH0_AUDIENCE=your-api-identifier
-
-   # Google Maps
-   VITE_GOOGLE_MAPS_API_KEY=your_key_here
-   ```
-
+   Create a `.env` file in the root based on `.env.example`.
 4. **Setup Database:**
    ```bash
    npm run knex migrate:latest
    npm run knex seed:run
    ```
-
 5. **Run Development Server:**
    ```bash
    npm run dev
    ```
-   Visit `http://localhost:5173` to see KiwiCart in action.
 
-## Testing
-We maintain high code quality with automated tests:
-```bash
-npm test          # Run all tests (Vitest)
-npm run lint      # Run ESLint
-```
+## Contributing
+We welcome contributions! Please see CONTRIBUTING.md for guidelines on:
+- Setting up your development environment
+- Code style and formatting requirements
+- Pull request process
+- Commit message conventions
 
 ## License
 ISC
