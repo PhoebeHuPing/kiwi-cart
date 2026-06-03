@@ -1,92 +1,89 @@
-# 🥝 KiwiCart - NZ Supermarket Price Sharing
+# KiwiCart - NZ Supermarket Price Sharing
 
-KiwiCart is a community-driven platform designed to tackle the **New Zealand Cost of Living Crisis**. It empowers users to compare supermarket prices across major brands (Pak'nSave, New World, and Woolworths) using real-time data and location-based search.
+KiwiCart is a community-driven platform designed to tackle the New Zealand Cost of Living Crisis. It empowers users to compare supermarket prices across major brands (Pak'nSave, New World, and Woolworths) using real-time data and location-based search.
 
-![Accessibility Status](https://img.shields.io/badge/Accessibility-WCAG%20AA-success)
-![React](https://img.shields.io/badge/Frontend-React%20%2B%20TS-blue)
-![Express](https://img.shields.io/badge/Backend-Node.js%20%2B%20Express-green)
-
-## 🎯 Project Mission
+## Project Mission
 In a market dominated by few players, KiwiCart aims to provide price transparency. We believe every Kiwi should have access to the best prices for their daily essentials without having to visit multiple websites or stores.
 
-## ✨ Features
+## Core Features
+- **Live Data Integration:** Real-time price updates from Pak'nSave, New World, and Woolworths to ensure accurate comparison.
+- **Multi-store Synchronization:** Seamlessly sync basket items across different supermarket brands to find the best total value.
+- **Hybrid Caching:** Background database caching with 24-hour expiry to ensure speed while maintaining data accuracy.
+- **Location-Aware Store Map:** Integrated Google Maps view to find the cheapest stores near you.
+- **Favorites & Profiles:** Secure user accounts via Auth0 to save your favorite products and personalized shopping lists.
+- **Accessibility First:** Fully compliant with WCAG AA standards, featuring high-contrast themes and full screen-reader support.
 
-- **Multi-Store Price Comparison:** Compare items across Pak'nSave, New World, and Woolworths in a single view.
-- **Smart Basket Calculation:** Add multiple items to your basket and instantly see which supermarket offers the lowest total cost for your entire shop.
-- **Location-Aware Search:** Integrated Google Maps view to find the cheapest stores near your current location.
-- **Accessibility First:** Fully compliant with **WCAG AA standards**, featuring high-contrast themes, ARIA labels for screen readers, and keyboard-friendly navigation.
-- **Community Driven:** Focused on user-shared data and transparency (avoiding aggressive scraping).
+## Usage
+1. **Search:** Enter a product name (e.g., "Milk" or "Bread") in the search bar.
+2. **Compare:** View a side-by-side comparison of prices across available supermarkets.
+3. **Basket:** Add multiple items to your virtual basket to calculate which store offers the best total price for your shop.
+4. **Locate:** Use the map view to find the physical store location for the best deals.
 
-## 🛠️ Tech Stack
+## Roadmap
+- [x] Real-time multi-store price comparison
+- [x] Integrated Google Maps store locator
+- [x] User favorites and shopping lists
+- [ ] Historical price tracking and trend charts
+- [ ] Gemini AI smart shopping recommendations
+- [ ] Mobile-optimized PWA (Progressive Web App)
+
+## Tech Stack
 
 ### Frontend
-- **React 18** with **TypeScript**
-- **Tailwind CSS** (Utility-first styling with custom accessibility-friendly colors)
-- **TanStack Query (React Query)** (Efficient data fetching and caching)
-- **Vite** (Modern build tool)
+- React 18 with TypeScript
+- Tailwind CSS 4.0
+- TanStack Query (React Query)
+- Vite 7
 
 ### Backend
-- **Node.js** & **Express**
-- **Knex.js** (Query builder)
-- **PostgreSQL** (Production database) / **SQLite** (Local development)
+- Node.js & Express
+- Knex.js (Query builder)
+- PostgreSQL (Production) / SQLite (Local)
+- Auth0 (Authentication)
 
-### Services & AI
-- **Google Maps API** (Store location and autocomplete)
-- **Gemini AI** (Smart shopping insights and price trend analysis)
-- **Auth0** (Secure authentication)
+### Services
+- Google Maps API (Location Services)
+- Gemini AI (Insights - In Progress)
 
-## 🏁 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v18+)
-- A Google Maps API Key (for the store locator)
+- PostgreSQL (Local or Docker)
+- Google Maps API Key
+- Auth0 Domain & Client ID
 
 ### Installation
-
 1. **Clone the Repo:**
    ```bash
    git clone <repository-url>
    cd KiwiCart
    ```
-
 2. **Install Dependencies:**
    ```bash
    npm install
    ```
-
 3. **Environment Variables:**
-   Create a `.env` file in the root:
-   ```env
-   VITE_GOOGLE_MAPS_API_KEY=your_key_here
-   ```
-
+   Create a `.env` file in the root based on `.env.example`.
 4. **Setup Database:**
    ```bash
    npm run knex migrate:latest
    npm run knex seed:run
    ```
-
 5. **Run Development Server:**
    ```bash
    npm run dev
    ```
-   Visit `http://localhost:5173` to see KiwiCart in action.
 
-## 🧪 Testing
-We maintain high code quality with automated tests:
-```bash
-npm test          # Run all tests (Vitest)
-npm run test:ui   # Run tests with a visual dashboard
-```
+## Contributing
+We welcome contributions! Please see CONTRIBUTING.md for guidelines on:
+- Setting up your development environment
+- Code style and formatting requirements
+- Pull request process
+- Commit message conventions
 
-## ♿ Accessibility Commitment
-KiwiCart is designed to be usable by everyone. Recent updates include:
-- **Contrast Ratios:** All text elements meet a minimum 4.5:1 ratio.
-- **Screen Readers:** Comprehensive ARIA labels and roles for all interactive elements.
-- **Keyboard Navigation:** Logic for focus management and skip-links.
-
-## 📄 License
+## License
 ISC
 
 ---
-*Helping Kiwis save money, one basket at a time.* 🥝🇳🇿
+*Helping Kiwis save money, one basket at a time.*
