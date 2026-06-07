@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 using KiwiCart.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
