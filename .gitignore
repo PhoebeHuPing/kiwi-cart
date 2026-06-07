@@ -18,3 +18,17 @@ coverage
 
 # Promptkit repository
 promptkit
+
+# AI Agent local files
+.agents/
+
+# Personal config
+*.user.toml
+
+# .NET
+**/bin/
+**/obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
