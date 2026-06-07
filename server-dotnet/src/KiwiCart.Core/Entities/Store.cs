@@ -1,0 +1,11 @@
+namespace KiwiCart.Core.Entities;
+
+public class Store
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Brand { get; set; } = string.Empty;
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
+    public string Address { get; set; } = string.Empty;
+}
