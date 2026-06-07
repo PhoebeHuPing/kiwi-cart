@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\KiwiCart.Api\KiwiCart.Api.csproj" />
-    <ProjectReference Include="..\..\src\KiwiCart.Core\KiwiCart.Core.csproj" />
-    <ProjectReference Include="..\..\src\KiwiCart.Infrastructure\KiwiCart.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
