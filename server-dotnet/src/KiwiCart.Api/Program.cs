@@ -7,6 +7,7 @@ using KiwiCart.Infrastructure.Data;
 using KiwiCart.Infrastructure.TokenProviders;
 using KiwiCart.Infrastructure.StoreClients;
 using KiwiCart.Infrastructure.Services;
+using KiwiCart.Infrastructure.Repositories;
 using KiwiCart.Core.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
@@ -14,7 +15,7 @@ using Polly.Extensions.Http;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
-    .AddJsonOptions(o => o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
+    .AddJsonOptions(o => o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
@@ -121,6 +122,13 @@ builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<NewWor
 builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<WoolworthsClient>());
 builder.Services.AddSingleton<IStoreAggregator, StoreAggregator>();
 
+// Price comparison services (Scoped - per-request)
+builder.Services.AddScoped<IPriceCacheRepository, PriceCacheRepository>();
+builder.Services.AddScoped<IPriceCalculator, PriceCalculator>();
+builder.Services.AddScoped<IPriceComparisonService, PriceComparisonService>();
+
+builder.Services.AddOutputCache();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -132,6 +140,7 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler();
 app.UseCors();
 app.UseRateLimiter();
+app.UseOutputCache();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
