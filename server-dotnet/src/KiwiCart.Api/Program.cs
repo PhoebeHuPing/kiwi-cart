@@ -127,6 +127,17 @@ builder.Services.AddScoped<IPriceCacheRepository, PriceCacheRepository>();
 builder.Services.AddScoped<IPriceCalculator, PriceCalculator>();
 builder.Services.AddScoped<IPriceComparisonService, PriceComparisonService>();
 builder.Services.AddScoped<IBucketService, BucketService>();
+builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<IFavoritesService, FavoritesService>();
+
+// Auth0 JWT Authentication
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = builder.Configuration["Auth0:Domain"];
+        options.Audience = builder.Configuration["Auth0:Audience"];
+    });
+builder.Services.AddAuthorization();
 
 builder.Services.AddOutputCache();
 
@@ -142,6 +153,7 @@ app.UseExceptionHandler();
 app.UseCors();
 app.UseRateLimiter();
 app.UseOutputCache();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");

@@ -1,7 +1,9 @@
 using KiwiCart.Core.DTOs;
 using KiwiCart.Core.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using System.Security.Claims;
 
 namespace KiwiCart.Api.Controllers;
 
@@ -12,11 +14,16 @@ public class ProductsController : ControllerBase
 {
     private readonly IPriceComparisonService _priceComparison;
     private readonly IBucketService _bucketService;
+    private readonly IFavoritesService _favoritesService;
 
-    public ProductsController(IPriceComparisonService priceComparison, IBucketService bucketService)
+    public ProductsController(
+        IPriceComparisonService priceComparison,
+        IBucketService bucketService,
+        IFavoritesService favoritesService)
     {
         _priceComparison = priceComparison;
         _bucketService = bucketService;
+        _favoritesService = favoritesService;
     }
 
     [HttpGet("compare")]
@@ -50,4 +57,30 @@ public class ProductsController : ControllerBase
         var results = await _bucketService.CompareAsync(request.Items, ct);
         return Ok(results);
     }
+
+    [Authorize]
+    [HttpGet("favorites")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetFavorites(CancellationToken ct)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+        return Ok(await _favoritesService.GetFavoritesAsync(userId, ct));
+    }
+
+    [Authorize]
+    [HttpPost("favorites")]
+    public async Task<ActionResult<object>> ToggleFavorite(
+        [FromBody] FavoriteRequest request, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
+            return Problem("Product name is required.", statusCode: 400);
+
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+        var (action, name) = await _favoritesService.ToggleAsync(userId, request.Name, ct);
+        return Ok(new { action, name });
+    }
+}
+
+public class FavoriteRequest
+{
+    public string Name { get; set; } = string.Empty;
 }
