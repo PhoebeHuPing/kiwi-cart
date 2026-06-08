@@ -126,6 +126,7 @@ builder.Services.AddSingleton<IStoreAggregator, StoreAggregator>();
 builder.Services.AddScoped<IPriceCacheRepository, PriceCacheRepository>();
 builder.Services.AddScoped<IPriceCalculator, PriceCalculator>();
 builder.Services.AddScoped<IPriceComparisonService, PriceComparisonService>();
+builder.Services.AddScoped<IBucketService, BucketService>();
 
 builder.Services.AddOutputCache();
 
