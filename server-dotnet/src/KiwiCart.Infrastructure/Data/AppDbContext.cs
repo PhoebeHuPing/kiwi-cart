@@ -61,8 +61,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.Id).HasColumnName("id");
             e.Property(p => p.StoreBrand).HasColumnName("store_brand").HasMaxLength(100).IsRequired();
             e.Property(p => p.Token).HasColumnName("token").IsRequired();
+            e.Property(p => p.IssuedAt).HasColumnName("issued_at");
             e.Property(p => p.ExpiresAt).HasColumnName("expires_at");
+            e.Property(p => p.UpdatedAt).HasColumnName("updated_at");
             e.HasIndex(p => p.StoreBrand).IsUnique();
+            e.Ignore(p => p.IsExpired);
+            e.Ignore(p => p.IsNearExpiry);
         });
 
         modelBuilder.Entity<Bucket>(e =>
