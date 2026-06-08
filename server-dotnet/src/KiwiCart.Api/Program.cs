@@ -39,7 +39,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Store token providers (Singleton - preserves static cache)
 builder.Services.AddSingleton<PakNSaveTokenProvider>();
+builder.Services.AddSingleton<NewWorldTokenProvider>();
 builder.Services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<PakNSaveTokenProvider>());
+builder.Services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<NewWorldTokenProvider>());
 
 // HttpClients with Polly resilience
 var retryPolicy = HttpPolicyExtensions.HandleTransientHttpError()
@@ -64,12 +66,31 @@ builder.Services.AddHttpClient("PakNSave", c =>
 .AddPolicyHandler(circuitBreakerPolicy)
 .AddPolicyHandler(timeoutPolicy);
 
+builder.Services.AddHttpClient("NewWorldAuth", c =>
+{
+    c.BaseAddress = new Uri("https://www.newworld.co.nz");
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+})
+.AddPolicyHandler(timeoutPolicy);
+
+builder.Services.AddHttpClient("NewWorld", c =>
+{
+    c.BaseAddress = new Uri("https://api-prod.newworld.co.nz");
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+})
+.AddPolicyHandler(retryPolicy)
+.AddPolicyHandler(circuitBreakerPolicy)
+.AddPolicyHandler(timeoutPolicy);
+
 // Store API clients (Singleton)
 builder.Services.AddSingleton<PakNSaveClient>(sp => new PakNSaveClient(
     sp.GetRequiredService<PakNSaveTokenProvider>(),
     sp.GetRequiredService<IHttpClientFactory>(),
     sp.GetRequiredService<ILogger<PakNSaveClient>>()));
-builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<PakNSaveClient>());
+builder.Services.AddSingleton<NewWorldClient>(sp => new NewWorldClient(
+    sp.GetRequiredService<NewWorldTokenProvider>(),
+    sp.GetRequiredService<IHttpClientFactory>(),
+    sp.GetRequiredService<ILogger<NewWorldClient>>()));
 
 var app = builder.Build();
 
