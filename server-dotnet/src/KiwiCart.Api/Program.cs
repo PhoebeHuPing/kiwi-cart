@@ -11,14 +11,24 @@ using KiwiCart.Infrastructure.Repositories;
 using KiwiCart.Core.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {RequestId} {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers()
     .AddJsonOptions(o => o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("DefaultConnection") ?? "",
+        name: "postgresql",
+        failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -126,6 +136,19 @@ builder.Services.AddSingleton<IStoreAggregator, StoreAggregator>();
 builder.Services.AddScoped<IPriceCacheRepository, PriceCacheRepository>();
 builder.Services.AddScoped<IPriceCalculator, PriceCalculator>();
 builder.Services.AddScoped<IPriceComparisonService, PriceComparisonService>();
+builder.Services.AddScoped<IBucketService, BucketService>();
+builder.Services.AddScoped<IStoreService, StoreService>();
+builder.Services.AddScoped<IFavoritesService, FavoritesService>();
+
+// Auth0 JWT Authentication
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = builder.Configuration["Auth0:Domain"];
+        options.Audience = builder.Configuration["Auth0:Audience"];
+        options.TokenValidationParameters.RoleClaimType = "https://kiwicart.co.nz/roles";
+    });
+builder.Services.AddAuthorization();
 
 builder.Services.AddOutputCache();
 
@@ -136,11 +159,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseHsts();
+}
 
 app.UseExceptionHandler();
+app.UseSerilogRequestLogging();
 app.UseCors();
 app.UseRateLimiter();
 app.UseOutputCache();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health");
