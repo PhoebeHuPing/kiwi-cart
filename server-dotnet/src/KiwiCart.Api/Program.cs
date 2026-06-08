@@ -11,8 +11,15 @@ using KiwiCart.Infrastructure.Repositories;
 using KiwiCart.Core.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {RequestId} {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 builder.Services.AddControllers()
     .AddJsonOptions(o => o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower);
@@ -158,6 +165,7 @@ else
 }
 
 app.UseExceptionHandler();
+app.UseSerilogRequestLogging();
 app.UseCors();
 app.UseRateLimiter();
 app.UseOutputCache();
