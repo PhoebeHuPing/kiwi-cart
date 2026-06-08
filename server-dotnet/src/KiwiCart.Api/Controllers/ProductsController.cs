@@ -1,5 +1,6 @@
 using KiwiCart.Core.DTOs;
 using KiwiCart.Core.Interfaces;
+using KiwiCart.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -15,15 +16,18 @@ public class ProductsController : ControllerBase
     private readonly IPriceComparisonService _priceComparison;
     private readonly IBucketService _bucketService;
     private readonly IFavoritesService _favoritesService;
+    private readonly AppDbContext _db;
 
     public ProductsController(
         IPriceComparisonService priceComparison,
         IBucketService bucketService,
-        IFavoritesService favoritesService)
+        IFavoritesService favoritesService,
+        AppDbContext db)
     {
         _priceComparison = priceComparison;
         _bucketService = bucketService;
         _favoritesService = favoritesService;
+        _db = db;
     }
 
     [HttpGet("compare")]
@@ -77,6 +81,20 @@ public class ProductsController : ControllerBase
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
         var (action, name) = await _favoritesService.ToggleAsync(userId, request.Name, ct);
         return Ok(new { action, name });
+    }
+
+    [Authorize(Roles = "admin")]
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(int id, CancellationToken ct)
+    {
+        var product = await _db.Products.FindAsync(new object[] { id }, ct);
+        if (product is null) return NotFound();
+        _db.Products.Remove(product);
+        await _db.SaveChangesAsync(ct);
+        return NoContent();
     }
 }
 

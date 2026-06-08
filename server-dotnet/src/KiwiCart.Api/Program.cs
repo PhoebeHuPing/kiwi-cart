@@ -139,6 +139,7 @@ builder.Services.AddAuthentication("Bearer")
     {
         options.Authority = builder.Configuration["Auth0:Domain"];
         options.Audience = builder.Configuration["Auth0:Audience"];
+        options.TokenValidationParameters.RoleClaimType = "https://kiwicart.co.nz/roles";
     });
 builder.Services.AddAuthorization();
 
