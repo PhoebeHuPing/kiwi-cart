@@ -6,6 +6,7 @@ using KiwiCart.Api.Middleware;
 using KiwiCart.Infrastructure.Data;
 using KiwiCart.Infrastructure.TokenProviders;
 using KiwiCart.Infrastructure.StoreClients;
+using KiwiCart.Infrastructure.Services;
 using KiwiCart.Core.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
@@ -40,8 +41,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Store token providers (Singleton - preserves static cache)
 builder.Services.AddSingleton<PakNSaveTokenProvider>();
 builder.Services.AddSingleton<NewWorldTokenProvider>();
+builder.Services.AddSingleton<WoolworthsTokenProvider>();
 builder.Services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<PakNSaveTokenProvider>());
 builder.Services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<NewWorldTokenProvider>());
+builder.Services.AddSingleton<ITokenProvider>(sp => sp.GetRequiredService<WoolworthsTokenProvider>());
 
 // HttpClients with Polly resilience
 var retryPolicy = HttpPolicyExtensions.HandleTransientHttpError()
@@ -82,6 +85,22 @@ builder.Services.AddHttpClient("NewWorld", c =>
 .AddPolicyHandler(circuitBreakerPolicy)
 .AddPolicyHandler(timeoutPolicy);
 
+builder.Services.AddHttpClient("WoolworthsAuth", c =>
+{
+    c.BaseAddress = new Uri("https://www.woolworths.co.nz");
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+})
+.AddPolicyHandler(timeoutPolicy);
+
+builder.Services.AddHttpClient("Woolworths", c =>
+{
+    c.BaseAddress = new Uri("https://www.woolworths.co.nz");
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+})
+.AddPolicyHandler(retryPolicy)
+.AddPolicyHandler(circuitBreakerPolicy)
+.AddPolicyHandler(timeoutPolicy);
+
 // Store API clients (Singleton)
 builder.Services.AddSingleton<PakNSaveClient>(sp => new PakNSaveClient(
     sp.GetRequiredService<PakNSaveTokenProvider>(),
@@ -91,6 +110,16 @@ builder.Services.AddSingleton<NewWorldClient>(sp => new NewWorldClient(
     sp.GetRequiredService<NewWorldTokenProvider>(),
     sp.GetRequiredService<IHttpClientFactory>(),
     sp.GetRequiredService<ILogger<NewWorldClient>>()));
+builder.Services.AddSingleton<WoolworthsClient>(sp => new WoolworthsClient(
+    sp.GetRequiredService<WoolworthsTokenProvider>(),
+    sp.GetRequiredService<IHttpClientFactory>(),
+    sp.GetRequiredService<ILogger<WoolworthsClient>>()));
+
+// Store aggregator (graceful degradation - one store down doesn't break others)
+builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<PakNSaveClient>());
+builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<NewWorldClient>());
+builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<WoolworthsClient>());
+builder.Services.AddSingleton<IStoreAggregator, StoreAggregator>();
 
 var app = builder.Build();
 
