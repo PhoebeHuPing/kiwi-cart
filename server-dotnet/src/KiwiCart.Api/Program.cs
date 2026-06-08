@@ -6,6 +6,7 @@ using KiwiCart.Api.Middleware;
 using KiwiCart.Infrastructure.Data;
 using KiwiCart.Infrastructure.TokenProviders;
 using KiwiCart.Infrastructure.StoreClients;
+using KiwiCart.Infrastructure.Services;
 using KiwiCart.Core.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
@@ -113,6 +114,12 @@ builder.Services.AddSingleton<WoolworthsClient>(sp => new WoolworthsClient(
     sp.GetRequiredService<WoolworthsTokenProvider>(),
     sp.GetRequiredService<IHttpClientFactory>(),
     sp.GetRequiredService<ILogger<WoolworthsClient>>()));
+
+// Store aggregator (graceful degradation - one store down doesn't break others)
+builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<PakNSaveClient>());
+builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<NewWorldClient>());
+builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<WoolworthsClient>());
+builder.Services.AddSingleton<IStoreAggregator, StoreAggregator>();
 
 var app = builder.Build();
 
