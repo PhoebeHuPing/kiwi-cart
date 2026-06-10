@@ -344,7 +344,7 @@ function ProductComparison() {
                           </button>
                         </div>
                         {group.options.length > 1 && (
-                          <div className="absolute top-4 right-4 bg-kiwi/90 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-sm">
+                          <div className="absolute top-4 right-4 bg-kiwi-dark/95 backdrop-blur-md text-white text-xs font-black px-3 py-1.5 rounded-xl uppercase tracking-widest shadow-lg border border-white/20">
                             {group.options.length} Stores
                           </div>
                         )}
