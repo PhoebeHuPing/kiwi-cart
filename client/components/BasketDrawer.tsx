@@ -144,7 +144,7 @@ export default function BasketDrawer() {
                   <button
                     onClick={handleCompare}
                     disabled={isComparing}
-                    className="w-full py-5 bg-kiwi-dark text-white rounded-3xl font-black text-xl shadow-2xl shadow-kiwi-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 mb-4 border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-5 bg-kiwi-dark text-white rounded-3xl font-black text-xl shadow-2xl shadow-kiwi-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 mb-4 border-none cursor-pointer disabled:bg-gray-700 disabled:opacity-90 disabled:cursor-not-allowed"
                   >
                     {isComparing ? (
                       <>
@@ -153,10 +153,11 @@ export default function BasketDrawer() {
                       </>
                     ) : (
                       <>
-                        <span className="text-2xl">⚡</span> Compare Live Prices
+                        <span className="text-2xl" aria-hidden="true">⚡</span> Compare Live Prices
                       </>
                     )}
                   </button>
+
                   <button
                     onClick={clearBasket}
                     className="w-full py-3 text-sm font-black text-gray-400 hover:text-red-600 transition-colors uppercase tracking-[0.3em] border-none bg-transparent cursor-pointer"

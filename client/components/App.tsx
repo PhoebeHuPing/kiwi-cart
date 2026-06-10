@@ -129,18 +129,18 @@ function App() {
               in real-time.
             </p>
 
-            <div className="mt-12 flex items-center gap-8 opacity-90">
+            <div className="mt-12 flex items-center gap-12">
               <div className="flex flex-col">
-                <span className="text-4xl font-black">20k+</span>
-                <span className="text-sm uppercase font-bold tracking-widest text-kiwi-light">
-                  Products
+                <span className="text-5xl font-black text-white drop-shadow-md">20k+</span>
+                <span className="text-sm uppercase font-black tracking-[0.2em] text-white/90 mt-1">
+                  Products Tracked
                 </span>
               </div>
-              <div className="w-px h-12 bg-white/20" />
+              <div className="w-px h-12 bg-white/30" />
               <div className="flex flex-col">
-                <span className="text-4xl font-black">100%</span>
-                <span className="text-sm uppercase font-bold tracking-widest text-kiwi-light">
-                  NZ Owned
+                <span className="text-5xl font-black text-white drop-shadow-md">100%</span>
+                <span className="text-sm uppercase font-black tracking-[0.2em] text-white/90 mt-1">
+                  NZ Owned & Built
                 </span>
               </div>
             </div>
