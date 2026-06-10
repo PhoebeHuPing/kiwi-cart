@@ -45,10 +45,10 @@ export default function MyKitchen() {
     <div className="max-w-6xl mx-auto py-8">
       <header className="mb-12">
         <div className="flex items-center gap-4 mb-4">
-          <img src={user?.picture} alt="" className="w-16 h-16 rounded-2xl border-4 border-white shadow-lg" />
+          <img src={user?.picture} alt={user?.name || 'User Profile'} className="w-16 h-16 rounded-2xl border-4 border-white shadow-lg" />
           <div>
             <h1 className="text-4xl font-black text-kiwi-dark tracking-tighter">My Kitchen</h1>
-            <p className="text-gray-500 font-medium">Daily staples and monitored prices for {user?.nickname || user?.name}</p>
+            <p className="text-gray-600 font-medium">Daily staples and monitored prices for {user?.nickname || user?.name}</p>
           </div>
         </div>
       </header>
@@ -86,18 +86,18 @@ export default function MyKitchen() {
                         const storePrice = item.prices.find(p => p.supermarket_name.includes(brand))
                         return (
                           <div key={brand} className={`p-4 rounded-2xl border ${storePrice ? 'bg-white border-gray-100' : 'bg-gray-50 border-transparent opacity-50'}`}>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{brand}</p>
+                            <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-2">{brand}</p>
                             {storePrice ? (
                               <div>
                                 <span className={`text-xl font-black ${storePrice === cheapest ? 'text-price' : 'text-kiwi-dark'}`}>
                                   ${storePrice.price.toFixed(2)}
                                 </span>
                                 {storePrice === cheapest && (
-                                  <span className="ml-2 text-[10px] bg-kiwi text-white px-1.5 py-0.5 rounded font-black uppercase">Best</span>
+                                  <span className="ml-2 text-xs bg-kiwi-dark text-white px-2 py-0.5 rounded-lg font-black uppercase">Best</span>
                                 )}
                               </div>
                             ) : (
-                              <span className="text-xs font-bold text-gray-400 italic">Not found</span>
+                              <span className="text-sm font-bold text-gray-600 italic">Not found</span>
                             )}
                           </div>
                         )

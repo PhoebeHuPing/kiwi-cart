@@ -1,9 +1,20 @@
 import * as Path from 'node:path'
 import express from 'express'
+import rateLimit from 'express-rate-limit'
 import productsRoutes from './routes/products.ts'
 
 const server = express()
 server.use(express.json())
+
+// Rate limiting: max 30 requests per minute per IP for API routes
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 30,
+  message: { error: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+server.use('/api', apiLimiter)
 
 // API ROUTES: NZ Supermarket Price Comparison
 // All product and store related requests are handled by productsRoutes

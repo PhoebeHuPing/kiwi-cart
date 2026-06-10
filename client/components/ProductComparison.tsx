@@ -162,7 +162,7 @@ function ProductComparison() {
               <input
                 type="text"
                 aria-label="Search for products"
-                className="flex-1 bg-transparent border-none focus:ring-0 text-xl font-medium outline-none placeholder:text-gray-400"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-xl font-medium outline-none placeholder:text-gray-600"
                 placeholder="Search for a product (e.g. Milk, Bread, Steak)..."
                 value={searchTerm}
                 onFocus={() => setShowDropdown(true)}
@@ -344,7 +344,7 @@ function ProductComparison() {
                           </button>
                         </div>
                         {group.options.length > 1 && (
-                          <div className="absolute top-4 right-4 bg-kiwi/90 backdrop-blur-sm text-white text-[10px] font-black px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-sm">
+                          <div className="absolute top-4 right-4 bg-kiwi-dark/95 backdrop-blur-md text-white text-xs font-black px-3 py-1.5 rounded-xl uppercase tracking-widest shadow-lg border border-white/20">
                             {group.options.length} Stores
                           </div>
                         )}
@@ -358,7 +358,7 @@ function ProductComparison() {
                           </h3>
                           <div className="flex items-center gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
                             <div className="w-20 h-20 bg-white rounded-xl p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
-                              <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
+                              <img src={bestOption.logo_url} alt={bestOption.supermarket_name} className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col">
                               <span className="text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
@@ -425,7 +425,7 @@ function ProductComparison() {
                       {/* Expanded Pricing Table - High Legibility & Responsive Fix */}
                       {isExpanded && (
                         <div className="bg-gray-50/80 border-t border-gray-100 p-4 sm:p-6 space-y-4 animate-in fade-in slide-in-from-top-2">
-                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">
+                          <p className="text-xs font-black text-gray-600 uppercase tracking-[0.2em] mb-2 ml-1">
                             Available Store Prices
                           </p>
                           {group.options.map((option, optIdx) => (
@@ -439,32 +439,32 @@ function ProductComparison() {
                             >
                               <div className="flex items-center gap-4 min-w-0">
                                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded-xl p-2 flex items-center justify-center flex-shrink-0">
-                                  <img src={option.logo_url} alt="" className="w-full h-full object-contain" />
+                                  <img src={option.logo_url} alt={option.supermarket_name} className="w-full h-full object-contain" />
                                 </div>
                                 <div className="min-w-0">
                                   <span className="block font-black text-base sm:text-lg text-kiwi-dark leading-tight truncate">
                                     {option.supermarket_name}
                                   </span>
-                                  <span className="text-[11px] sm:text-sm text-gray-500 font-medium flex items-center gap-1 mt-0.5 truncate">
+                                  <span className="text-xs sm:text-sm text-gray-600 font-medium flex items-center gap-1 mt-0.5 truncate">
                                     📍 {option.address.split(',')[0]}
                                   </span>
                                 </div>
                               </div>
                               
                               <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0">
-                                <span className="sm:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest">Price</span>
+                                <span className="sm:hidden text-xs font-black text-gray-600 uppercase tracking-widest">Price</span>
                                 <div className="text-right">
                                   <div className="flex flex-col items-end">
                                     <span className="font-black text-xl sm:text-2xl text-kiwi-dark tracking-tighter">
                                       ${option.price.toFixed(2)}
                                     </span>
                                     {option.unit_price && (
-                                      <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-tighter -mt-1">
+                                      <span className="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-tighter -mt-1">
                                         {option.unit_price}
                                       </span>
                                     )}
                                     {optIdx === 0 && (
-                                      <span className="mt-1 px-2 py-0.5 bg-kiwi text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded">
+                                      <span className="mt-1 px-2 py-0.5 bg-kiwi-dark text-white text-xs font-black uppercase tracking-widest rounded-lg">
                                         Cheapest
                                       </span>
                                     )}
@@ -522,40 +522,41 @@ function ProductComparison() {
             {basket.length > 0 && (
               <div className="bg-kiwi-dark rounded-3xl p-8 text-white shadow-xl shadow-kiwi-dark/20 animate-in fade-in slide-in-from-right-4">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="bg-kiwi p-3 rounded-2xl text-2xl">
+                  <div className="bg-kiwi-dark text-white p-3 rounded-2xl text-2xl shadow-lg">
                     🛒
                   </div>
                   <div>
                     <h4 className="font-black text-xl leading-none">Your Basket</h4>
-                    <p className="text-kiwi-light text-xs font-bold uppercase tracking-widest mt-1">
+                    <p className="text-white/90 text-sm font-black uppercase tracking-widest mt-2">
                       {basket.reduce((sum, item) => sum + item.quantity, 0)} Items Selected
                     </p>
                   </div>
-                </div>
-                
-                <div className="space-y-4 mb-8">
+                  </div>
+
+                  <div className="space-y-4 mb-8">
                   {basket.slice(0, 3).map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-white/10 rounded-lg p-1">
-                        <img src={item.image_url} alt="" className="w-full h-full object-contain mix-blend-screen" />
+                      <div className="w-10 h-10 bg-white/10 rounded-xl p-1.5">
+                        <img src={item.image_url} alt={item.name} className="w-full h-full object-contain mix-blend-screen" />
                       </div>
-                      <span className="text-sm font-bold truncate flex-1">{item.name}</span>
-                      <span className="text-xs font-black text-kiwi">×{item.quantity}</span>
+                      <span className="text-sm font-black truncate flex-1">{item.name}</span>
+                      <span className="text-sm font-black text-white">×{item.quantity}</span>
                     </div>
                   ))}
                   {basket.length > 3 && (
-                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest text-center">
+                    <p className="text-xs text-white/80 font-black uppercase tracking-[0.2em] text-center bg-white/5 py-2 rounded-lg">
                       + {basket.length - 3} more items
                     </p>
                   )}
-                </div>
+                  </div>
 
-                <button
+                  <button
                   onClick={() => setIsDrawerOpen(true)}
-                  className="w-full py-4 bg-kiwi text-white rounded-2xl font-black text-base shadow-lg hover:bg-kiwi-dark border border-kiwi-light/20 transition-all cursor-pointer"
-                >
+                  className="w-full py-4 bg-white text-kiwi-dark rounded-2xl font-black text-base shadow-lg hover:bg-kiwi-light transition-all border-none cursor-pointer"
+                  >
                   Compare Total Prices
-                </button>
+                  </button>
+
               </div>
             )}
           </div>

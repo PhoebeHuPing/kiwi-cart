@@ -54,18 +54,18 @@ export default function BasketDrawer() {
           <div className="w-screen max-w-xl">
             <div className="h-full flex flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300">
               {/* Header */}
-              <div className="px-8 py-10 border-b border-gray-100 flex items-center justify-between bg-kiwi/5">
+              <div className="px-8 py-10 border-b border-gray-100 flex items-center justify-between bg-kiwi-dark/5">
                 <div>
                   <h2 className="text-3xl font-black text-kiwi-dark flex items-center gap-3">
-                    <span aria-hidden="true">🛒</span> My Basket
+                    <span className="bg-kiwi-dark text-white p-2.5 rounded-xl text-xl" aria-hidden="true">🛒</span> My Basket
                   </h2>
-                  <p className="text-sm font-black text-kiwi-dark/80 uppercase tracking-[0.2em] mt-2">
+                  <p className="text-sm font-black text-kiwi-dark uppercase tracking-[0.2em] mt-3">
                     {totalItems} Items to compare
                   </p>
                 </div>
                 <button
                   onClick={() => setIsDrawerOpen(false)}
-                  className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-white hover:shadow-sm transition-all text-3xl border-none bg-transparent cursor-pointer"
+                  className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-kiwi-dark hover:text-white transition-all text-2xl border-none bg-gray-100 text-kiwi-dark cursor-pointer shadow-sm"
                   aria-label="Close basket"
                 >
                   ✕
@@ -144,7 +144,7 @@ export default function BasketDrawer() {
                   <button
                     onClick={handleCompare}
                     disabled={isComparing}
-                    className="w-full py-5 bg-kiwi-dark text-white rounded-3xl font-black text-xl shadow-2xl shadow-kiwi-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 mb-4 border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-5 bg-kiwi-dark text-white rounded-3xl font-black text-xl shadow-2xl shadow-kiwi-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 mb-4 border-none cursor-pointer disabled:bg-gray-700 disabled:opacity-90 disabled:cursor-not-allowed"
                   >
                     {isComparing ? (
                       <>
@@ -153,10 +153,11 @@ export default function BasketDrawer() {
                       </>
                     ) : (
                       <>
-                        <span className="text-2xl">⚡</span> Compare Live Prices
+                        <span className="text-2xl" aria-hidden="true">⚡</span> Compare Live Prices
                       </>
                     )}
                   </button>
+
                   <button
                     onClick={clearBasket}
                     className="w-full py-3 text-sm font-black text-gray-400 hover:text-red-600 transition-colors uppercase tracking-[0.3em] border-none bg-transparent cursor-pointer"

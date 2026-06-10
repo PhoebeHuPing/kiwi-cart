@@ -45,7 +45,7 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
           ${price.toFixed(2)}
         </span>
         {isCheapest && (
-          <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider ml-1">
+          <span className="bg-emerald-100 text-emerald-800 text-xs font-black px-2 py-0.5 rounded-full uppercase tracking-wider ml-1 border border-emerald-200/50">
             Best
           </span>
         )}
