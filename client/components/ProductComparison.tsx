@@ -361,10 +361,10 @@ function ProductComparison() {
                               <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-xs font-black text-kiwi uppercase tracking-[0.2em] leading-none mb-2">
+                              <span className="text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
                                 Best Price At
                               </span>
-                              <span className="text-lg font-black text-kiwi-dark leading-tight">
+                              <span className="text-xl font-black text-kiwi-dark leading-tight">
                                 {bestOption.supermarket_name}
                               </span>
                             </div>
@@ -394,12 +394,19 @@ function ProductComparison() {
                               }}
                               className={`w-12 h-12 flex items-center justify-center rounded-2xl transition-all border shadow-sm ${
                                 isInBasket(group.product_name)
-                                  ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100'
-                                  : 'bg-kiwi text-white border-kiwi shadow-kiwi/20 hover:bg-kiwi-dark'
+                                  ? 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200'
+                                  : 'bg-kiwi-dark text-white border-kiwi-dark shadow-kiwi/20 hover:scale-105'
                               }`}
                               title={isInBasket(group.product_name) ? "Remove" : "Add to Basket"}
                             >
-                              {isInBasket(group.product_name) ? '✕' : '🛒'}
+                              {isInBasket(group.product_name) ? (
+                                <span className="text-xl" aria-hidden="true">✕</span>
+                              ) : (
+                                <span className="text-xl" aria-hidden="true">🛒</span>
+                              )}
+                              <span className="sr-only">
+                                {isInBasket(group.product_name) ? "Remove from basket" : "Add to basket"}
+                              </span>
                             </button>
                           </div>
 
