@@ -361,10 +361,10 @@ function ProductComparison() {
                               <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-xs font-black text-kiwi uppercase tracking-[0.2em] leading-none mb-2">
+                              <span className="text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
                                 Best Price At
                               </span>
-                              <span className="text-lg font-black text-kiwi-dark leading-tight">
+                              <span className="text-xl font-black text-kiwi-dark leading-tight">
                                 {bestOption.supermarket_name}
                               </span>
                             </div>

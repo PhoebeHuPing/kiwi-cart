@@ -20,20 +20,18 @@ function App() {
       <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-6">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link to="/" className="text-4xl hover:scale-110 transition-transform no-underline" aria-label="KiwiCart Home">🥝</Link>
-            <div className="flex flex-col">
-              <Link to="/" className="text-2xl font-black tracking-tighter text-kiwi-dark no-underline leading-none">
-                KiwiCart
-              </Link>
-              <Link 
-                to="/developer" 
-                className="text-xs font-black text-kiwi hover:text-kiwi-dark hover:scale-105 transition-all no-underline mt-1 tracking-widest"
-              >
-                By Phoebe
-              </Link>
-            </div>
+            <Link to="/" className="flex items-center gap-3 group no-underline" aria-label="KiwiCart Home">
+              <span className="text-4xl group-hover:rotate-12 transition-transform">🥝</span>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black tracking-tighter text-kiwi-dark leading-none">
+                  KiwiCart
+                </span>
+                <span className="text-sm font-black text-kiwi group-hover:text-kiwi-dark transition-all mt-1 tracking-widest uppercase">
+                  By Phoebe
+                </span>
+              </div>
+            </Link>
           </div>
-
           <div className="flex items-center gap-6">
             {isAuthenticated && (
               <Link 
@@ -115,13 +113,14 @@ function App() {
               <h1 className="text-7xl md:text-9xl font-black tracking-tighter drop-shadow-2xl leading-none">
                 KiwiCart
               </h1>
-              <Link 
-                to="/developer" 
-                className="mt-4 text-2xl md:text-4xl font-black text-white hover:text-kiwi-light hover:scale-105 hover:underline decoration-white/30 underline-offset-8 transition-all no-underline drop-shadow-2xl"
+              <Link
+                to="/developer"
+                className="mt-6 text-2xl md:text-4xl font-black text-white hover:text-kiwi-light hover:scale-105 hover:underline decoration-white/30 underline-offset-8 transition-all no-underline drop-shadow-2xl"
               >
-                By Phoebe
+                Created By Phoebe
               </Link>
-            </div>
+              </div>
+
             <p className="mt-8 text-2xl md:text-3xl font-bold text-kiwi-light drop-shadow-lg max-w-3xl leading-tight">
               Stop overpaying. Compare prices across{' '}
               <span className="text-white underline decoration-kiwi-light/50 underline-offset-8">
