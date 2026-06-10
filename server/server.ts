@@ -1,9 +1,24 @@
 import * as Path from 'node:path'
 import express from 'express'
+import helmet from 'helmet'
+import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import productsRoutes from './routes/products.ts'
 
 const server = express()
+
+// Security headers
+server.use(helmet({
+  contentSecurityPolicy: false, // Disable CSP to allow Google Maps scripts
+}))
+
+// CORS: allow same-origin in production, localhost in development
+server.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? process.env.CORS_ORIGIN || true
+    : 'http://localhost:5173',
+}))
+
 server.use(express.json())
 
 // Rate limiting: max 30 requests per minute per IP for API routes

@@ -26,10 +26,10 @@ function App() {
                 <span className="text-2xl font-black tracking-tighter text-kiwi-dark leading-none">
                   KiwiCart
                 </span>
-                <span className="text-sm font-black text-kiwi group-hover:text-kiwi-dark transition-all mt-1 tracking-widest uppercase">
-                  By Phoebe
-                </span>
               </div>
+            </Link>
+            <Link to="/developer" className="text-sm font-black text-kiwi hover:text-kiwi-dark transition-all mt-1 tracking-widest uppercase no-underline">
+              By Phoebe
             </Link>
           </div>
           <div className="flex items-center gap-6">
