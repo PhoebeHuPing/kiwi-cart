@@ -358,7 +358,7 @@ function ProductComparison() {
                           </h3>
                           <div className="flex items-center gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
                             <div className="w-20 h-20 bg-white rounded-xl p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
-                              <img src={bestOption.logo_url} alt={bestOption.supermarket_name} className="w-full h-full object-contain" />
+                              <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col">
                               <span className="text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
@@ -439,7 +439,7 @@ function ProductComparison() {
                             >
                               <div className="flex items-center gap-4 min-w-0">
                                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded-xl p-2 flex items-center justify-center flex-shrink-0">
-                                  <img src={option.logo_url} alt={option.supermarket_name} className="w-full h-full object-contain" />
+                                  <img src={option.logo_url} alt="" className="w-full h-full object-contain" />
                                 </div>
                                 <div className="min-w-0">
                                   <span className="block font-black text-base sm:text-lg text-kiwi-dark leading-tight truncate">
