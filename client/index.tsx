@@ -8,7 +8,14 @@ import { BasketProvider } from './contexts/BasketContext'
 
 import './styles/index.css'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes: don't refetch if data is fresh
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 /**
  * Main application entry point.

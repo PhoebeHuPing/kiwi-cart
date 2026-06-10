@@ -162,7 +162,7 @@ function ProductComparison() {
               <input
                 type="text"
                 aria-label="Search for products"
-                className="flex-1 bg-transparent border-none focus:ring-0 text-xl font-medium outline-none placeholder:text-gray-400"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-xl font-medium outline-none placeholder:text-gray-600"
                 placeholder="Search for a product (e.g. Milk, Bread, Steak)..."
                 value={searchTerm}
                 onFocus={() => setShowDropdown(true)}
@@ -358,7 +358,7 @@ function ProductComparison() {
                           </h3>
                           <div className="flex items-center gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
                             <div className="w-20 h-20 bg-white rounded-xl p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
-                              <img src={bestOption.logo_url} alt={`${bestOption.supermarket_name} logo`} className="w-full h-full object-contain" />
+                              <img src={bestOption.logo_url} alt={bestOption.supermarket_name} className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col">
                               <span className="text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
@@ -425,7 +425,7 @@ function ProductComparison() {
                       {/* Expanded Pricing Table - High Legibility & Responsive Fix */}
                       {isExpanded && (
                         <div className="bg-gray-50/80 border-t border-gray-100 p-4 sm:p-6 space-y-4 animate-in fade-in slide-in-from-top-2">
-                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 ml-1">
+                          <p className="text-xs font-black text-gray-600 uppercase tracking-[0.2em] mb-2 ml-1">
                             Available Store Prices
                           </p>
                           {group.options.map((option, optIdx) => (
@@ -439,32 +439,32 @@ function ProductComparison() {
                             >
                               <div className="flex items-center gap-4 min-w-0">
                                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded-xl p-2 flex items-center justify-center flex-shrink-0">
-                                  <img src={option.logo_url} alt={`${option.supermarket_name} logo`} className="w-full h-full object-contain" />
+                                  <img src={option.logo_url} alt={option.supermarket_name} className="w-full h-full object-contain" />
                                 </div>
                                 <div className="min-w-0">
                                   <span className="block font-black text-base sm:text-lg text-kiwi-dark leading-tight truncate">
                                     {option.supermarket_name}
                                   </span>
-                                  <span className="text-[11px] sm:text-sm text-gray-500 font-medium flex items-center gap-1 mt-0.5 truncate">
+                                  <span className="text-xs sm:text-sm text-gray-600 font-medium flex items-center gap-1 mt-0.5 truncate">
                                     📍 {option.address.split(',')[0]}
                                   </span>
                                 </div>
                               </div>
                               
                               <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0">
-                                <span className="sm:hidden text-[10px] font-black text-gray-400 uppercase tracking-widest">Price</span>
+                                <span className="sm:hidden text-xs font-black text-gray-600 uppercase tracking-widest">Price</span>
                                 <div className="text-right">
                                   <div className="flex flex-col items-end">
                                     <span className="font-black text-xl sm:text-2xl text-kiwi-dark tracking-tighter">
                                       ${option.price.toFixed(2)}
                                     </span>
                                     {option.unit_price && (
-                                      <span className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-tighter -mt-1">
+                                      <span className="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-tighter -mt-1">
                                         {option.unit_price}
                                       </span>
                                     )}
                                     {optIdx === 0 && (
-                                      <span className="mt-1 px-2 py-0.5 bg-kiwi text-white text-[9px] sm:text-[10px] font-black uppercase tracking-widest rounded">
+                                      <span className="mt-1 px-2 py-0.5 bg-kiwi-dark text-white text-xs font-black uppercase tracking-widest rounded-lg">
                                         Cheapest
                                       </span>
                                     )}
@@ -522,7 +522,7 @@ function ProductComparison() {
             {basket.length > 0 && (
               <div className="bg-kiwi-dark rounded-3xl p-8 text-white shadow-xl shadow-kiwi-dark/20 animate-in fade-in slide-in-from-right-4">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="bg-kiwi p-3 rounded-2xl text-2xl">
+                  <div className="bg-kiwi-dark text-white p-3 rounded-2xl text-2xl shadow-lg">
                     🛒
                   </div>
                   <div>

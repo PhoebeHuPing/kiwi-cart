@@ -54,18 +54,18 @@ export default function BasketDrawer() {
           <div className="w-screen max-w-xl">
             <div className="h-full flex flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300">
               {/* Header */}
-              <div className="px-8 py-10 border-b border-gray-100 flex items-center justify-between bg-kiwi/5">
+              <div className="px-8 py-10 border-b border-gray-100 flex items-center justify-between bg-kiwi-dark/5">
                 <div>
                   <h2 className="text-3xl font-black text-kiwi-dark flex items-center gap-3">
-                    <span aria-hidden="true">🛒</span> My Basket
+                    <span className="bg-kiwi-dark text-white p-2.5 rounded-xl text-xl" aria-hidden="true">🛒</span> My Basket
                   </h2>
-                  <p className="text-sm font-black text-kiwi-dark/80 uppercase tracking-[0.2em] mt-2">
+                  <p className="text-sm font-black text-kiwi-dark uppercase tracking-[0.2em] mt-3">
                     {totalItems} Items to compare
                   </p>
                 </div>
                 <button
                   onClick={() => setIsDrawerOpen(false)}
-                  className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-white hover:shadow-sm transition-all text-3xl border-none bg-transparent cursor-pointer"
+                  className="w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-kiwi-dark hover:text-white transition-all text-2xl border-none bg-gray-100 text-kiwi-dark cursor-pointer shadow-sm"
                   aria-label="Close basket"
                 >
                   ✕

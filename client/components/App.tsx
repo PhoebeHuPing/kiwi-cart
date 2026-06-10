@@ -123,7 +123,7 @@ function App() {
 
             <p className="mt-8 text-2xl md:text-3xl font-bold text-kiwi-light drop-shadow-lg max-w-3xl leading-tight">
               Stop overpaying. Compare prices across{' '}
-              <span className="text-white underline decoration-kiwi-light/50 underline-offset-8">
+              <span className="text-white border-b-4 border-kiwi-light/40 pb-1">
                 Pak&apos;nSave, New World, and Woolworths
               </span>{' '}
               in real-time.
