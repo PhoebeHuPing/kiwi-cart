@@ -59,7 +59,7 @@ describe('ProductComparison Component', () => {
       expect(screen.getByText('Apple')).toBeDefined()
     })
 
-    expect(screen.getByText('Best Price')).toBeDefined()
+    expect(screen.getByText('Best Price At')).toBeDefined()
     expect(screen.getByText('$3.50')).toBeDefined()
   })
 
@@ -80,11 +80,12 @@ describe('ProductComparison Component', () => {
 
     render(<ProductComparison />, { wrapper })
 
-    const productHeading = await screen.findByText('Apple')
-    fireEvent.click(productHeading)
+    // Wait for the query to resolve and find the 'View All Prices' button
+    const viewAllPricesButton = await screen.findByText(/View All Prices/i)
+    fireEvent.click(viewAllPricesButton)
 
-    expect(screen.getByText('Live Price Comparison')).toBeDefined()
-    expect(screen.getByText('Woolworths')).toBeDefined()
-    expect(screen.getByText('123 Street')).toBeDefined()
+    expect(screen.getByText('Available Store Prices')).toBeDefined()
+    expect(screen.getAllByText('Woolworths')).toBeDefined()
+    expect(screen.getByText(/123 Street/)).toBeDefined()
   })
 })

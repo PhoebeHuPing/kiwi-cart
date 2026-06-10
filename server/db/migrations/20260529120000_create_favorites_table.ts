@@ -1,4 +1,4 @@
-import { Knex } from 'knex'
+import type { Knex } from 'knex'
 
 /**
  * Creates the favorites table to store user-specific tracked products.
