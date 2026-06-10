@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { getSupermarkets } from '../apis/products'
+import { getSupermarkets, getNearbySupermarkets } from '../apis/products'
 
 interface Supermarket {
   id: number
   name: string
   address: string
-  lat: number
-  lng: number
+  latitude: number
+  longitude: number
 }
 
 declare global {
@@ -19,7 +19,7 @@ declare global {
  * StoreMap Component: Renders a Google Map with user location and supermarket markers.
  * Features:
  * - Browser Geolocation to find the user.
- * - Places Autocomplete for location searching.
+ * - 5km Radius filtering: Fetches only nearby stores when location is available.
  * - Custom brand markers for major NZ supermarkets.
  */
 export default function StoreMap() {
@@ -43,13 +43,41 @@ export default function StoreMap() {
         },
         (error) => {
           console.error('Geolocation error:', error.message)
+          // If geolocation fails, we still load all supermarkets as fallback
+          fetchSupermarkets()
         },
         { enableHighAccuracy: true }
       )
+    } else {
+      fetchSupermarkets()
     }
   }, [])
 
-  // 2. Dynamic script loading for Google Maps API using Environment Variable
+  // 2. Fetch supermarket data (Nearby or All)
+  const fetchSupermarkets = async (lat?: number, lng?: number) => {
+    try {
+      let data
+      if (lat !== undefined && lng !== undefined) {
+        console.log(`Fetching stores within 5km of ${lat}, ${lng}`)
+        data = await getNearbySupermarkets(lat, lng, 5)
+      } else {
+        console.log('Fetching all stores (fallback)')
+        data = await getSupermarkets()
+      }
+      setSupermarkets(data)
+    } catch (err) {
+      console.error('Failed to fetch supermarkets:', err)
+    }
+  }
+
+  // Trigger fetch when userLocation is found
+  useEffect(() => {
+    if (userLocation) {
+      fetchSupermarkets(userLocation.lat, userLocation.lng)
+    }
+  }, [userLocation])
+
+  // 3. Dynamic script loading for Google Maps API using Environment Variable
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
     if (!apiKey) {
@@ -69,13 +97,6 @@ export default function StoreMap() {
     script.onload = () => setIsLoaded(true)
     script.onerror = () => setMapError('Failed to load Google Maps script')
     document.head.appendChild(script)
-  }, [])
-
-  // 3. Fetch all supermarket store data from the local API
-  useEffect(() => {
-    getSupermarkets()
-      .then(setSupermarkets)
-      .catch((err) => console.error('Failed to fetch supermarkets:', err))
   }, [])
 
   // 4. Initialize Google Map Instance & Places Autocomplete
@@ -104,12 +125,19 @@ export default function StoreMap() {
         autocomplete.addListener('place_changed', () => {
           const place = autocomplete.getPlace()
           if (!place.geometry || !place.geometry.location) return
+          
+          const newLat = place.geometry.location.lat()
+          const newLng = place.geometry.location.lng()
+
           if (place.geometry.viewport) {
             map.fitBounds(place.geometry.viewport)
           } else {
             map.setCenter(place.geometry.location)
             map.setZoom(15)
           }
+
+          // When user searches for a new area, refetch stores for that area
+          fetchSupermarkets(newLat, newLng)
         })
       }
     }
@@ -149,7 +177,7 @@ export default function StoreMap() {
     if (mapInstance && supermarkets.length > 0) {
       supermarkets.forEach((store) => {
         const marker = new window.google.maps.Marker({
-          position: { lat: store.lat, lng: store.lng },
+          position: { lat: store.latitude, lng: store.longitude },
           map: mapInstance,
           title: store.name,
           icon: {

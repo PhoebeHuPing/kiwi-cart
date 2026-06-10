@@ -86,5 +86,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.ProductId).HasColumnName("product_id");
             e.Property(p => p.Quantity).HasColumnName("quantity");
         });
+
+        // Auckland Supermarket Seed Data
+        modelBuilder.Entity<Store>().HasData(
+            new Store { Id = 1, Name = "Pak'nSave Royal Oak", Brand = "PakNSave", Latitude = -36.9100, Longitude = 174.7760, Address = "Royal Oak, Auckland" },
+            new Store { Id = 2, Name = "New World Victoria Park", Brand = "NewWorld", Latitude = -36.8485, Longitude = 174.7521, Address = "Victoria St West, Auckland CBD" },
+            new Store { Id = 3, Name = "Woolworths Auckland City", Brand = "Woolworths", Latitude = -36.8475, Longitude = 174.7670, Address = "Quay St, Auckland CBD" },
+            new Store { Id = 4, Name = "Pak'nSave Albany", Brand = "PakNSave", Latitude = -36.7262, Longitude = 174.7061, Address = "Don McKinnon Dr, Albany" },
+            new Store { Id = 5, Name = "New World Mt Eden", Brand = "NewWorld", Latitude = -36.8837, Longitude = 174.7622, Address = "Dominion Rd, Mt Eden" },
+            new Store { Id = 6, Name = "Woolworths Newmarket", Brand = "Woolworths", Latitude = -36.8687, Longitude = 174.7770, Address = "Broadway, Newmarket" },
+            new Store { Id = 7, Name = "Pak'nSave Mt Albert", Brand = "PakNSave", Latitude = -36.8817, Longitude = 174.7188, Address = "New North Rd, Mt Albert" }
+        );
     }
 }

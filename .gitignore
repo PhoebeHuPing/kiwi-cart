@@ -15,15 +15,21 @@ coverage
 
 # Dotenv env settings
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Promptkit repository
-promptkit
+# IDEs and Editors
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# AI Agent local files
-.agents/
-
-# Personal config
-*.user.toml
+# OS files
+.DS_Store
+Thumbs.db
 
 # .NET
 **/bin/
@@ -32,3 +38,10 @@ promptkit
 *.suo
 *.userosscache
 *.sln.docstates
+appsettings.Development.json
+
+# AI Agent local files
+.agents/
+_bmad-output/
+_bmad/config.user.toml
+_bmad/custom/config.user.toml

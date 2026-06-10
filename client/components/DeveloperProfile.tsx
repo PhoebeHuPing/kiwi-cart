@@ -76,7 +76,7 @@ function DeveloperProfile() {
                   <span className="text-3xl">🛠️</span> Tech Stack
                 </h3>
                 <div className="flex flex-wrap gap-3">
-                  {['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'Tailwind CSS', 'Vite'].map(tech => (
+                  {['React', 'TypeScript', '.NET 8 (C#)', 'PostgreSQL', 'Tailwind CSS', 'Antigravity CLI'].map(tech => (
                     <span key={tech} className="px-6 py-3 bg-gray-50 rounded-2xl text-base font-black text-gray-500 border border-gray-100">
                       {tech}
                     </span>
@@ -89,9 +89,8 @@ function DeveloperProfile() {
                   <span className="text-3xl">💡</span> Future Vision
                 </h3>
                 <p className="text-gray-600 leading-relaxed text-xl font-medium">
-                  I'm currently working on integrating Gemini AI to provide personalized shopping advice, 
-                  receipt OCR for community-driven price updates, and expanded location-based mapping 
-                  to include local butchers and produce markets.
+                  I'm currently focused on expanding our location-based features to include real-time price comparisons within a 5km radius, 
+                  receipt OCR for community-driven price updates, and AI-driven shopping advice to help Kiwis beat inflation.
                 </p>
               </section>
             </div>
@@ -102,15 +101,15 @@ function DeveloperProfile() {
                 <ul className="space-y-6">
                   <li className="flex items-start gap-4">
                     <span className="text-kiwi text-xl mt-0.5">✓</span>
-                    <span className="text-lg font-black text-kiwi-dark">KiwiCart Price Tracker</span>
+                    <span className="text-lg font-black text-kiwi-dark">KiwiCart .NET Migration</span>
+                  </li>
+                  <li className="flex items-start gap-4">
+                    <span className="text-kiwi text-xl mt-0.5">✓</span>
+                    <span className="text-lg font-black text-kiwi-dark">5km Radius Store Finder</span>
                   </li>
                   <li className="flex items-start gap-4">
                     <span className="text-kiwi text-xl mt-0.5">○</span>
-                    <span className="text-lg text-gray-400 font-bold">NZ Supermarket API SDK</span>
-                  </li>
-                  <li className="flex items-start gap-4">
-                    <span className="text-kiwi text-xl mt-0.5">○</span>
-                    <span className="text-lg text-gray-400 font-bold">OpenFoodFacts Contributor</span>
+                    <span className="text-lg text-gray-400 font-bold">Community Price Sharing</span>
                   </li>
                 </ul>
               </div>
