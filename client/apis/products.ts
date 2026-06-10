@@ -42,7 +42,7 @@ export async function compareBasket(
  * Fetches a list of all stores and their coordinates.
  */
 export async function getSupermarkets() {
-  const response = await request.get('/api/v1/stores')
+  const response = await request.get('/api/v1/products/supermarkets')
   return response.body
 }
 
@@ -55,7 +55,7 @@ export async function getNearbySupermarkets(
   radius = 5,
 ) {
   const response = await request
-    .get('/api/v1/stores/nearby')
+    .get('/api/v1/products/nearby')
     .query({ lat, lng, radius })
   return response.body
 }
