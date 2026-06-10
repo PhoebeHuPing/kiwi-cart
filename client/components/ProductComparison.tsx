@@ -527,35 +527,36 @@ function ProductComparison() {
                   </div>
                   <div>
                     <h4 className="font-black text-xl leading-none">Your Basket</h4>
-                    <p className="text-kiwi-light text-xs font-bold uppercase tracking-widest mt-1">
+                    <p className="text-white/90 text-sm font-black uppercase tracking-widest mt-2">
                       {basket.reduce((sum, item) => sum + item.quantity, 0)} Items Selected
                     </p>
                   </div>
-                </div>
-                
-                <div className="space-y-4 mb-8">
+                  </div>
+
+                  <div className="space-y-4 mb-8">
                   {basket.slice(0, 3).map((item, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-white/10 rounded-lg p-1">
-                        <img src={item.image_url} alt="" className="w-full h-full object-contain mix-blend-screen" />
+                      <div className="w-10 h-10 bg-white/10 rounded-xl p-1.5">
+                        <img src={item.image_url} alt={item.name} className="w-full h-full object-contain mix-blend-screen" />
                       </div>
-                      <span className="text-sm font-bold truncate flex-1">{item.name}</span>
-                      <span className="text-xs font-black text-kiwi">×{item.quantity}</span>
+                      <span className="text-sm font-black truncate flex-1">{item.name}</span>
+                      <span className="text-sm font-black text-white">×{item.quantity}</span>
                     </div>
                   ))}
                   {basket.length > 3 && (
-                    <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest text-center">
+                    <p className="text-xs text-white/80 font-black uppercase tracking-[0.2em] text-center bg-white/5 py-2 rounded-lg">
                       + {basket.length - 3} more items
                     </p>
                   )}
-                </div>
+                  </div>
 
-                <button
+                  <button
                   onClick={() => setIsDrawerOpen(true)}
-                  className="w-full py-4 bg-kiwi text-white rounded-2xl font-black text-base shadow-lg hover:bg-kiwi-dark border border-kiwi-light/20 transition-all cursor-pointer"
-                >
+                  className="w-full py-4 bg-white text-kiwi-dark rounded-2xl font-black text-base shadow-lg hover:bg-kiwi-light transition-all border-none cursor-pointer"
+                  >
                   Compare Total Prices
-                </button>
+                  </button>
+
               </div>
             )}
           </div>
