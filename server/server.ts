@@ -4,6 +4,7 @@ import helmet from 'helmet'
 import cors from 'cors'
 import rateLimit from 'express-rate-limit'
 import productsRoutes from './routes/products.ts'
+import feedbackRoutes from './routes/feedback.ts'
 
 const server = express()
 
@@ -34,6 +35,7 @@ server.use('/api', apiLimiter)
 // API ROUTES: NZ Supermarket Price Comparison
 // All product and store related requests are handled by productsRoutes
 server.use('/api/v1/products', productsRoutes)
+server.use('/api/v1/feedback', feedbackRoutes)
 
 // In production, serve the compiled frontend assets from the 'dist' folder
 if (process.env.NODE_ENV === 'production') {

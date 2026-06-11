@@ -9,6 +9,7 @@ import App from './components/App.tsx'
 import ProductComparison from './components/ProductComparison.tsx'
 import DeveloperProfile from './components/DeveloperProfile.tsx'
 import MyKitchen from './components/MyKitchen.tsx'
+import FeedbackBoard from './components/FeedbackBoard.tsx'
 
 // Protect the My Kitchen route so only authenticated users can access it
 const ProtectedMyKitchen = withAuthenticationRequired(MyKitchen)
@@ -19,6 +20,7 @@ export const routes = createBrowserRouter(
       <Route index element={<ProductComparison />} />
       <Route path="developer" element={<DeveloperProfile />} />
       <Route path="kitchen" element={<ProtectedMyKitchen />} />
+      <Route path="feedback" element={<FeedbackBoard />} />
     </Route>,
   ),
 )

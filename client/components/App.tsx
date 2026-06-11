@@ -148,19 +148,6 @@ function App() {
         <Outlet />
       </main>
 
-      <BasketDrawer />
-    </>
-  )
-}
-
-export default App
-       </div>
-        </header>
-      )}
-      <main className="max-w-[1600px] mx-auto py-12 px-6 md:px-12">
-        <Outlet />
-      </main>
-
       <footer className="bg-kiwi-dark text-white pt-16 pb-8 px-6 mt-20">
         <div className="max-w-[1600px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -186,11 +173,20 @@ export default App
             <div>
               <h4 className="text-sm font-black uppercase tracking-[0.2em] mb-6">Community</h4>
               <ul className="list-none p-0 flex flex-col gap-4">
-                <li><a href="#" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Report Price Bug</a></li>
-                <li><a href="#" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Supermarket News</a></li>
-                <li><a href="#" className="text-white/70 hover:text-white transition-colors no-underline font-bold">NZ Data Source</a></li>
+                <li><Link to="/feedback" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Report Price Bug</Link></li>
+                <li><a href="https://supermarketnews.co.nz/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Supermarket News</a></li>
               </ul>
             </div>
+          </div>
+
+          <div className="mb-12 pt-8 border-t border-white/10">
+            <h4 className="text-sm font-black uppercase tracking-[0.2em] mb-4">Data Integration & Compliance</h4>
+            <p className="text-white/70 text-sm leading-relaxed mb-3">KiwiCart is built on the principles of transparency and ethical data sourcing.</p>
+            <ul className="list-none p-0 text-white/60 text-sm space-y-2">
+              <li><span className="font-bold text-white/70">No Scraping:</span> This project does not employ web scraping or automated crawling technologies.</li>
+              <li><span className="font-bold text-white/70">Direct Integration:</span> All price information is retrieved through standard API integrations to ensure data integrity and reliability.</li>
+              <li><span className="font-bold text-white/70">Compliance:</span> We respect the terms of service of all integrated retailers and aim to support the community by providing accurate, real-time information to help manage the cost of living.</li>
+            </ul>
           </div>
 
           <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">

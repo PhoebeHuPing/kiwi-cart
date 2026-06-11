@@ -177,3 +177,17 @@ export async function removeFavorite(userId: string, productName: string): Promi
     .andWhere('product_name', productName)
     .delete()
 }
+
+/**
+ * Fetches all feedback messages, newest first.
+ */
+export async function getFeedbackMessages() {
+  return db('feedback_messages').select('*').orderBy('created_at', 'desc')
+}
+
+/**
+ * Creates a new feedback message.
+ */
+export async function createFeedbackMessage(userId: string, userName: string, message: string) {
+  return db('feedback_messages').insert({ user_id: userId, user_name: userName, message })
+}
