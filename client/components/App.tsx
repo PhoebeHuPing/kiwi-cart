@@ -28,9 +28,6 @@ function App() {
                 </span>
               </div>
             </Link>
-            <Link to="/developer" className="text-sm font-black text-kiwi hover:text-kiwi-dark transition-all mt-1 tracking-widest uppercase no-underline">
-              By Phoebe
-            </Link>
           </div>
           <div className="flex items-center gap-6">
             {isAuthenticated && (
@@ -150,6 +147,63 @@ function App() {
       <main className="max-w-[1600px] mx-auto py-12 px-6 md:px-12">
         <Outlet />
       </main>
+
+      <BasketDrawer />
+    </>
+  )
+}
+
+export default App
+       </div>
+        </header>
+      )}
+      <main className="max-w-[1600px] mx-auto py-12 px-6 md:px-12">
+        <Outlet />
+      </main>
+
+      <footer className="bg-kiwi-dark text-white pt-16 pb-8 px-6 mt-20">
+        <div className="max-w-[1600px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-4xl">🥝</span>
+                <span className="text-2xl font-black tracking-tighter text-white">KiwiCart</span>
+              </div>
+              <p className="text-kiwi-light font-medium max-w-md leading-relaxed">
+                Empowering New Zealanders to combat the cost of living crisis through transparency and community-driven price tracking.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="text-sm font-black uppercase tracking-[0.2em] mb-6">Explore</h4>
+              <ul className="list-none p-0 flex flex-col gap-4">
+                <li><Link to="/" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Home</Link></li>
+                <li><Link to="/kitchen" className="text-white/70 hover:text-white transition-colors no-underline font-bold">My Kitchen</Link></li>
+                <li><Link to="/developer" className="text-white/70 hover:text-white transition-colors no-underline font-bold">About the Dev</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-black uppercase tracking-[0.2em] mb-6">Community</h4>
+              <ul className="list-none p-0 flex flex-col gap-4">
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Report Price Bug</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Supermarket News</a></li>
+                <li><a href="#" className="text-white/70 hover:text-white transition-colors no-underline font-bold">NZ Data Source</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+            <span className="text-white/40 text-sm font-bold">
+              © {new Date().getFullYear()} KiwiCart NZ. All rights reserved.
+            </span>
+            <div className="flex gap-8">
+              <a href="#" className="text-white/40 hover:text-white text-xs font-black uppercase tracking-widest no-underline">Privacy</a>
+              <a href="#" className="text-white/40 hover:text-white text-xs font-black uppercase tracking-widest no-underline">Terms</a>
+            </div>
+          </div>
+        </div>
+      </footer>
 
       <BasketDrawer />
     </>
