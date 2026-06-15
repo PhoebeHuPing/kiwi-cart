@@ -1,5 +1,9 @@
 # KiwiCart - NZ Supermarket Price Sharing
 
+🔗 **Live Demo:** [https://kiwicart.azurewebsites.net/](https://kiwicart.azurewebsites.net/)
+
+![KiwiCart Screenshot](assets/kiwicart.jpeg)
+
 KiwiCart is a community-driven platform designed to tackle the New Zealand Cost of Living Crisis. It empowers users to compare supermarket prices across major brands (Pak'nSave, New World, and Woolworths) using real-time data and location-based search.
 
 ## Project Mission
@@ -80,13 +84,6 @@ KiwiCart is built on the principles of transparency and ethical data sourcing.
    ```bash
    npm run dev
    ```
-
-## Contributing
-We welcome contributions! Please see CONTRIBUTING.md for guidelines on:
-- Setting up your development environment
-- Code style and formatting requirements
-- Pull request process
-- Commit message conventions
 
 ## License
 ISC
