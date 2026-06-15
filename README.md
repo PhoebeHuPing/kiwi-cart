@@ -85,13 +85,6 @@ KiwiCart is built on the principles of transparency and ethical data sourcing.
    npm run dev
    ```
 
-## Contributing
-We welcome contributions! Please see CONTRIBUTING.md for guidelines on:
-- Setting up your development environment
-- Code style and formatting requirements
-- Pull request process
-- Commit message conventions
-
 ## License
 ISC
 
