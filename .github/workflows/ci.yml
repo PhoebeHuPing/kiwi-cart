@@ -18,6 +18,8 @@ jobs:
         working-directory: server-dotnet
       - run: dotnet test --no-build
         working-directory: server-dotnet
+        env:
+          ConnectionStrings__DefaultConnection: "Host=localhost;Database=test;Username=test;Password=test"
 
   frontend:
     runs-on: ubuntu-latest
