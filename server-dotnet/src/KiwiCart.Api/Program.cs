@@ -62,7 +62,7 @@ var retryPolicy = HttpPolicyExtensions.HandleTransientHttpError()
     .RetryAsync(2);
 var circuitBreakerPolicy = HttpPolicyExtensions.HandleTransientHttpError()
     .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
-var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(2.5));
+var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(10));
 
 builder.Services.AddHttpClient("PakNSaveAuth", c =>
 {
