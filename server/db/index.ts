@@ -18,20 +18,20 @@ export async function getComparePrices(
 ): Promise<(PriceComparisonData & { updated_at: string | null })[]> {
   return db('products')
     .join('prices', 'products.id', 'prices.product_id')
-    .join('supermarkets', 'supermarkets.id', 'prices.supermarket_id')
+    .join('stores', 'stores.id', 'prices.store_id')
     .select(
       'products.name as product_name',
       'products.image_url',
-      'supermarkets.name as supermarket_name',
-      'supermarkets.logo_url',
-      'supermarkets.address',
-      'supermarkets.lat',
-      'supermarkets.lng',
-      'prices.price',
-      'prices.updated_at',
+      'stores.name as supermarket_name',
+      'stores.logo_url',
+      'stores.address',
+      'stores.latitude as lat',
+      'stores.longitude as lng',
+      'prices.amount as price',
+      'prices.retrieved_at as updated_at',
     )
     .where('products.name', 'like', `%${searchTerm}%`)
-    .orderBy('prices.price', 'asc')
+    .orderBy('prices.amount', 'asc')
 }
 
 /**
@@ -44,13 +44,13 @@ export async function upsertPrice(data: {
   supermarket_name: string
   price: number
 }): Promise<void> {
-  // 1. Ensure the supermarket exists (or get its ID)
-  const supermarket = await db('supermarkets')
+  // 1. Ensure the store exists (or get its ID)
+  const store = await db('stores')
     .where('name', 'like', `%${data.supermarket_name}%`)
     .first()
   
-  if (!supermarket) {
-    console.warn(`Supermarket ${data.supermarket_name} not found in DB`)
+  if (!store) {
+    console.warn(`Store ${data.supermarket_name} not found in DB`)
     return
   }
 
@@ -71,22 +71,22 @@ export async function upsertPrice(data: {
   // 3. Upsert the price
   const existingPrice = await db('prices')
     .where('product_id', product.id)
-    .andWhere('supermarket_id', supermarket.id)
+    .andWhere('store_id', store.id)
     .first()
 
   if (existingPrice) {
     await db('prices')
       .where('id', existingPrice.id)
       .update({
-        price: data.price,
-        updated_at: new Date().toISOString(),
+        amount: data.price,
+        retrieved_at: new Date().toISOString(),
       })
   } else {
     await db('prices').insert({
       product_id: product.id,
-      supermarket_id: supermarket.id,
-      price: data.price,
-      updated_at: new Date().toISOString(),
+      store_id: store.id,
+      amount: data.price,
+      retrieved_at: new Date().toISOString(),
     })
   }
 }
@@ -95,7 +95,7 @@ export async function upsertPrice(data: {
  * Fetches all supermarkets.
  */
 export async function getSupermarkets() {
-  return db('supermarkets').select('*')
+  return db('stores').select('*')
 }
 
 /**
@@ -107,9 +107,9 @@ export async function getNearbySupermarkets(
   lng: number,
   radiusKm: number,
 ) {
-  const allStores = await db('supermarkets').select('*')
+  const allStores = await db('stores').select('*')
   return allStores.filter((store) => {
-    const distance = calculateDistance(lat, lng, store.lat, store.lng)
+    const distance = calculateDistance(lat, lng, store.latitude, store.longitude)
     return distance <= radiusKm
   })
 }
