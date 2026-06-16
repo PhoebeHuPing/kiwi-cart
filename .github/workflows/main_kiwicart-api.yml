@@ -29,6 +29,14 @@ jobs:
         run: dotnet build --configuration Release
         working-directory: ./server-dotnet/src/KiwiCart.Api
 
+      - name: Run database migrations
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet ef database update --project ../KiwiCart.Infrastructure --startup-project .
+        working-directory: ./server-dotnet/src/KiwiCart.Api
+        env:
+          ConnectionStrings__DefaultConnection: "Host=${{ secrets.DB_HOST }};Port=${{ secrets.DB_PORT }};Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }};SSL Mode=Require"
+
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
         working-directory: ./server-dotnet/src/KiwiCart.Api
