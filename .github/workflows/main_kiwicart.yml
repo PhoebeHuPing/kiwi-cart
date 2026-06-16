@@ -67,4 +67,13 @@ jobs:
           app-name: 'kiwicart'
           slot-name: 'Production'
           package: .
+
+      - name: Run database migrations
+        run: npm run knex migrate:latest -- --env production
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           
