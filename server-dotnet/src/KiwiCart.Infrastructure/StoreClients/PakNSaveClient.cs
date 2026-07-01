@@ -66,11 +66,30 @@ public class PakNSaveClient : StoreApiClient
                     && sp.TryGetProperty("price", out var priceEl)
                     ? priceEl.GetDecimal() : 0m;
 
+                // Extract image URL from API response (fallback to fsimg CDN)
+                var productId = p.TryGetProperty("productId", out var pid) ? pid.GetString() ?? "" : "";
+                var simpleId = productId.Split('-')[0];
+                string? imageUrl = null;
+                if (p.TryGetProperty("images", out var images)
+                    && images.TryGetProperty("primaryImages", out var primary)
+                    && primary.TryGetProperty("400px", out var img400))
+                {
+                    imageUrl = img400.GetString();
+                }
+                imageUrl ??= string.IsNullOrEmpty(simpleId)
+                    ? null
+                    : $"https://a.fsimg.co.nz/product/retail/fan/image/400x400/{simpleId}.png";
+
                 results.Add(new PriceResult
                 {
                     ProductName = name,
+                    ImageUrl = imageUrl,
                     StoreName = StoreName,
                     StoreBrand = "PakNSave",
+                    LogoUrl = "/images/pak-n-save.webp",
+                    Address = "Henderson, West Auckland",
+                    Lat = -36.8819,
+                    Lng = 174.6336,
                     Price = priceInCents / 100m,
                     RetrievedAt = DateTime.UtcNow
                 });
