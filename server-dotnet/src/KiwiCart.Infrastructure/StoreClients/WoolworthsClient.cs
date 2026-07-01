@@ -62,11 +62,26 @@ public class WoolworthsClient : StoreApiClient
                     && priceObj.TryGetProperty("salePrice", out var salePrice)
                     ? salePrice.GetDecimal() : 0m;
 
+                // Extract image URL (Woolworths uses images.big / images.small)
+                string? imageUrl = null;
+                if (p.TryGetProperty("images", out var images))
+                {
+                    if (images.TryGetProperty("big", out var bigImg))
+                        imageUrl = bigImg.GetString()?.Replace("w=200&h=200", "w=400&h=400");
+                    else if (images.TryGetProperty("small", out var smallImg))
+                        imageUrl = smallImg.GetString();
+                }
+
                 results.Add(new PriceResult
                 {
                     ProductName = name,
+                    ImageUrl = imageUrl,
                     StoreName = StoreName,
                     StoreBrand = "Woolworths",
+                    LogoUrl = "/images/woolworths.webp",
+                    Address = "Grey Lynn, Auckland",
+                    Lat = -36.8645,
+                    Lng = 174.7431,
                     Price = price, // Already in dollars
                     RetrievedAt = DateTime.UtcNow
                 });
