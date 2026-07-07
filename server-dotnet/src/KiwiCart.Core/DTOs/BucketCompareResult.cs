@@ -7,6 +7,9 @@ public class BucketCompareResult
     [JsonPropertyName("supermarket_name")]
     public string StoreName { get; set; } = string.Empty;
 
+    [JsonPropertyName("logo_url")]
+    public string? LogoUrl { get; set; }
+
     [JsonPropertyName("total_price")]
     public decimal TotalPrice { get; set; }
 
