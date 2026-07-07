@@ -4,8 +4,9 @@ import {
   PriceComparisonData,
   BasketComparisonResult,
 } from '../../models/products'
+import { buildApiUrl } from './apiBaseUrl'
 
-const rootURL = '/api/v1/products'
+const rootURL = buildApiUrl('/v1/products')
 
 /**
  * Fetches all products from the local database.
@@ -34,7 +35,9 @@ export async function getComparePrices(
 export async function compareBasket(
   items: { name: string; quantity: number }[],
 ): Promise<BasketComparisonResult[]> {
-  const response = await request.post(`${rootURL}/compare-basket`).send({ items })
+  const response = await request
+    .post(`${rootURL}/compare-bucket`)
+    .send({ items })
   return response.body
 }
 
@@ -42,7 +45,7 @@ export async function compareBasket(
  * Fetches a list of all stores and their coordinates.
  */
 export async function getSupermarkets() {
-  const response = await request.get('/api/v1/products/supermarkets')
+  const response = await request.get(buildApiUrl('/v1/products/supermarkets'))
   return response.body
 }
 
@@ -55,7 +58,7 @@ export async function getNearbySupermarkets(
   radius = 5,
 ) {
   const response = await request
-    .get('/api/v1/products/nearby')
+    .get(buildApiUrl('/v1/products/nearby'))
     .query({ lat, lng, radius })
   return response.body
 }

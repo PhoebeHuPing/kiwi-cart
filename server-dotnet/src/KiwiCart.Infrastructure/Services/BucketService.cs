@@ -37,6 +37,14 @@ public class BucketService : IBucketService
         foreach (var store in storeNames)
         {
             var result = new BucketCompareResult { StoreName = store };
+            var storeMatch = allResults
+                .SelectMany(r => r.results)
+                .FirstOrDefault(r => r.StoreName == store);
+
+            if (storeMatch is not null)
+            {
+                result.LogoUrl = storeMatch.LogoUrl;
+            }
 
             foreach (var (item, results) in allResults)
             {
