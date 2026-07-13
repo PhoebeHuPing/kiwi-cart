@@ -45,3 +45,13 @@ appsettings.Development.json
 _bmad-output/
 _bmad/config.user.toml
 _bmad/custom/config.user.toml*:Zone.Identifier
+
+# Data files (potential scraping artifacts)
+nw_data.json
+pns_data.json
+
+# Debug files
+debug-request.ts
+
+# Sensitive JSON files
+*.local.json
