@@ -14,6 +14,7 @@ public class ProductsControllerTests
     private readonly Mock<IPriceComparisonService> _priceComparison = new();
     private readonly Mock<IBucketService> _bucketService = new();
     private readonly Mock<IFavoritesService> _favoritesService = new();
+    private readonly Mock<IStoreService> _storeService = new();
     private readonly AppDbContext _db;
     private readonly ProductsController _sut;
 
@@ -25,16 +26,17 @@ public class ProductsControllerTests
         _db = new AppDbContext(options);
         _sut = new ProductsController(
             _priceComparison.Object, _bucketService.Object,
-            _favoritesService.Object, _db);
+            _favoritesService.Object, _storeService.Object, _db);
     }
 
     [Fact]
-    public async Task Compare_EmptyQuery_Returns400()
+    public async Task Compare_EmptyQuery_ReturnsEmptyArray()
     {
         var result = await _sut.Compare("", CancellationToken.None);
 
-        var problem = Assert.IsType<ObjectResult>(result.Result);
-        Assert.Equal(400, problem.StatusCode);
+        var ok = Assert.IsType<OkObjectResult>(result.Result);
+        var data = Assert.IsAssignableFrom<PriceResult[]>(ok.Value);
+        Assert.Empty(data);
     }
 
     [Fact]

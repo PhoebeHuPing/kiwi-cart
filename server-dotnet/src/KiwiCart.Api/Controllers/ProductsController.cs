@@ -16,30 +16,32 @@ public class ProductsController : ControllerBase
     private readonly IPriceComparisonService _priceComparison;
     private readonly IBucketService _bucketService;
     private readonly IFavoritesService _favoritesService;
+    private readonly IStoreService _storeService;
     private readonly AppDbContext _db;
 
     public ProductsController(
         IPriceComparisonService priceComparison,
         IBucketService bucketService,
         IFavoritesService favoritesService,
+        IStoreService storeService,
         AppDbContext db)
     {
         _priceComparison = priceComparison;
         _bucketService = bucketService;
         _favoritesService = favoritesService;
+        _storeService = storeService;
         _db = db;
     }
 
     [HttpGet("compare")]
     [OutputCache(Duration = 300)]
     [ProducesResponseType(typeof(IReadOnlyList<PriceResult>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IReadOnlyList<PriceResult>>> Compare(
         [FromQuery(Name = "q")] string? query,
         CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(query))
-            return Problem("Search query is required.", statusCode: 400);
+            return Ok(Array.Empty<PriceResult>());
 
         var results = await _priceComparison.CompareAsync(query.Trim(), ct);
         return Ok(results);
@@ -59,6 +61,27 @@ public class ProductsController : ControllerBase
             return Problem("All items must have a name.", statusCode: 400);
 
         var results = await _bucketService.CompareAsync(request.Items, ct);
+        return Ok(results);
+    }
+
+    [HttpGet("supermarkets")]
+    [OutputCache(Duration = 600)]
+    public async Task<IActionResult> GetSupermarkets(CancellationToken ct)
+    {
+        var stores = await _storeService.GetAllAsync(ct);
+        return Ok(stores);
+    }
+
+    [HttpGet("nearby")]
+    public async Task<IActionResult> GetNearby(
+        [FromQuery] double? lat, [FromQuery] double? lng,
+        [FromQuery] double radius = 5,
+        CancellationToken ct = default)
+    {
+        if (lat is null || lng is null)
+            return Problem("lat and lng query parameters are required.", statusCode: 400);
+
+        var results = await _storeService.GetNearbyAsync(lat.Value, lng.Value, radius, ct);
         return Ok(results);
     }
 
