@@ -32,7 +32,10 @@ builder.Services.AddHealthChecks()
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
-        policy.WithOrigins("http://localhost:5173", "https://kiwicart.azurewebsites.net")
+        policy.WithOrigins(
+                "http://localhost:5173",
+                "https://kiwicart.azurewebsites.net",
+                "https://kiwi-cart.azurewebsites.net")
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
