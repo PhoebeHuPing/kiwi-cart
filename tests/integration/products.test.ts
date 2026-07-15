@@ -72,7 +72,7 @@ describe('GET /api/v1/products/compare', () => {
   })
 })
 
-describe('POST /api/v1/products/compare-basket', () => {
+describe('POST /api/v1/products/compare-bucket', () => {
   it('should calculate total cost across supermarkets and identify missing items', async () => {
     const mockBasket = {
       items: [
@@ -107,7 +107,7 @@ describe('POST /api/v1/products/compare-basket', () => {
     vi.mocked(fetchWoolworthsPrices).mockResolvedValue([])
 
     const response = await request(server)
-      .post('/api/v1/products/compare-basket')
+      .post('/api/v1/products/compare-bucket')
       .send(mockBasket)
 
     expect(response.status).toBe(200)

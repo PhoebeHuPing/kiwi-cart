@@ -70,7 +70,7 @@ router.get('/compare', async (req, res) => {
 })
 
 /**
- * POST /api/v1/products/compare-basket
+ * POST /api/v1/products/compare-bucket
  * Calculates the total cost of a basket across different supermarket brands.
  */
 router.post('/compare-bucket', async (req, res) => {
