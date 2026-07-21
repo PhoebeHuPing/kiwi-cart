@@ -102,14 +102,14 @@ builder.Services.AddHttpClient("NewWorld", c =>
 builder.Services.AddHttpClient("WoolworthsAuth", c =>
 {
     c.BaseAddress = new Uri("https://www.woolworths.co.nz");
-    c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
 })
 .AddPolicyHandler(timeoutPolicy);
 
 builder.Services.AddHttpClient("Woolworths", c =>
 {
     c.BaseAddress = new Uri("https://www.woolworths.co.nz");
-    c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
 })
 .AddPolicyHandler(retryPolicy)
 .AddPolicyHandler(circuitBreakerPolicy)

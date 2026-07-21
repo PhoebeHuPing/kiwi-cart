@@ -1,4 +1,4 @@
-using System.Net.Http.Json;
+using System.Text;
 using KiwiCart.Core.DTOs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,7 +27,12 @@ public class WoolworthsTokenProvider : CachedTokenProvider
     protected override async Task<TokenResponse> FetchTokenAsync(CancellationToken ct)
     {
         var client = _httpClientFactory.CreateClient("WoolworthsAuth");
-        using var response = await client.PostAsJsonAsync("/api/v1/session", new { }, ct);
+
+        using var request = new HttpRequestMessage(HttpMethod.Post, "/api/v1/session");
+        request.Content = new StringContent("{}", System.Text.Encoding.UTF8, "application/json");
+        request.Headers.Add("X-Requested-With", "OnlineShopping.WebApp");
+
+        using var response = await client.SendAsync(request, ct);
         response.EnsureSuccessStatusCode();
 
         // Extract session cookie
