@@ -7,9 +7,13 @@
   "main": "server/index.ts",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "run-p dev:client dev:server",
+    "dev": "npm-run-all --parallel dev:client dev:server",
+    "dev:dotnet": "VITE_SERVER_PORT=5000 npm-run-all --parallel dev:client dev:server:dotnet",
+    "dev:java": "VITE_SERVER_PORT=8080 npm-run-all --parallel dev:client dev:server:java",
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
+    "dev:server:dotnet": "cd server-dotnet/src/KiwiCart.Api && dotnet watch run",
+    "dev:server:java": "cd server-java && bash -c 'source ~/.sdkman/bin/sdkman-init.sh && ./gradlew bootRun'",
     "build": "run-s build:client build:server",
     "build:client": "vite build",
     "build:server": "esbuild --packages=external --platform=node --format=esm --outfile=dist/server.js --bundle server/index.ts",
@@ -26,7 +30,7 @@
   "author": "Dev Academy Aotearoa",
   "license": "ISC",
   "eslintConfig": {
-    "extends": "@devacademy/eslint-config/react",
+    "extends": "@devacademy/eslint-config-react",
     "ignorePatterns": [
       "bundle.js"
     ]

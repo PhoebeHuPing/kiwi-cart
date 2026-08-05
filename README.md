@@ -37,24 +37,6 @@ KiwiCart is built on the principles of transparency and ethical data sourcing.
 - [ ] Gemini AI smart shopping recommendations
 - [ ] Mobile-optimized PWA (Progressive Web App)
 
-## Tech Stack
-
-### Frontend
-- React 18 with TypeScript
-- Tailwind CSS 4.0
-- TanStack Query (React Query)
-- Vite 7
-
-### Backend
-- Node.js & Express
-- Knex.js (Query builder)
-- PostgreSQL (Production) / SQLite (Local)
-- Auth0 (Authentication)
-
-### Services
-- Google Maps API (Location Services)
-- Gemini AI (Insights - In Progress)
-
 ## Getting Started
 
 ### Prerequisites
