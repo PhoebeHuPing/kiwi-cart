@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast'
 import { useBasket } from '../contexts/BasketContext'
 import BasketDrawer from './BasketDrawer'
 import { useEffect, useState } from 'react'
+import { buildApiUrl } from '../apis/apiBaseUrl'
 
 function App() {
   const { basket, setIsDrawerOpen } = useBasket()
@@ -17,7 +18,7 @@ function App() {
 
   useEffect(() => {
     if (showVersion) {
-      fetch('/api/v1/health')
+      fetch(buildApiUrl('/v1/health'))
         .then(res => res.json())
         .then(data => {
           const versionMap: Record<string, string> = {
