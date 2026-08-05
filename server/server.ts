@@ -37,6 +37,10 @@ server.use('/api', apiLimiter)
 server.use('/api/v1/products', productsRoutes)
 server.use('/api/v1/feedback', feedbackRoutes)
 
+server.get('/api/v1/health', (req, res) => {
+  res.json({ status: 'ok', backend: 'node', framework: 'Express 4' })
+})
+
 // In production, serve the compiled frontend assets from the 'dist' folder
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))

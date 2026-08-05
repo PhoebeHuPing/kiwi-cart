@@ -3,6 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { Toaster } from 'react-hot-toast'
 import { useBasket } from '../contexts/BasketContext'
 import BasketDrawer from './BasketDrawer'
+import { useEffect, useState } from 'react'
 
 function App() {
   const { basket, setIsDrawerOpen } = useBasket()
@@ -10,6 +11,25 @@ function App() {
   const location = useLocation()
   const totalItems = basket.reduce((sum, item) => sum + item.quantity, 0)
   const isHomePage = location.pathname === '/'
+  const searchParams = new URLSearchParams(window.location.search)
+  const showVersion = searchParams.get('v') === 'true'
+  const [versionInfo, setVersionInfo] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (showVersion) {
+      fetch('/api/v1/health')
+        .then(res => res.json())
+        .then(data => {
+          const versionMap: Record<string, string> = {
+            node: 'v1.0',
+            dotnet: 'v2.0',
+            java: 'v3.0',
+          }
+          setVersionInfo(versionMap[data.backend] || data.backend)
+        })
+        .catch(() => setVersionInfo(null))
+    }
+  }, [showVersion])
 
   const handleLogin = () => loginWithRedirect()
   const handleLogout = () => logout({ logoutParams: { returnTo: window.location.origin } })
@@ -28,6 +48,11 @@ function App() {
                 </span>
               </div>
             </Link>
+            {showVersion && versionInfo && (
+              <span className="bg-gray-800 text-white text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide">
+                {versionInfo}
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-6">
             {isAuthenticated && (

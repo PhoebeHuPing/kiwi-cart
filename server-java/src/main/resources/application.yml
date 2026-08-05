@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: kiwicart-api
+
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+      - https://kiwicart.azurewebsites.net
+
+supermarket:
+  paknsave:
+    base-url: https://www.paknsave.co.nz
+    api-url: https://api-prod.paknsave.co.nz
+  newworld:
+    base-url: https://www.newworld.co.nz
+    api-url: https://api-prod.newworld.co.nz
+  woolworths:
+    base-url: https://www.woolworths.co.nz

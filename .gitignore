@@ -40,6 +40,15 @@ Thumbs.db
 *.sln.docstates
 appsettings.Development.json
 
+# Java / Gradle
+server-java/.gradle/
+server-java/build/
+server-java/gradle/wrapper/gradle-wrapper.jar
+*.class
+*.jar
+*.war
+.env.java
+
 # AI Agent local files
 .agents/
 _bmad-output/
