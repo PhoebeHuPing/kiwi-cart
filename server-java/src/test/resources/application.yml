@@ -1,0 +1,28 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: kiwicart-api-test
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://test.auth0.com/
+          audiences: https://test-audience
+
+supermarket:
+  paknsave:
+    base-url: https://www.paknsave.co.nz
+    api-url: https://api-prod.paknsave.co.nz
+  newworld:
+    base-url: https://www.newworld.co.nz
+    api-url: https://api-prod.newworld.co.nz
+  woolworths:
+    base-url: https://www.woolworths.co.nz
