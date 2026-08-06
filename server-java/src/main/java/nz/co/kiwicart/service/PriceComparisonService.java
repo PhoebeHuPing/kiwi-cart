@@ -6,13 +6,14 @@ import nz.co.kiwicart.model.FoodstuffsConfig;
 import nz.co.kiwicart.model.PriceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Service
 public class PriceComparisonService {
@@ -21,6 +22,8 @@ public class PriceComparisonService {
 
     private final FoodstuffsService foodstuffsService;
     private final WoolworthsService woolworthsService;
+    private final PriceCacheService priceCacheService;
+    private final UnitPriceCalculator unitPriceCalculator;
 
     private static final FoodstuffsConfig PAKNSAVE_CONFIG = FoodstuffsConfig.builder()
             .domain("paknsave.co.nz")
@@ -44,29 +47,40 @@ public class PriceComparisonService {
             .defaultLng(174.7523)
             .build();
 
-    public PriceComparisonService(FoodstuffsService foodstuffsService, WoolworthsService woolworthsService) {
+    public PriceComparisonService(FoodstuffsService foodstuffsService,
+                                  WoolworthsService woolworthsService,
+                                  PriceCacheService priceCacheService,
+                                  UnitPriceCalculator unitPriceCalculator) {
         this.foodstuffsService = foodstuffsService;
         this.woolworthsService = woolworthsService;
+        this.priceCacheService = priceCacheService;
+        this.unitPriceCalculator = unitPriceCalculator;
     }
 
     public List<PriceResult> compare(String query) {
         log.info("Comparing prices for: {}", query);
 
-        var paknsaveFuture = CompletableFuture.supplyAsync(() ->
-                foodstuffsService.search(query, PAKNSAVE_CONFIG));
+        // 1. Check cache first
+        Optional<List<PriceResult>> cached = priceCacheService.getCachedResults(query);
+        if (cached.isPresent()) {
+            // Trigger background refresh if cache is stale (> 12h)
+            if (priceCacheService.shouldRefreshInBackground(query)) {
+                refreshInBackground(query);
+            }
+            return cached.get();
+        }
 
-        var newworldFuture = CompletableFuture.supplyAsync(() ->
-                foodstuffsService.search(query, NEWWORLD_CONFIG));
+        // 2. Cache miss - fetch from APIs
+        List<PriceResult> results = fetchFromApis(query);
 
-        var woolworthsFuture = CompletableFuture.supplyAsync(() ->
-                woolworthsService.search(query));
+        // 3. Calculate unit prices
+        results.forEach(r -> r.setUnitPrice(
+                unitPriceCalculator.calculate(r.getProductName(), r.getPrice())));
 
-        CompletableFuture.allOf(paknsaveFuture, newworldFuture, woolworthsFuture).join();
-
-        var results = new ArrayList<PriceResult>();
-        results.addAll(paknsaveFuture.join());
-        results.addAll(newworldFuture.join());
-        results.addAll(woolworthsFuture.join());
+        // 4. Store in cache
+        if (!results.isEmpty()) {
+            priceCacheService.cacheResults(query, results);
+        }
 
         log.info("Found {} results for '{}'", results.size(), query);
         return results;
@@ -122,6 +136,47 @@ public class PriceComparisonService {
                     .build());
         }
 
+        // Sort: most items found (descending), then lowest total price (ascending)
+        results.sort((a, b) -> {
+            int itemCompare = Integer.compare(b.getItemsFound(), a.getItemsFound());
+            if (itemCompare != 0) return itemCompare;
+            return Double.compare(a.getTotalPrice(), b.getTotalPrice());
+        });
+
+        return results;
+    }
+
+    @Async
+    public void refreshInBackground(String query) {
+        log.debug("Background refresh for '{}'", query);
+        try {
+            List<PriceResult> results = fetchFromApis(query);
+            results.forEach(r -> r.setUnitPrice(
+                    unitPriceCalculator.calculate(r.getProductName(), r.getPrice())));
+            if (!results.isEmpty()) {
+                priceCacheService.cacheResults(query, results);
+            }
+        } catch (Exception e) {
+            log.warn("Background refresh failed for '{}': {}", query, e.getMessage());
+        }
+    }
+
+    private List<PriceResult> fetchFromApis(String query) {
+        var paknsaveFuture = CompletableFuture.supplyAsync(() ->
+                foodstuffsService.search(query, PAKNSAVE_CONFIG));
+
+        var newworldFuture = CompletableFuture.supplyAsync(() ->
+                foodstuffsService.search(query, NEWWORLD_CONFIG));
+
+        var woolworthsFuture = CompletableFuture.supplyAsync(() ->
+                woolworthsService.search(query));
+
+        CompletableFuture.allOf(paknsaveFuture, newworldFuture, woolworthsFuture).join();
+
+        var results = new ArrayList<PriceResult>();
+        results.addAll(paknsaveFuture.join());
+        results.addAll(newworldFuture.join());
+        results.addAll(woolworthsFuture.join());
         return results;
     }
 }

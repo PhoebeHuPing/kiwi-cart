@@ -3,6 +3,7 @@ name: Build and deploy Java app to Azure Web App - kiwicart-api
 on:
   push:
     branches:
+      - main
       - deploy/java-backend
     paths:
       - 'server-java/**'

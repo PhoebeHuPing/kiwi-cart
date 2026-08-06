@@ -1,5 +1,7 @@
 package nz.co.kiwicart.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import nz.co.kiwicart.model.FoodstuffsConfig;
 import nz.co.kiwicart.model.PriceResult;
 import org.slf4j.Logger;
@@ -7,10 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
 
 @Service
 public class FoodstuffsService {
@@ -19,53 +23,77 @@ public class FoodstuffsService {
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
     private final WebClient.Builder webClientBuilder;
-    private final ConcurrentHashMap<String, String> tokenCache = new ConcurrentHashMap<>();
+    private final TokenPersistenceService tokenPersistenceService;
 
-    public FoodstuffsService(WebClient.Builder webClientBuilder) {
+    public FoodstuffsService(WebClient.Builder webClientBuilder, TokenPersistenceService tokenPersistenceService) {
         this.webClientBuilder = webClientBuilder;
+        this.tokenPersistenceService = tokenPersistenceService;
     }
 
+    @CircuitBreaker(name = "foodstuffs", fallbackMethod = "searchFallback")
+    @Retry(name = "foodstuffs")
     public List<PriceResult> search(String searchTerm, FoodstuffsConfig config) {
         try {
             String token = getToken(config);
             List<PriceResult> results = doSearch(searchTerm, token, config);
 
             if (results == null) {
+                // Token expired in-flight — invalidate and refresh
                 log.warn("Token for {} expired, refreshing...", config.getDomain());
-                tokenCache.remove(config.getDomain());
-                token = getToken(config);
+                tokenPersistenceService.invalidateToken(config.getDomain());
+                token = fetchAndStoreToken(config);
                 results = doSearch(searchTerm, token, config);
             }
 
             return results != null ? results : Collections.emptyList();
         } catch (Exception e) {
             log.error("{} Real-time API failed: {}", config.getSupermarketName(), e.getMessage());
-            return Collections.emptyList();
+            throw e;
         }
     }
 
+    @SuppressWarnings("unused")
+    private List<PriceResult> searchFallback(String searchTerm, FoodstuffsConfig config, Throwable t) {
+        log.warn("Circuit breaker fallback for {} search '{}': {}",
+                config.getSupermarketName(), searchTerm, t.getMessage());
+        return Collections.emptyList();
+    }
+
     private String getToken(FoodstuffsConfig config) {
-        return tokenCache.computeIfAbsent(config.getDomain(), domain -> {
-            log.info("Fetching token for {}", domain);
+        // Try 3-tier: memory → DB → API
+        Optional<String> cached = tokenPersistenceService.getToken(config.getDomain());
+        if (cached.isPresent()) {
+            return cached.get();
+        }
+        return fetchAndStoreToken(config);
+    }
 
-            var client = webClientBuilder.build();
-            var response = client.post()
-                    .uri("https://www." + domain + "/api/user/get-current-user")
-                    .header("User-Agent", USER_AGENT)
-                    .header("Content-Type", "application/json")
-                    .bodyValue(Map.of())
-                    .retrieve()
-                    .bodyToMono(Map.class)
-                    .block();
+    private String fetchAndStoreToken(FoodstuffsConfig config) {
+        log.info("Fetching token from API for {}", config.getDomain());
 
-            if (response == null || !response.containsKey("access_token")) {
-                throw new RuntimeException("No token returned from " + domain);
-            }
+        var client = webClientBuilder.build();
+        var response = client.post()
+                .uri("https://www." + config.getDomain() + "/api/user/get-current-user")
+                .header("User-Agent", USER_AGENT)
+                .header("Content-Type", "application/json")
+                .bodyValue(Map.of())
+                .retrieve()
+                .bodyToMono(Map.class)
+                .timeout(Duration.ofSeconds(10))
+                .block();
 
-            String token = (String) response.get("access_token");
-            log.info("Successfully refreshed token for {}", domain);
-            return token;
-        });
+        if (response == null || !response.containsKey("access_token")) {
+            throw new RuntimeException("No token returned from " + config.getDomain());
+        }
+
+        String token = (String) response.get("access_token");
+
+        // Tokens typically last ~1 hour, set expiry to 50 minutes for safety
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(50);
+        tokenPersistenceService.storeToken(config.getDomain(), token, expiresAt);
+
+        log.info("Successfully refreshed token for {}", config.getDomain());
+        return token;
     }
 
     @SuppressWarnings("unchecked")
@@ -90,10 +118,11 @@ public class FoodstuffsService {
                     .bodyValue(body)
                     .retrieve()
                     .bodyToMono(Map.class)
+                    .timeout(Duration.ofSeconds(10))
                     .block();
         } catch (Exception e) {
             if (e.getMessage() != null && e.getMessage().contains("401")) {
-                return null;
+                return null; // Signal token expired
             }
             throw e;
         }

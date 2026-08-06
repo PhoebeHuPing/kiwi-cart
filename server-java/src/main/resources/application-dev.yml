@@ -1,0 +1,9 @@
+# Dev profile: allows running locally without a real Auth0 tenant
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Use a dummy JWK set URI to avoid startup connection to Auth0
+          # All authenticated endpoints will still require a valid JWT structure
+          jwk-set-uri: https://localhost/.well-known/jwks.json

@@ -1,0 +1,60 @@
+server:
+  port: 0
+
+spring:
+  application:
+    name: kiwicart-api-test
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://test.auth0.com/
+          audiences: https://test-audience
+
+app:
+  rate-limit:
+    requests-per-minute: 1000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      foodstuffs:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
+      woolworths:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
+  retry:
+    instances:
+      foodstuffs:
+        max-attempts: 2
+        wait-duration: 100ms
+      woolworths:
+        max-attempts: 2
+        wait-duration: 100ms
+
+supermarket:
+  paknsave:
+    base-url: https://www.paknsave.co.nz
+    api-url: https://api-prod.paknsave.co.nz
+  newworld:
+    base-url: https://www.newworld.co.nz
+    api-url: https://api-prod.newworld.co.nz
+  woolworths:
+    base-url: https://www.woolworths.co.nz
