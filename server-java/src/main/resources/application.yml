@@ -10,6 +10,18 @@ spring:
         jwt:
           issuer-uri: ${AUTH0_DOMAIN:https://your-tenant.au.auth0.com/}
           audiences: ${AUTH0_AUDIENCE:https://kiwicart/api}
+  datasource:
+    url: ${DATABASE_URL:jdbc:h2:mem:kiwicart;DB_CLOSE_DELAY=-1}
+    username: ${DB_USER:sa}
+    password: ${DB_PASSWORD:}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+  h2:
+    console:
+      enabled: true
 
 app:
   cors:

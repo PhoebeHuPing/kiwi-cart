@@ -31,8 +31,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/api/v1/products/compare").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/products/compare-bucket").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/supermarkets").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/products/nearby").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/health").permitAll()
                         .requestMatchers("/api/v1/products/favorites/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/products/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
