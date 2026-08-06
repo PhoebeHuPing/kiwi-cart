@@ -43,9 +43,9 @@ appsettings.Development.json
 # Java / Gradle
 server-java/.gradle/
 server-java/build/
-server-java/gradle/wrapper/gradle-wrapper.jar
 *.class
 *.jar
+!server-java/gradle/wrapper/gradle-wrapper.jar
 *.war
 .env.java
 
