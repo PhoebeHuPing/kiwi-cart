@@ -13,7 +13,7 @@
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
     "dev:server:dotnet": "cd server-dotnet/src/KiwiCart.Api && dotnet watch run",
-    "dev:server:java": "cd server-java && bash -c 'source ~/.sdkman/bin/sdkman-init.sh && ./gradlew bootRun'",
+    "dev:server:java": "cd server-java && ./gradlew bootRun --args='--spring.profiles.active=dev'",
     "build": "run-s build:client build:server",
     "build:client": "vite build",
     "build:server": "esbuild --packages=external --platform=node --format=esm --outfile=dist/server.js --bundle server/index.ts",

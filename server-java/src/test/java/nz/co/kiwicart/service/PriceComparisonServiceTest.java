@@ -6,11 +6,11 @@ import nz.co.kiwicart.model.PriceResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +26,9 @@ class PriceComparisonServiceTest {
     @Mock
     private WoolworthsService woolworthsService;
 
-    @InjectMocks
+    @Mock
+    private PriceCacheService priceCacheService;
+
     private PriceComparisonService priceComparisonService;
 
     private List<PriceResult> paknsaveResults;
@@ -35,6 +37,10 @@ class PriceComparisonServiceTest {
 
     @BeforeEach
     void setUp() {
+        UnitPriceCalculator unitPriceCalculator = new UnitPriceCalculator();
+        priceComparisonService = new PriceComparisonService(
+                foodstuffsService, woolworthsService, priceCacheService, unitPriceCalculator);
+
         paknsaveResults = List.of(PriceResult.builder()
                 .productName("Anchor Milk 2L")
                 .price(4.88)
@@ -71,6 +77,9 @@ class PriceComparisonServiceTest {
 
     @Test
     void compare_returnsCombinedResultsFromAllStores() {
+        // Cache miss
+        when(priceCacheService.getCachedResults(any())).thenReturn(Optional.empty());
+
         when(foodstuffsService.search(eq("Milk"), any(FoodstuffsConfig.class)))
                 .thenReturn(paknsaveResults)
                 .thenReturn(newworldResults);
@@ -85,7 +94,21 @@ class PriceComparisonServiceTest {
     }
 
     @Test
+    void compare_returnsCachedResultsWhenAvailable() {
+        List<PriceResult> cached = List.of(
+                PriceResult.builder().productName("Cached Milk").price(3.99).supermarketName("Pak'nSave").build());
+        when(priceCacheService.getCachedResults("Milk")).thenReturn(Optional.of(cached));
+        when(priceCacheService.shouldRefreshInBackground("Milk")).thenReturn(false);
+
+        var results = priceComparisonService.compare("Milk");
+
+        assertThat(results).hasSize(1);
+        assertThat(results.get(0).getProductName()).isEqualTo("Cached Milk");
+    }
+
+    @Test
     void compare_returnsEmptyWhenAllStoresFail() {
+        when(priceCacheService.getCachedResults(any())).thenReturn(Optional.empty());
         when(foodstuffsService.search(any(), any(FoodstuffsConfig.class)))
                 .thenReturn(List.of());
         when(woolworthsService.search(any()))
@@ -97,7 +120,26 @@ class PriceComparisonServiceTest {
     }
 
     @Test
+    void compare_calculatesUnitPrice() {
+        when(priceCacheService.getCachedResults(any())).thenReturn(Optional.empty());
+        when(foodstuffsService.search(eq("Milk"), any(FoodstuffsConfig.class)))
+                .thenReturn(paknsaveResults)
+                .thenReturn(newworldResults);
+        when(woolworthsService.search("Milk"))
+                .thenReturn(woolworthsResults);
+
+        var results = priceComparisonService.compare("Milk");
+
+        // "Anchor Milk 2L" → should calculate $/L
+        var paknsave = results.stream()
+                .filter(r -> r.getSupermarketName().equals("Pak'nSave"))
+                .findFirst().orElseThrow();
+        assertThat(paknsave.getUnitPrice()).isEqualTo("$2.44/L");
+    }
+
+    @Test
     void compareBucket_calculatesTotalPerStore() {
+        when(priceCacheService.getCachedResults(any())).thenReturn(Optional.empty());
         when(foodstuffsService.search(eq("Milk"), any(FoodstuffsConfig.class)))
                 .thenReturn(paknsaveResults)
                 .thenReturn(newworldResults);

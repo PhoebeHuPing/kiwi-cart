@@ -10,12 +10,44 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+  flyway:
+    enabled: false
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: https://test.auth0.com/
           audiences: https://test-audience
+
+app:
+  rate-limit:
+    requests-per-minute: 1000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      foodstuffs:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
+      woolworths:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 5s
+  retry:
+    instances:
+      foodstuffs:
+        max-attempts: 2
+        wait-duration: 100ms
+      woolworths:
+        max-attempts: 2
+        wait-duration: 100ms
 
 supermarket:
   paknsave:
