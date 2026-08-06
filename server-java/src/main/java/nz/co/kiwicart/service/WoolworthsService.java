@@ -1,11 +1,14 @@
 package nz.co.kiwicart.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import nz.co.kiwicart.model.PriceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,8 @@ public class WoolworthsService {
         this.webClientBuilder = webClientBuilder;
     }
 
+    @CircuitBreaker(name = "woolworths", fallbackMethod = "searchFallback")
+    @Retry(name = "woolworths")
     @SuppressWarnings("unchecked")
     public List<PriceResult> search(String searchTerm) {
         try {
@@ -40,6 +45,7 @@ public class WoolworthsService {
                         return response.bodyToMono(String.class)
                                 .map(body -> cookies);
                     })
+                    .timeout(Duration.ofSeconds(10))
                     .block();
 
             String cookieHeader = sessionResponse != null
@@ -61,6 +67,7 @@ public class WoolworthsService {
                     .header("Cookie", cookieHeader)
                     .retrieve()
                     .bodyToMono(Map.class)
+                    .timeout(Duration.ofSeconds(10))
                     .block();
 
             if (response == null) return Collections.emptyList();
@@ -78,8 +85,14 @@ public class WoolworthsService {
 
         } catch (Exception e) {
             log.error("Woolworths Real-time API failed: {}", e.getMessage());
-            return Collections.emptyList();
+            throw e; // Let Resilience4j handle it
         }
+    }
+
+    @SuppressWarnings("unused")
+    private List<PriceResult> searchFallback(String searchTerm, Throwable t) {
+        log.warn("Circuit breaker fallback for Woolworths search '{}': {}", searchTerm, t.getMessage());
+        return Collections.emptyList();
     }
 
     @SuppressWarnings("unchecked")
