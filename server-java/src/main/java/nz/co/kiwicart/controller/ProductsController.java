@@ -9,7 +9,12 @@ import nz.co.kiwicart.repository.FavoriteRepository;
 import nz.co.kiwicart.repository.ProductRepository;
 import nz.co.kiwicart.repository.StoreRepository;
 import nz.co.kiwicart.service.PriceComparisonService;
+import nz.co.kiwicart.util.GeoUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/products")
+@Tag(name = "Products", description = "Price comparison and product management")
 public class ProductsController {
 
     private final PriceComparisonService priceComparisonService;
@@ -38,7 +44,15 @@ public class ProductsController {
         this.favoriteRepository = favoriteRepository;
     }
 
+    @GetMapping
+    @Operation(summary = "List all products", description = "Get all products from the database")
+    public ResponseEntity<List<nz.co.kiwicart.entity.Product>> getAllProducts() {
+        return ResponseEntity.ok(productRepository.findAll());
+    }
+
     @GetMapping("/compare")
+    @Operation(summary = "Compare prices", description = "Search and compare prices across all supermarkets")
+    @Cacheable(value = "compareResults", key = "#query", condition = "#query != null && !#query.isBlank()")
     public ResponseEntity<List<PriceResult>> compare(
             @RequestParam(name = "q", defaultValue = "") String query) {
         if (query.isBlank()) {
@@ -48,6 +62,7 @@ public class ProductsController {
     }
 
     @PostMapping("/compare-bucket")
+    @Operation(summary = "Compare basket", description = "Compare total basket price across supermarkets")
     public ResponseEntity<List<BasketComparisonResult>> compareBucket(
             @RequestBody BasketCompareRequest request) {
         if (request.getItems() == null || request.getItems().isEmpty()) {
@@ -57,11 +72,14 @@ public class ProductsController {
     }
 
     @GetMapping("/supermarkets")
+    @Operation(summary = "List stores", description = "Get all supermarket store locations")
+    @Cacheable(value = "supermarkets")
     public ResponseEntity<List<Store>> getSupermarkets() {
         return ResponseEntity.ok(storeRepository.findAll());
     }
 
     @GetMapping("/nearby")
+    @Operation(summary = "Find nearby stores", description = "Find stores within a radius of given coordinates")
     public ResponseEntity<?> getNearby(
             @RequestParam(required = false) Double lat,
             @RequestParam(required = false) Double lng,
@@ -72,12 +90,13 @@ public class ProductsController {
         var allStores = storeRepository.findAll();
         var nearby = allStores.stream()
                 .filter(store -> store.getLatitude() != null && store.getLongitude() != null)
-                .filter(store -> calculateDistance(lat, lng, store.getLatitude(), store.getLongitude()) <= radius)
+                .filter(store -> GeoUtils.calculateDistanceKm(lat, lng, store.getLatitude(), store.getLongitude()) <= radius)
                 .toList();
         return ResponseEntity.ok(nearby);
     }
 
     @GetMapping("/favorites")
+    @Operation(summary = "Get favorites", description = "Get user's favorite products (requires auth)")
     public ResponseEntity<List<String>> getFavorites(@AuthenticationPrincipal Jwt jwt) {
         String userId = jwt.getSubject();
         var favorites = favoriteRepository.findByUserIdOrderByCreatedAtDesc(userId);
@@ -85,6 +104,7 @@ public class ProductsController {
     }
 
     @PostMapping("/favorites")
+    @Operation(summary = "Toggle favorite", description = "Add or remove a product from favorites (requires auth)")
     @Transactional
     public ResponseEntity<Map<String, String>> toggleFavorite(
             @AuthenticationPrincipal Jwt jwt,
@@ -110,6 +130,8 @@ public class ProductsController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete product", description = "Delete a product (admin only)")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         if (!productRepository.existsById(id)) {
             return ResponseEntity.notFound().build();
@@ -118,14 +140,4 @@ public class ProductsController {
         return ResponseEntity.noContent().build();
     }
 
-    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        double R = 6371;
-        double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    }
 }
