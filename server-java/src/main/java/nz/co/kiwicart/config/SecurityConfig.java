@@ -76,19 +76,36 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder decoder = JwtDecoders.fromIssuerLocation(issuerUri);
+        // Lazy-loaded: does NOT connect to Auth0 at startup.
+        // OIDC discovery happens on first token validation request,
+        // matching the behavior of ASP.NET Core's AddJwtBearer.
+        return new JwtDecoder() {
+            private volatile NimbusJwtDecoder delegate;
 
-        OAuth2TokenValidator<Jwt> audienceValidator = token ->
-                token.getAudience().contains(audience)
-                        ? OAuth2TokenValidatorResult.success()
-                        : OAuth2TokenValidatorResult.failure(
-                        new OAuth2Error("invalid_token", "The required audience is missing", null));
+            @Override
+            public Jwt decode(String token) throws JwtException {
+                if (delegate == null) {
+                    synchronized (this) {
+                        if (delegate == null) {
+                            NimbusJwtDecoder decoder = JwtDecoders.fromIssuerLocation(issuerUri);
 
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
-        OAuth2TokenValidator<Jwt> combined = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
+                            OAuth2TokenValidator<Jwt> audienceValidator = t ->
+                                    t.getAudience().contains(audience)
+                                            ? OAuth2TokenValidatorResult.success()
+                                            : OAuth2TokenValidatorResult.failure(
+                                            new OAuth2Error("invalid_token", "The required audience is missing", null));
 
-        decoder.setJwtValidator(combined);
-        return decoder;
+                            OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuerUri);
+                            OAuth2TokenValidator<Jwt> combined = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
+
+                            decoder.setJwtValidator(combined);
+                            this.delegate = decoder;
+                        }
+                    }
+                }
+                return delegate.decode(token);
+            }
+        };
     }
 
     @Bean
