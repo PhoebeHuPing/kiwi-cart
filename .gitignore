@@ -34,6 +34,7 @@ Thumbs.db
 # .NET
 **/bin/
 **/obj/
+**/.config/dotnet-tools.json
 *.user
 *.suo
 *.userosscache
