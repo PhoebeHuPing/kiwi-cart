@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Threading.RateLimiting;
+using System.Globalization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using KiwiCart.Api.Middleware;
@@ -41,10 +42,53 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddRateLimiter(options =>
 {
-    options.AddFixedWindowLimiter("default", opt =>
+    // Return 429 with a Retry-After hint when a limit is exceeded.
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.OnRejected = async (context, ct) =>
     {
-        opt.Window = TimeSpan.FromMinutes(1);
-        opt.PermitLimit = 60;
+        if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+        {
+            context.HttpContext.Response.Headers.RetryAfter =
+                ((int)retryAfter.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo);
+        }
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+            "{\"error\":\"Too many requests, please try again later.\"}", ct);
+    };
+
+    // Global fallback: per-IP fixed window. Applies to every endpoint unless
+    // a more specific named policy is attached.
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+        {
+            Window = TimeSpan.FromMinutes(1),
+            PermitLimit = 100,
+        });
+    });
+
+    // Stricter per-IP limit for the price comparison endpoint (hits external APIs).
+    options.AddPolicy("compare", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+        {
+            Window = TimeSpan.FromMinutes(1),
+            PermitLimit = 20,
+        });
+    });
+
+    // Tightest per-IP limit for basket comparison: one request fans out to
+    // N items x 3 supermarkets of external calls, so it is the most expensive.
+    options.AddPolicy("bucket", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+        {
+            Window = TimeSpan.FromMinutes(1),
+            PermitLimit = 5,
+        });
     });
 });
 builder.Services.AddProblemDetails();
@@ -142,6 +186,7 @@ builder.Services.AddScoped<IPriceComparisonService, PriceComparisonService>();
 builder.Services.AddScoped<IBucketService, BucketService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IFavoritesService, FavoritesService>();
+builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 
 // Auth0 JWT Authentication
 builder.Services.AddAuthentication("Bearer")
