@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     if (showVersion) {
-      fetch(buildApiUrl('/v1/health'))
+      fetch(buildApiUrl('/v1/health'), { cache: 'no-store' })
         .then(res => res.json())
         .then(data => {
           const versionMap: Record<string, string> = {

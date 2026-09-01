@@ -8,14 +8,32 @@ interface FeedbackMessage {
   id: number
   user_name: string
   message: string
+  category: string
   created_at: string
 }
 
+const CATEGORIES = [
+  { value: 'general', label: 'General' },
+  { value: 'bug', label: 'Price Bug' },
+  { value: 'praise', label: 'Praise' },
+] as const
+
+const CATEGORY_STYLES: Record<string, string> = {
+  general: 'bg-gray-100 text-gray-600',
+  bug: 'bg-red-100 text-red-700',
+  praise: 'bg-green-100 text-green-700',
+}
+
+function categoryLabel(value: string): string {
+  return CATEGORIES.find((c) => c.value === value)?.label ?? value
+}
+
 function FeedbackBoard() {
-  const { isAuthenticated, getAccessTokenSilently, user, loginWithRedirect } =
+  const { isAuthenticated, getAccessTokenSilently, loginWithRedirect } =
     useAuth0()
   const [messages, setMessages] = useState<FeedbackMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
+  const [category, setCategory] = useState<string>('general')
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
@@ -41,10 +59,11 @@ function FeedbackBoard() {
         .set('Authorization', `Bearer ${token}`)
         .send({
           message: newMessage,
-          userName: user?.nickname || user?.name || 'Anonymous',
+          category,
         })
 
       setNewMessage('')
+      setCategory('general')
       const res = await request.get(buildApiUrl('/v1/feedback'))
       setMessages(res.body)
     } catch (err) {
@@ -78,9 +97,26 @@ function FeedbackBoard() {
             maxLength={500}
           />
           <div className="flex justify-between items-center mt-3">
-            <span className="text-sm text-gray-400">
-              {newMessage.length}/500
-            </span>
+            <div className="flex items-center gap-3">
+              <label htmlFor="feedback-category" className="sr-only">
+                Category
+              </label>
+              <select
+                id="feedback-category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="border-2 border-gray-200 rounded-xl px-3 py-2 text-sm font-medium text-gray-700 focus:border-kiwi focus:outline-none"
+              >
+                {CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+              <span className="text-sm text-gray-400">
+                {newMessage.length}/500
+              </span>
+            </div>
             <button
               type="submit"
               disabled={submitting || !newMessage.trim()}
@@ -118,9 +154,18 @@ function FeedbackBoard() {
               className="p-5 bg-white border border-gray-100 rounded-2xl shadow-sm"
             >
               <div className="flex justify-between items-center mb-2">
-                <span className="font-bold text-kiwi-dark">
-                  {msg.user_name}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-kiwi-dark">
+                    {msg.user_name}
+                  </span>
+                  <span
+                    className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                      CATEGORY_STYLES[msg.category] ?? CATEGORY_STYLES.general
+                    }`}
+                  >
+                    {categoryLabel(msg.category)}
+                  </span>
+                </div>
                 <span className="text-xs text-gray-400">
                   {new Date(msg.created_at).toLocaleDateString('en-NZ', {
                     day: 'numeric',

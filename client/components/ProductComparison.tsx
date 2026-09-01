@@ -445,9 +445,11 @@ function ProductComparison() {
                                   <span className="block font-black text-base sm:text-lg text-kiwi-dark leading-tight truncate">
                                     {option.supermarket_name}
                                   </span>
-                                  <span className="text-xs sm:text-sm text-gray-600 font-medium flex items-center gap-1 mt-0.5 truncate">
-                                    📍 {option.address.split(',')[0]}
-                                  </span>
+                                  {option.address && (
+                                    <span className="text-xs sm:text-sm text-gray-600 font-medium flex items-center gap-1 mt-0.5 truncate">
+                                      📍 {option.address.split(',')[0]}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
                               
