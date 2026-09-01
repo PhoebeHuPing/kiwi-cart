@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<StoreToken> StoreTokens => Set<StoreToken>();
     public DbSet<Bucket> Buckets => Set<Bucket>();
     public DbSet<BucketItem> BucketItems => Set<BucketItem>();
+    public DbSet<Feedback> Feedback => Set<Feedback>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,6 +23,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.Name).HasColumnName("name").HasMaxLength(500).IsRequired();
             e.Property(p => p.Brand).HasColumnName("brand").HasMaxLength(200);
             e.Property(p => p.Category).HasColumnName("category").HasMaxLength(200);
+            e.Property(p => p.ImageUrl).HasColumnName("image_url").HasMaxLength(1000);
         });
 
         modelBuilder.Entity<Store>(e =>
@@ -85,6 +87,17 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.BucketId).HasColumnName("bucket_id");
             e.Property(p => p.ProductId).HasColumnName("product_id");
             e.Property(p => p.Quantity).HasColumnName("quantity");
+        });
+
+        modelBuilder.Entity<Feedback>(e =>
+        {
+            e.ToTable("feedback");
+            e.Property(p => p.Id).HasColumnName("id");
+            e.Property(p => p.UserId).HasColumnName("user_id").HasMaxLength(200);
+            e.Property(p => p.UserName).HasColumnName("user_name").HasMaxLength(200);
+            e.Property(p => p.Message).HasColumnName("message").IsRequired();
+            e.Property(p => p.Category).HasColumnName("category").HasMaxLength(50);
+            e.Property(p => p.CreatedAt).HasColumnName("created_at");
         });
 
         // Auckland Supermarket Seed Data

@@ -20,7 +20,15 @@ public class PriceCacheRepository : IPriceCacheRepository
     {
         await using var connection = new NpgsqlConnection(_connectionString);
         var results = await connection.QueryAsync<PriceResult>(
-            @"SELECT p.name AS ProductName, s.name AS StoreName, s.brand AS StoreBrand,
+            @"SELECT p.name AS ProductName, p.image_url AS ImageUrl,
+                     s.name AS StoreName, s.brand AS StoreBrand,
+                     s.address AS Address, s.latitude AS Lat, s.longitude AS Lng,
+                     CASE s.brand
+                        WHEN 'PakNSave'   THEN '/images/pak-n-save.webp'
+                        WHEN 'NewWorld'   THEN '/images/new-world.webp'
+                        WHEN 'Woolworths' THEN '/images/woolworths.webp'
+                        ELSE NULL
+                     END AS LogoUrl,
                      pr.amount AS Price, pr.retrieved_at AS RetrievedAt
               FROM prices pr
               JOIN products p ON p.id = pr.product_id
@@ -44,8 +52,15 @@ public class PriceCacheRepository : IPriceCacheRepository
         if (productId is null)
         {
             productId = await connection.ExecuteScalarAsync<int>(
-                "INSERT INTO products (name, brand, category) VALUES (@Name, @Brand, '') RETURNING id",
-                new { Name = price.ProductName, Brand = price.StoreBrand });
+                "INSERT INTO products (name, brand, category, image_url) VALUES (@Name, @Brand, '', @ImageUrl) RETURNING id",
+                new { Name = price.ProductName, Brand = price.StoreBrand, price.ImageUrl });
+        }
+        else if (!string.IsNullOrEmpty(price.ImageUrl))
+        {
+            // Backfill/refresh image for an existing product when we have one.
+            await connection.ExecuteAsync(
+                "UPDATE products SET image_url = @ImageUrl WHERE id = @Id AND (image_url IS NULL OR image_url <> @ImageUrl)",
+                new { price.ImageUrl, Id = productId });
         }
 
         // Find store

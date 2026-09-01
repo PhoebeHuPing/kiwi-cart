@@ -4,6 +4,7 @@ using KiwiCart.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
 
 namespace KiwiCart.Api.Controllers;
@@ -34,6 +35,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("compare")]
+    [EnableRateLimiting("compare")]
     [OutputCache(Duration = 300)]
     [ProducesResponseType(typeof(IReadOnlyList<PriceResult>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<PriceResult>>> Compare(
@@ -48,6 +50,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("compare-bucket")]
+    [EnableRateLimiting("bucket")]
     [ProducesResponseType(typeof(IReadOnlyList<BucketCompareResult>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<IReadOnlyList<BucketCompareResult>>> CompareBucket(
