@@ -10,20 +10,18 @@ namespace KiwiCart.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "image_url",
-                table: "products",
-                type: "character varying(1000)",
-                maxLength: 1000,
-                nullable: true);
+            // Idempotent: the column may already exist if it was created by the
+            // Node/knex backend, which shares this database. EF's migration
+            // history does not track that column, so guard with IF NOT EXISTS.
+            migrationBuilder.Sql(
+                "ALTER TABLE products ADD COLUMN IF NOT EXISTS image_url character varying(1000);");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "image_url",
-                table: "products");
+            migrationBuilder.Sql(
+                "ALTER TABLE products DROP COLUMN IF EXISTS image_url;");
         }
     }
 }
