@@ -43,18 +43,18 @@ export default function MyKitchen() {
 
   return (
     <div className="max-w-6xl mx-auto py-8">
-      <header className="mb-12">
+      <header className="mb-8 sm:mb-12">
         <div className="flex items-center gap-4 mb-4">
-          <img src={user?.picture} alt={user?.name || 'User Profile'} className="w-16 h-16 rounded-2xl border-4 border-white shadow-lg" />
+          <img src={user?.picture} alt={user?.name || 'User Profile'} className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-4 border-white shadow-lg" />
           <div>
-            <h1 className="text-4xl font-black text-kiwi-dark tracking-tighter">My Kitchen</h1>
-            <p className="text-gray-600 font-medium">Daily staples and monitored prices for {user?.nickname || user?.name}</p>
+            <h1 className="text-2xl sm:text-4xl font-black text-kiwi-dark tracking-tighter">My Kitchen</h1>
+            <p className="text-sm sm:text-base text-gray-600 font-medium">Daily staples and monitored prices for {user?.nickname || user?.name}</p>
           </div>
         </div>
       </header>
 
       {favoriteNames.length === 0 ? (
-        <div className="bg-white rounded-[2.5rem] p-16 text-center border-2 border-dashed border-gray-100">
+        <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-8 sm:p-16 text-center border-2 border-dashed border-gray-100">
           <span className="text-6xl mb-6 block" aria-hidden="true">🍳</span>
           <h2 className="text-2xl font-black text-kiwi-dark mb-4">Your kitchen is empty!</h2>
           <p className="text-gray-500 mb-8 max-w-md mx-auto">
@@ -74,13 +74,13 @@ export default function MyKitchen() {
             staplePrices.map((item) => {
               const cheapest = item.prices[0]
               return (
-                <div key={item.name} className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm flex flex-col md:flex-row items-center gap-10">
-                  <div className="w-32 h-32 bg-gray-50 rounded-2xl p-4 flex-shrink-0">
+                <div key={item.name} className="bg-white rounded-3xl p-5 sm:p-8 border border-gray-100 shadow-sm flex flex-col md:flex-row items-center gap-6 sm:gap-10">
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-50 rounded-2xl p-4 flex-shrink-0">
                     <img src={cheapest?.image_url || '/images/supermarket.avif'} alt="" className="w-full h-full object-contain mix-blend-multiply" />
                   </div>
                   
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-black text-kiwi-dark tracking-tight">{item.name}</h3>
+                  <div className="flex-1 w-full">
+                    <h3 className="text-xl sm:text-2xl font-black text-kiwi-dark tracking-tight text-center md:text-left">{item.name}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
                       {['Pak\'nSave', 'New World', 'Woolworths'].map(brand => {
                         const storePrice = item.prices.find(p => p.supermarket_name.includes(brand))
@@ -107,7 +107,7 @@ export default function MyKitchen() {
 
                   <Link 
                     to={`/?q=${item.name}`}
-                    className="bg-gray-50 text-kiwi-dark px-6 py-4 rounded-xl font-black text-sm no-underline hover:bg-kiwi/10 hover:text-kiwi transition-all"
+                    className="w-full md:w-auto text-center bg-gray-50 text-kiwi-dark px-6 py-4 rounded-xl font-black text-sm no-underline hover:bg-kiwi/10 hover:text-kiwi transition-all"
                   >
                     View Details
                   </Link>

@@ -5,13 +5,13 @@ function DeveloperProfile() {
   const { user, isAuthenticated } = useAuth0()
 
   return (
-    <div className="max-w-5xl mx-auto py-16 px-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <div className="bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-gray-100">
+    <div className="max-w-5xl mx-auto py-8 sm:py-16 px-4 sm:px-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="bg-white rounded-[2rem] sm:rounded-[3rem] shadow-2xl overflow-hidden border border-gray-100">
         {/* Header/Cover Image Placeholder */}
-        <div className="h-64 bg-gradient-to-r from-kiwi to-kiwi-dark relative">
-          <div className="absolute -bottom-20 left-16">
-            <div className="w-40 h-40 rounded-[2.5rem] bg-white p-3 shadow-2xl border-4 border-white overflow-hidden">
-              <div className="w-full h-full bg-gray-100 rounded-[2rem] flex items-center justify-center overflow-hidden">
+        <div className="h-40 sm:h-64 bg-gradient-to-r from-kiwi to-kiwi-dark relative">
+          <div className="absolute -bottom-14 sm:-bottom-20 left-1/2 -translate-x-1/2 sm:left-16 sm:translate-x-0">
+            <div className="w-28 h-28 sm:w-40 sm:h-40 rounded-[2rem] sm:rounded-[2.5rem] bg-white p-2 sm:p-3 shadow-2xl border-4 border-white overflow-hidden">
+              <div className="w-full h-full bg-gray-100 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center overflow-hidden">
                 <img 
                   src="/images/phoebe.jpg" 
                   alt="Phoebe" 
@@ -22,17 +22,17 @@ function DeveloperProfile() {
           </div>
         </div>
 
-        <div className="pt-28 pb-16 px-16">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
+        <div className="pt-20 sm:pt-28 pb-10 sm:pb-16 px-5 sm:px-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 sm:gap-10 text-center sm:text-left items-center sm:items-start">
             <div>
-              <h2 className="text-5xl font-black text-kiwi-dark tracking-tighter">
+              <h2 className="text-3xl sm:text-5xl font-black text-kiwi-dark tracking-tighter">
                 Phoebe
               </h2>
-              <p className="text-kiwi font-black text-2xl mt-2">
+              <p className="text-kiwi font-black text-lg sm:text-2xl mt-2">
                 Full-Stack Developer & KiwiCart Creator
               </p>
             </div>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap justify-center sm:justify-start gap-3 sm:gap-4">
               <a 
                 href="https://github.com/PhoebeHuPing" 
                 target="_blank" 
@@ -58,8 +58,8 @@ function DeveloperProfile() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mt-20">
-            <div className="md:col-span-2 space-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-16 mt-10 sm:mt-20">
+            <div className="md:col-span-2 space-y-8 sm:space-y-12">
               <section>
                 <h3 className="text-2xl font-black text-kiwi-dark flex items-center gap-3 mb-6">
                   <span className="text-3xl">🚀</span> Mission
@@ -96,7 +96,7 @@ function DeveloperProfile() {
             </div>
 
             <div className="space-y-8">
-              <div className="bg-kiwi/5 rounded-[2rem] p-10 border border-kiwi/10">
+              <div className="bg-kiwi/5 rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 border border-kiwi/10">
                 <h4 className="text-kiwi font-black text-sm uppercase tracking-[0.2em] mb-6">Current Projects</h4>
                 <ul className="space-y-6">
                   <li className="flex items-start gap-4">
@@ -114,7 +114,7 @@ function DeveloperProfile() {
                 </ul>
               </div>
 
-              <div className="bg-kiwi/5 rounded-[2rem] p-10 border border-kiwi/10">
+              <div className="bg-kiwi/5 rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 border border-kiwi/10">
                 <h4 className="text-kiwi font-black text-sm uppercase tracking-[0.2em] mb-6">Contact</h4>
                 <p className="text-lg text-gray-700 mb-6 font-bold leading-tight">Interested in collaborating?</p>
                 <a 

@@ -288,7 +288,7 @@ function ProductComparison() {
         <div className="flex flex-col xl:flex-row gap-12 items-start">
           {/* Main Comparison List - Now in a flexible container to maximize width */}
           <div className="flex-1 space-y-8 w-full">
-            <h2 className="text-3xl font-black text-kiwi-dark mb-6 flex items-center gap-3">
+            <h2 className="text-2xl sm:text-3xl font-black text-kiwi-dark mb-6 flex items-center gap-3">
               {debouncedSearchTerm ? (
                 <>
                   <span className="text-2xl" aria-hidden="true">
@@ -325,7 +325,7 @@ function ProductComparison() {
                       className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:shadow-xl transition-all duration-300 group"
                     >
                       {/* Flowbite-style Image Header */}
-                      <div className="relative aspect-square bg-gray-50/50 p-8 flex items-center justify-center overflow-hidden">
+                      <div className="relative aspect-square bg-gray-50/50 p-4 sm:p-8 flex items-center justify-center overflow-hidden">
                         <img
                           src={group.image_url}
                           alt={group.product_name}
@@ -351,20 +351,20 @@ function ProductComparison() {
                       </div>
 
                       {/* Content Area */}
-                      <div className="p-6 flex flex-col flex-1">
+                      <div className="p-4 sm:p-6 flex flex-col flex-1">
                         <div className="flex-1">
-                          <h3 className="text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2">
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2">
                             {group.product_name}
                           </h3>
-                          <div className="flex items-center gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
-                            <div className="w-20 h-20 bg-white rounded-xl p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+                          <div className="flex items-center gap-4 sm:gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
+                            <div className="w-14 h-14 sm:w-20 sm:h-20 bg-white rounded-xl p-2 sm:p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
                               <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
                             </div>
                             <div className="flex flex-col">
-                              <span className="text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
+                              <span className="text-xs sm:text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
                                 Best Price At
                               </span>
-                              <span className="text-xl font-black text-kiwi-dark leading-tight">
+                              <span className="text-lg sm:text-xl font-black text-kiwi-dark leading-tight">
                                 {bestOption.supermarket_name}
                               </span>
                             </div>
@@ -499,9 +499,9 @@ function ProductComparison() {
           </div>
 
           {/* Sticky Sidebar - Now with a fixed width on XL screens to give more room to cards */}
-          <div className="xl:w-80 space-y-6 flex-shrink-0">
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-              <h3 className="text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
+          <div className="xl:w-80 space-y-6 flex-shrink-0 w-full">
+            <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-sm border border-gray-100">
+              <h3 className="text-lg sm:text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
                 <span className="text-2xl" aria-hidden="true">🗺️</span> Nearby Stores
               </h3>
               <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-100">
@@ -510,7 +510,7 @@ function ProductComparison() {
             </div>
 
             {/* AI Insights Widget */}
-            <div className="bg-kiwi/5 rounded-3xl p-8 border border-kiwi/10">
+            <div className="bg-kiwi/5 rounded-3xl p-5 sm:p-8 border border-kiwi/10">
               <h4 className="text-kiwi font-black text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
                 <span>🥝</span> Kiwi Insight
               </h4>
@@ -522,7 +522,7 @@ function ProductComparison() {
 
             {/* Sidebar Basket Widget */}
             {basket.length > 0 && (
-              <div className="bg-kiwi-dark rounded-3xl p-8 text-white shadow-xl shadow-kiwi-dark/20 animate-in fade-in slide-in-from-right-4">
+              <div className="bg-kiwi-dark rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-kiwi-dark/20 animate-in fade-in slide-in-from-right-4">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="bg-kiwi-dark text-white p-3 rounded-2xl text-2xl shadow-lg">
                     🛒

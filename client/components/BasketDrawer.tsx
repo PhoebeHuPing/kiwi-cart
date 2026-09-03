@@ -54,12 +54,12 @@ export default function BasketDrawer() {
           <div className="w-screen max-w-xl">
             <div className="h-full flex flex-col bg-white shadow-2xl animate-in slide-in-from-right duration-300">
               {/* Header */}
-              <div className="px-8 py-10 border-b border-gray-100 flex items-center justify-between bg-kiwi-dark/5">
+              <div className="px-5 py-6 sm:px-8 sm:py-10 border-b border-gray-100 flex items-center justify-between bg-kiwi-dark/5">
                 <div>
-                  <h2 className="text-3xl font-black text-kiwi-dark flex items-center gap-3">
-                    <span className="bg-kiwi-dark text-white p-2.5 rounded-xl text-xl" aria-hidden="true">🛒</span> My Basket
+                  <h2 className="text-2xl sm:text-3xl font-black text-kiwi-dark flex items-center gap-3">
+                    <span className="bg-kiwi-dark text-white p-2 sm:p-2.5 rounded-xl text-lg sm:text-xl" aria-hidden="true">🛒</span> My Basket
                   </h2>
-                  <p className="text-sm font-black text-kiwi-dark uppercase tracking-[0.2em] mt-3">
+                  <p className="text-xs sm:text-sm font-black text-kiwi-dark uppercase tracking-[0.2em] mt-2 sm:mt-3">
                     {totalItems} Items to compare
                   </p>
                 </div>
@@ -73,7 +73,7 @@ export default function BasketDrawer() {
               </div>
 
               {/* List */}
-              <div className="flex-1 overflow-y-auto px-8 py-8">
+              <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-8 sm:py-8">
                 {basket.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center opacity-60">
                     <div className="text-8xl mb-6" aria-hidden="true">🧺</div>
@@ -89,9 +89,9 @@ export default function BasketDrawer() {
                     {basket.map((item) => (
                       <div
                         key={item.name}
-                        className="flex items-center gap-6 bg-gray-50/50 p-6 rounded-3xl border border-gray-100 group transition-all hover:bg-white hover:shadow-xl hover:border-kiwi/20"
+                        className="flex items-center gap-4 sm:gap-6 bg-gray-50/50 p-4 sm:p-6 rounded-3xl border border-gray-100 group transition-all hover:bg-white hover:shadow-xl hover:border-kiwi/20"
                       >
-                        <div className="w-24 h-24 bg-white rounded-2xl p-4 shadow-inner flex-shrink-0">
+                        <div className="w-16 h-16 sm:w-24 sm:h-24 bg-white rounded-2xl p-3 sm:p-4 shadow-inner flex-shrink-0">
                           <img
                             src={item.image_url}
                             alt={item.name}
@@ -102,7 +102,7 @@ export default function BasketDrawer() {
                           <h4 className="font-black text-lg text-kiwi-dark truncate">
                             {item.name}
                           </h4>
-                          <div className="flex items-center gap-6 mt-4">
+                          <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-4">
                             <div className="flex items-center bg-white border border-gray-200 rounded-xl overflow-hidden h-10 shadow-sm">
                               <button
                                 onClick={() =>
@@ -140,11 +140,11 @@ export default function BasketDrawer() {
 
               {/* Footer */}
               {basket.length > 0 && (
-                <div className="p-8 border-t border-gray-100 bg-gray-50/80">
+                <div className="p-5 sm:p-8 border-t border-gray-100 bg-gray-50/80">
                   <button
                     onClick={handleCompare}
                     disabled={isComparing}
-                    className="w-full py-5 bg-kiwi-dark text-white rounded-3xl font-black text-xl shadow-2xl shadow-kiwi-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 mb-4 border-none cursor-pointer disabled:bg-gray-700 disabled:opacity-90 disabled:cursor-not-allowed"
+                    className="w-full py-4 sm:py-5 bg-kiwi-dark text-white rounded-3xl font-black text-lg sm:text-xl shadow-2xl shadow-kiwi-dark/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-4 mb-4 border-none cursor-pointer disabled:bg-gray-700 disabled:opacity-90 disabled:cursor-not-allowed"
                   >
                     {isComparing ? (
                       <>
