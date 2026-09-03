@@ -62,10 +62,10 @@ function ProductComparison() {
             borderRadius: '24px',
             background: '#333',
             color: '#fff',
-            padding: '24px 48px',
-            fontSize: '20px',
+            padding: '16px 24px',
+            fontSize: '16px',
             fontWeight: 'bold',
-            minWidth: '600px',
+            maxWidth: 'min(90vw, 600px)',
             textAlign: 'center',
             boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.5)',
           },
@@ -80,14 +80,14 @@ function ProductComparison() {
     e.stopPropagation()
     if (!isAuthenticated) {
       toast((t) => (
-        <span className="flex items-center justify-between w-full font-bold text-kiwi-dark text-xl">
+        <span className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full font-bold text-kiwi-dark text-base sm:text-xl">
           <span>Please sign in to save favorites!</span>
           <button
             onClick={() => {
               toast.dismiss(t.id)
               loginWithRedirect()
             }}
-            className="bg-kiwi text-white px-8 py-3 rounded-2xl text-base font-black uppercase tracking-wider border-none cursor-pointer hover:bg-kiwi-dark hover:scale-105 transition-all shadow-lg"
+            className="bg-kiwi text-white px-6 py-2.5 sm:px-8 sm:py-3 rounded-2xl text-sm sm:text-base font-black uppercase tracking-wider border-none cursor-pointer hover:bg-kiwi-dark hover:scale-105 transition-all shadow-lg whitespace-nowrap"
           >
             Sign In Now
           </button>
@@ -99,8 +99,8 @@ function ProductComparison() {
           background: '#fff',
           color: '#333',
           border: '4px solid #f1f5f9',
-          padding: '32px 60px',
-          minWidth: '800px',
+          padding: '20px 28px',
+          maxWidth: 'min(90vw, 800px)',
           boxShadow: '0 35px 60px -15px rgb(0 0 0 / 0.3)',
         },
       })

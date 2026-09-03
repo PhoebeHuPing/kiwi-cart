@@ -38,7 +38,7 @@ function App() {
   return (
     <>
       <Toaster position="top-center" />
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-6">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-4 sm:px-6 sm:py-6">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-3 group no-underline" aria-label="KiwiCart Home">
@@ -117,7 +117,7 @@ function App() {
       </nav>
 
       {isHomePage && (
-        <header className="relative bg-kiwi text-white py-24 px-6 overflow-hidden shadow-2xl">
+        <header className="relative bg-kiwi text-white py-12 sm:py-16 lg:py-24 px-6 overflow-hidden shadow-2xl">
           <div className="absolute inset-0 z-0">
             <img
               src="/images/supermarket.avif"
@@ -133,18 +133,18 @@ function App() {
               🇳🇿 NZ&apos;s Community Price Tracker
             </div>
             <div className="flex flex-col items-start">
-              <h1 className="text-7xl md:text-9xl font-black tracking-tighter drop-shadow-2xl leading-none">
+              <h1 className="text-5xl sm:text-7xl md:text-9xl font-black tracking-tighter drop-shadow-2xl leading-none">
                 KiwiCart
               </h1>
               <Link
                 to="/developer"
-                className="mt-6 text-2xl md:text-4xl font-black text-white hover:text-kiwi-light hover:scale-105 hover:underline decoration-white/30 underline-offset-8 transition-all no-underline drop-shadow-2xl"
+                className="mt-4 sm:mt-6 text-xl sm:text-2xl md:text-4xl font-black text-white hover:text-kiwi-light hover:scale-105 hover:underline decoration-white/30 underline-offset-8 transition-all no-underline drop-shadow-2xl"
               >
                 Created By Phoebe
               </Link>
               </div>
 
-            <p className="mt-8 text-2xl md:text-3xl font-bold text-kiwi-light drop-shadow-lg max-w-3xl leading-tight">
+            <p className="mt-6 sm:mt-8 text-lg sm:text-2xl md:text-3xl font-bold text-kiwi-light drop-shadow-lg max-w-3xl leading-tight">
               Stop overpaying. Compare prices across{' '}
               <span className="text-white border-b-4 border-kiwi-light/40 pb-1">
                 Pak&apos;nSave, New World, and Woolworths
@@ -152,17 +152,17 @@ function App() {
               in real-time.
             </p>
 
-            <div className="mt-12 flex items-center gap-12">
+            <div className="mt-8 sm:mt-12 flex items-center gap-6 sm:gap-12">
               <div className="flex flex-col">
-                <span className="text-5xl font-black text-white drop-shadow-md">20k+</span>
-                <span className="text-sm uppercase font-black tracking-[0.2em] text-white/90 mt-1">
+                <span className="text-3xl sm:text-5xl font-black text-white drop-shadow-md">20k+</span>
+                <span className="text-xs sm:text-sm uppercase font-black tracking-[0.2em] text-white/90 mt-1">
                   Products Tracked
                 </span>
               </div>
-              <div className="w-px h-12 bg-white/30" />
+              <div className="w-px h-10 sm:h-12 bg-white/30" />
               <div className="flex flex-col">
-                <span className="text-5xl font-black text-white drop-shadow-md">100%</span>
-                <span className="text-sm uppercase font-black tracking-[0.2em] text-white/90 mt-1">
+                <span className="text-3xl sm:text-5xl font-black text-white drop-shadow-md">100%</span>
+                <span className="text-xs sm:text-sm uppercase font-black tracking-[0.2em] text-white/90 mt-1">
                   NZ Owned & Built
                 </span>
               </div>

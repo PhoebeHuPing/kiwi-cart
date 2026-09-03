@@ -39,12 +39,12 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
       {/* Modal Content */}
       <div className="relative bg-white w-full max-w-4xl max-h-[90vh] rounded-[3rem] shadow-2xl overflow-hidden flex flex-col animate-in zoom-in slide-in-from-bottom-8 duration-300">
         {/* Header */}
-        <div className="px-10 py-8 border-b border-gray-100 flex items-center justify-between bg-kiwi/5">
+        <div className="px-5 py-6 sm:px-10 sm:py-8 border-b border-gray-100 flex items-center justify-between bg-kiwi/5">
           <div>
-            <h2 className="text-3xl font-black text-kiwi-dark">
+            <h2 className="text-xl sm:text-3xl font-black text-kiwi-dark">
               Price Comparison
             </h2>
-            <p className="text-sm font-black text-kiwi-dark/80 uppercase tracking-[0.2em] mt-2">
+            <p className="text-xs sm:text-sm font-black text-kiwi-dark/80 uppercase tracking-[0.2em] mt-1 sm:mt-2">
               Live results for your current basket
             </p>
           </div>
@@ -58,12 +58,12 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
 
         {/* AI Insight / Savings Banner */}
         {potentialSavings > 0 && (
-          <div className="bg-kiwi px-10 py-6 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <span className="text-3xl" aria-hidden="true">💡</span>
-              <p className="text-lg font-bold text-white leading-tight">
+          <div className="bg-kiwi px-5 py-4 sm:px-10 sm:py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <span className="text-2xl sm:text-3xl" aria-hidden="true">💡</span>
+              <p className="text-base sm:text-lg font-bold text-white leading-tight">
                 You can save up to{' '}
-                <span className="text-2xl font-black underline underline-offset-8 decoration-white/50">
+                <span className="text-xl sm:text-2xl font-black underline underline-offset-8 decoration-white/50">
                   ${potentialSavings.toFixed(2)}
                 </span>{' '}
                  by shopping at {cheapest.supermarket_name}!
@@ -76,7 +76,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
         )}
 
         {/* Results List */}
-        <div className="flex-1 overflow-y-auto p-10 space-y-10">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 lg:p-10 space-y-6 sm:space-y-10">
           {sortedResults.map((store, index) => {
             const isExpanded = expandedStore === store.supermarket_name
 
@@ -95,10 +95,10 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                   </div>
                 )}
 
-                <div className="p-8">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
-                    <div className="flex items-center gap-6">
-                      <div className="w-24 h-24 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex-shrink-0">
+                <div className="p-5 sm:p-8">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-8">
+                    <div className="flex items-center gap-4 sm:gap-6">
+                      <div className="w-16 h-16 sm:w-24 sm:h-24 bg-white rounded-2xl p-3 sm:p-4 shadow-sm border border-gray-100 flex-shrink-0">
                         <img
                           src={store.logo_url}
                           alt={`${store.supermarket_name} logo`}
@@ -106,10 +106,10 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                         />
                       </div>
                       <div>
-                        <h3 className="text-3xl font-black text-kiwi-dark tracking-tight">
+                        <h3 className="text-xl sm:text-3xl font-black text-kiwi-dark tracking-tight">
                           {store.supermarket_name}
                         </h3>
-                        <p className="text-lg font-bold text-gray-700 mt-1">
+                        <p className="text-sm sm:text-lg font-bold text-gray-700 mt-1">
                           {store.items_found} items found
                           {store.missing_items.length > 0 &&
                             ` • ${store.missing_items.length} missing`}
@@ -164,7 +164,7 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                   {/* Expanded Item List */}
                   {isExpanded && (
                     <div className="mt-4 space-y-2 animate-in slide-in-from-top-2 duration-300">
-                      <div className="grid grid-cols-4 px-2 text-sm font-black text-gray-700 uppercase tracking-widest pb-2">
+                      <div className="grid grid-cols-4 px-2 text-xs sm:text-sm font-black text-gray-700 uppercase tracking-widest pb-2">
                         <div className="col-span-2">Product</div>
                         <div className="text-center">Qty</div>
                         <div className="text-right">Price</div>
@@ -172,9 +172,9 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                       {store.details.map((item, i) => (
                         <div
                           key={i}
-                          className="grid grid-cols-4 px-2 py-3 bg-gray-50 rounded-lg text-base"
+                          className="grid grid-cols-4 px-2 py-2.5 sm:py-3 bg-gray-50 rounded-lg text-sm sm:text-base"
                         >
-                          <div className="col-span-2 font-bold text-kiwi-dark truncate">
+                          <div className="col-span-2 font-bold text-kiwi-dark truncate pr-2">
                             {item.name}
                           </div>
                           <div className="text-center text-gray-800 font-bold">
@@ -194,10 +194,10 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
         </div>
 
         {/* Footer Action */}
-        <div className="p-8 bg-gray-50 border-t border-gray-100">
+        <div className="p-5 sm:p-8 bg-gray-50 border-t border-gray-100">
           <button
             onClick={onClose}
-            className="w-full py-4 bg-kiwi-dark text-white rounded-2xl font-black text-lg shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all border-none cursor-pointer"
+            className="w-full py-4 bg-kiwi-dark text-white rounded-2xl font-black text-base sm:text-lg shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all border-none cursor-pointer"
           >
             Got it, thanks!
           </button>

@@ -21,16 +21,16 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
 }) => {
   const sizeClasses = {
     sm: {
-      price: 'text-lg',
+      price: 'text-base sm:text-lg',
       unit: 'text-xs',
     },
     md: {
-      price: 'text-2xl',
-      unit: 'text-sm',
+      price: 'text-xl sm:text-2xl',
+      unit: 'text-xs sm:text-sm',
     },
     lg: {
-      price: 'text-4xl',
-      unit: 'text-base',
+      price: 'text-2xl sm:text-3xl lg:text-4xl',
+      unit: 'text-sm sm:text-base',
     },
   }
 
