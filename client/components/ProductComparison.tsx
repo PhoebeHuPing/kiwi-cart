@@ -1,9 +1,18 @@
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import {
+  useQuery,
+  useQueries,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { useDebounce } from 'use-debounce'
 import { useAuth0 } from '@auth0/auth0-react'
 import toast from 'react-hot-toast'
-import { getComparePrices, getFavorites, toggleFavorite } from '../apis/products'
+import {
+  getComparePrices,
+  getFavorites,
+  toggleFavorite,
+} from '../apis/products'
 import StoreMap from './StoreMap'
 import PriceDisplay from './ui/PriceDisplay'
 import { PriceComparisonData } from '../../models/products'
@@ -16,7 +25,8 @@ interface GroupedProduct {
 }
 
 function ProductComparison() {
-  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } = useAuth0()
+  const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
+    useAuth0()
   const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
@@ -24,6 +34,7 @@ function ProductComparison() {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
   const { basket, addToBasket, isInBasket, removeFromBasket, setIsDrawerOpen } =
     useBasket()
+  const featuredProducts = ['Milk', 'Bread', 'Eggs', 'Butter']
 
   const {
     data: products,
@@ -33,7 +44,20 @@ function ProductComparison() {
   } = useQuery({
     queryKey: ['compare', debouncedSearchTerm],
     queryFn: () => getComparePrices(debouncedSearchTerm),
+    enabled: Boolean(debouncedSearchTerm),
   })
+
+  const featuredQueries = useQueries({
+    queries: featuredProducts.map((productName) => ({
+      queryKey: ['featured', productName],
+      queryFn: () => getComparePrices(productName),
+      staleTime: 5 * 60 * 1000,
+    })),
+  })
+
+  const featuredResults = featuredQueries.flatMap((query) => query.data ?? [])
+  const displayedProducts = debouncedSearchTerm ? products : featuredResults
+  const isFeaturedLoading = featuredQueries.some((query) => query.isLoading)
 
   // Fetch favorites only if authenticated
   const { data: favorites = [] } = useQuery({
@@ -53,8 +77,8 @@ function ProductComparison() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] })
       toast(
-        data.action === 'added' 
-          ? `✅ Added "${data.name}" to favorites!` 
+        data.action === 'added'
+          ? `✅ Added "${data.name}" to favorites!`
           : `🗑️ Removed "${data.name}" from favorites!`,
         {
           duration: 3000,
@@ -69,7 +93,7 @@ function ProductComparison() {
             textAlign: 'center',
             boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.5)',
           },
-        }
+        },
       )
     },
   })
@@ -79,31 +103,34 @@ function ProductComparison() {
   const handleFavoriteClick = (e: React.MouseEvent, productName: string) => {
     e.stopPropagation()
     if (!isAuthenticated) {
-      toast((t) => (
-        <span className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full font-bold text-kiwi-dark text-base sm:text-xl">
-          <span>Please sign in to save favorites!</span>
-          <button
-            onClick={() => {
-              toast.dismiss(t.id)
-              loginWithRedirect()
-            }}
-            className="bg-kiwi text-white px-6 py-2.5 sm:px-8 sm:py-3 rounded-2xl text-sm sm:text-base font-black uppercase tracking-wider border-none cursor-pointer hover:bg-kiwi-dark hover:scale-105 transition-all shadow-lg whitespace-nowrap"
-          >
-            Sign In Now
-          </button>
-        </span>
-      ), {
-        duration: 6000,
-        style: {
-          borderRadius: '32px',
-          background: '#fff',
-          color: '#333',
-          border: '4px solid #f1f5f9',
-          padding: '20px 28px',
-          maxWidth: 'min(90vw, 800px)',
-          boxShadow: '0 35px 60px -15px rgb(0 0 0 / 0.3)',
+      toast(
+        (t) => (
+          <span className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 w-full font-bold text-kiwi-dark text-base sm:text-xl">
+            <span>Please sign in to save favorites!</span>
+            <button
+              onClick={() => {
+                toast.dismiss(t.id)
+                loginWithRedirect()
+              }}
+              className="bg-kiwi text-white px-6 py-2.5 sm:px-8 sm:py-3 rounded-2xl text-sm sm:text-base font-black uppercase tracking-wider border-none cursor-pointer hover:bg-kiwi-dark hover:scale-105 transition-all shadow-lg whitespace-nowrap"
+            >
+              Sign In Now
+            </button>
+          </span>
+        ),
+        {
+          duration: 6000,
+          style: {
+            borderRadius: '32px',
+            background: '#fff',
+            color: '#333',
+            border: '4px solid #f1f5f9',
+            padding: '20px 28px',
+            maxWidth: 'min(90vw, 800px)',
+            boxShadow: '0 35px 60px -15px rgb(0 0 0 / 0.3)',
+          },
         },
-      })
+      )
       return
     }
     favoriteMutation.mutate(productName)
@@ -111,35 +138,40 @@ function ProductComparison() {
 
   // Group the flat array of products by their name and ensure one lowest price per supermarket.
   // This prevents multiple results for the same product at different locations of the same brand.
-  const groupedProducts = products?.reduce((acc: GroupedProduct[], current) => {
-    const existingProduct = acc.find(
-      (p) => p.product_name === current.product_name,
-    )
-
-    if (existingProduct) {
-      const existingOptionIndex = existingProduct.options.findIndex(
-        (opt) => opt.supermarket_name === current.supermarket_name,
+  const groupedProducts = displayedProducts?.reduce(
+    (acc: GroupedProduct[], current) => {
+      const existingProduct = acc.find(
+        (p) => p.product_name === current.product_name,
       )
 
-      if (existingOptionIndex !== -1) {
-        // If this supermarket already has a price for this product, keep the cheapest one
-        if (current.price < existingProduct.options[existingOptionIndex].price) {
-          existingProduct.options[existingOptionIndex] = current
+      if (existingProduct) {
+        const existingOptionIndex = existingProduct.options.findIndex(
+          (opt) => opt.supermarket_name === current.supermarket_name,
+        )
+
+        if (existingOptionIndex !== -1) {
+          // If this supermarket already has a price for this product, keep the cheapest one
+          if (
+            current.price < existingProduct.options[existingOptionIndex].price
+          ) {
+            existingProduct.options[existingOptionIndex] = current
+          }
+        } else {
+          existingProduct.options.push(current)
         }
+        // Ensure options are always sorted by price within the group
+        existingProduct.options.sort((a, b) => a.price - b.price)
       } else {
-        existingProduct.options.push(current)
+        acc.push({
+          product_name: current.product_name,
+          image_url: current.image_url,
+          options: [current],
+        })
       }
-      // Ensure options are always sorted by price within the group
-      existingProduct.options.sort((a, b) => a.price - b.price)
-    } else {
-      acc.push({
-        product_name: current.product_name,
-        image_url: current.image_url,
-        options: [current],
-      })
-    }
-    return acc
-  }, [])
+      return acc
+    },
+    [],
+  )
 
   const trendingCategories = [
     { name: 'Milk', icon: '🥛' },
@@ -285,7 +317,7 @@ function ProductComparison() {
           ></div>
         )}
 
-        <div className="flex flex-col xl:flex-row gap-12 items-start">
+        <div className="flex flex-col lg:flex-row gap-12 items-start">
           {/* Main Comparison List - Now in a flexible container to maximize width */}
           <div className="flex-1 space-y-8 w-full">
             <h2 className="text-2xl sm:text-3xl font-black text-kiwi-dark mb-6 flex items-center gap-3">
@@ -302,7 +334,7 @@ function ProductComparison() {
                   <span className="text-2xl" aria-hidden="true">
                     🔥
                   </span>{' '}
-                  Daily Essentials
+                  Today&apos;s Picks
                 </>
               )}
             </h2>
@@ -314,6 +346,15 @@ function ProductComparison() {
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {isFeaturedLoading &&
+                !displayedProducts?.length &&
+                !debouncedSearchTerm && (
+                  <div className="col-span-full py-12 text-center text-gray-600">
+                    <div className="w-8 h-8 border-4 border-kiwi border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+                    <p className="font-bold">Loading today&apos;s picks...</p>
+                  </div>
+                )}
+
               {groupedProducts?.map(
                 (group: GroupedProduct, groupIdx: number) => {
                   const isExpanded = expandedIndex === groupIdx
@@ -333,14 +374,18 @@ function ProductComparison() {
                         />
                         <div className="absolute top-4 left-4 flex flex-col gap-2">
                           <button
-                            onClick={(e) => handleFavoriteClick(e, group.product_name)}
+                            onClick={(e) =>
+                              handleFavoriteClick(e, group.product_name)
+                            }
                             className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all border-none cursor-pointer text-xl shadow-sm ${
                               isAuthenticated && isFavorite(group.product_name)
                                 ? 'text-red-500 bg-white'
                                 : 'text-gray-300 bg-white/80 hover:text-red-300'
                             }`}
                           >
-                            {isAuthenticated && isFavorite(group.product_name) ? '❤️' : '🤍'}
+                            {isAuthenticated && isFavorite(group.product_name)
+                              ? '❤️'
+                              : '🤍'}
                           </button>
                         </div>
                         {group.options.length > 1 && (
@@ -358,7 +403,11 @@ function ProductComparison() {
                           </h3>
                           <div className="flex items-center gap-4 sm:gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
                             <div className="w-14 h-14 sm:w-20 sm:h-20 bg-white rounded-xl p-2 sm:p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
-                              <img src={bestOption.logo_url} alt="" className="w-full h-full object-contain" />
+                              <img
+                                src={bestOption.logo_url}
+                                alt=""
+                                className="w-full h-full object-contain"
+                              />
                             </div>
                             <div className="flex flex-col">
                               <span className="text-xs sm:text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
@@ -374,7 +423,7 @@ function ProductComparison() {
                         {/* Pricing & Actions */}
                         <div className="mt-auto space-y-4">
                           <div className="flex items-end justify-between">
-                            <PriceDisplay 
+                            <PriceDisplay
                               price={bestOption.price}
                               unitPrice={bestOption.unit_price}
                               isCheapest={true}
@@ -397,25 +446,39 @@ function ProductComparison() {
                                   ? 'bg-red-100 text-red-800 border-red-200 hover:bg-red-200'
                                   : 'bg-kiwi-dark text-white border-kiwi-dark shadow-kiwi/20 hover:scale-105'
                               }`}
-                              title={isInBasket(group.product_name) ? "Remove" : "Add to Basket"}
+                              title={
+                                isInBasket(group.product_name)
+                                  ? 'Remove'
+                                  : 'Add to Basket'
+                              }
                             >
                               {isInBasket(group.product_name) ? (
-                                <span className="text-xl" aria-hidden="true">✕</span>
+                                <span className="text-xl" aria-hidden="true">
+                                  ✕
+                                </span>
                               ) : (
-                                <span className="text-xl" aria-hidden="true">🛒</span>
+                                <span className="text-xl" aria-hidden="true">
+                                  🛒
+                                </span>
                               )}
                               <span className="sr-only">
-                                {isInBasket(group.product_name) ? "Remove from basket" : "Add to basket"}
+                                {isInBasket(group.product_name)
+                                  ? 'Remove from basket'
+                                  : 'Add to basket'}
                               </span>
                             </button>
                           </div>
 
                           <button
-                            onClick={() => setExpandedIndex(isExpanded ? null : groupIdx)}
+                            onClick={() =>
+                              setExpandedIndex(isExpanded ? null : groupIdx)
+                            }
                             className="w-full py-3 px-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl text-sm font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 border-none cursor-pointer"
                           >
                             {isExpanded ? 'Close Prices' : 'View All Prices'}
-                            <span className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}>
+                            <span
+                              className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                            >
                               ▼
                             </span>
                           </button>
@@ -432,14 +495,18 @@ function ProductComparison() {
                             <div
                               key={optIdx}
                               className={`flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 sm:p-5 rounded-2xl border transition-all gap-4 ${
-                                optIdx === 0 
-                                  ? 'border-kiwi/30 shadow-md ring-1 ring-kiwi/5' 
+                                optIdx === 0
+                                  ? 'border-kiwi/30 shadow-md ring-1 ring-kiwi/5'
                                   : 'border-gray-100 shadow-sm'
                               }`}
                             >
                               <div className="flex items-center gap-4 min-w-0">
                                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded-xl p-2 flex items-center justify-center flex-shrink-0">
-                                  <img src={option.logo_url} alt="" className="w-full h-full object-contain" />
+                                  <img
+                                    src={option.logo_url}
+                                    alt=""
+                                    className="w-full h-full object-contain"
+                                  />
                                 </div>
                                 <div className="min-w-0">
                                   <span className="block font-black text-base sm:text-lg text-kiwi-dark leading-tight truncate">
@@ -452,9 +519,11 @@ function ProductComparison() {
                                   )}
                                 </div>
                               </div>
-                              
+
                               <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0">
-                                <span className="sm:hidden text-xs font-black text-gray-600 uppercase tracking-widest">Price</span>
+                                <span className="sm:hidden text-xs font-black text-gray-600 uppercase tracking-widest">
+                                  Price
+                                </span>
                                 <div className="text-right">
                                   <div className="flex flex-col items-end">
                                     <span className="font-black text-xl sm:text-2xl text-kiwi-dark tracking-tighter">
@@ -485,7 +554,9 @@ function ProductComparison() {
               {/* Empty state when no results match the search */}
               {!isLoading && products?.length === 0 && debouncedSearchTerm && (
                 <div className="col-span-full bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
-                  <div className="text-5xl mb-4 text-center" aria-hidden="true">🥝</div>
+                  <div className="text-5xl mb-4 text-center" aria-hidden="true">
+                    🥝
+                  </div>
                   <h3 className="text-xl font-bold text-kiwi-dark">
                     No products found
                   </h3>
@@ -498,69 +569,114 @@ function ProductComparison() {
             </div>
           </div>
 
-          {/* Sticky Sidebar - Now with a fixed width on XL screens to give more room to cards */}
-          <div className="xl:w-80 space-y-6 flex-shrink-0 w-full">
+          {/* Sticky Sidebar - Pinned to the viewport so Nearby Stores and
+              Kiwi Insight stay visible for the full length of the product list.
+              The column itself is the sticky element; its containing block is
+              the tall flex row above, so it stays pinned while that row is in
+              view instead of scrolling away with a short inner wrapper. */}
+          <div className="lg:w-80 space-y-6 flex-shrink-0 w-full lg:sticky lg:top-28 lg:self-start">
+            {/* Nearby Stores map */}
             <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-sm border border-gray-100">
               <h3 className="text-lg sm:text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
-                <span className="text-2xl" aria-hidden="true">🗺️</span> Nearby Stores
+                <span className="text-2xl" aria-hidden="true">
+                  🗺️
+                </span>{' '}
+                Nearby Stores
               </h3>
               <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-100">
                 <StoreMap />
               </div>
             </div>
 
-            {/* AI Insights Widget */}
-            <div className="bg-kiwi/5 rounded-3xl p-5 sm:p-8 border border-kiwi/10">
-              <h4 className="text-kiwi font-black text-sm uppercase tracking-widest mb-4 flex items-center gap-2">
-                <span>🥝</span> Kiwi Insight
-              </h4>
-              <p className="text-lg text-kiwi-dark/80 italic leading-relaxed">
-                Milk prices in Auckland CBD have dropped by 5% this week. Keep
-                an eye on New World specials!
-              </p>
-            </div>
+            {/* Your Basket - always visible, shows an empty state when empty */}
+            <div className="bg-kiwi-dark rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-kiwi-dark/20">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="bg-white/10 text-white p-3 rounded-2xl text-2xl shadow-lg">
+                  🛒
+                </div>
+                <div>
+                  <h4 className="font-black text-xl leading-none">
+                    Your Basket
+                  </h4>
+                  <p className="text-white/90 text-sm font-black uppercase tracking-widest mt-2">
+                    {basket.reduce((sum, item) => sum + item.quantity, 0)} Items
+                    Selected
+                  </p>
+                </div>
+              </div>
 
-            {/* Sidebar Basket Widget */}
-            {basket.length > 0 && (
-              <div className="bg-kiwi-dark rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-kiwi-dark/20 animate-in fade-in slide-in-from-right-4">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="bg-kiwi-dark text-white p-3 rounded-2xl text-2xl shadow-lg">
-                    🛒
-                  </div>
-                  <div>
-                    <h4 className="font-black text-xl leading-none">Your Basket</h4>
-                    <p className="text-white/90 text-sm font-black uppercase tracking-widest mt-2">
-                      {basket.reduce((sum, item) => sum + item.quantity, 0)} Items Selected
-                    </p>
-                  </div>
-                  </div>
-
+              {basket.length > 0 ? (
+                <>
                   <div className="space-y-4 mb-8">
-                  {basket.slice(0, 3).map((item, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-white/10 rounded-xl p-1.5">
-                        <img src={item.image_url} alt={item.name} className="w-full h-full object-contain mix-blend-screen" />
+                    {basket.slice(0, 3).map((item, i) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-white/10 rounded-xl p-1.5">
+                          <img
+                            src={item.image_url}
+                            alt={item.name}
+                            className="w-full h-full object-contain mix-blend-screen"
+                          />
+                        </div>
+                        <span className="text-sm font-black truncate flex-1">
+                          {item.name}
+                        </span>
+                        <span className="text-sm font-black text-white">
+                          ×{item.quantity}
+                        </span>
                       </div>
-                      <span className="text-sm font-black truncate flex-1">{item.name}</span>
-                      <span className="text-sm font-black text-white">×{item.quantity}</span>
-                    </div>
-                  ))}
-                  {basket.length > 3 && (
-                    <p className="text-xs text-white/80 font-black uppercase tracking-[0.2em] text-center bg-white/5 py-2 rounded-lg">
-                      + {basket.length - 3} more items
-                    </p>
-                  )}
+                    ))}
+                    {basket.length > 3 && (
+                      <p className="text-xs text-white/80 font-black uppercase tracking-[0.2em] text-center bg-white/5 py-2 rounded-lg">
+                        + {basket.length - 3} more items
+                      </p>
+                    )}
                   </div>
 
                   <button
-                  onClick={() => setIsDrawerOpen(true)}
-                  className="w-full py-4 bg-white text-kiwi-dark rounded-2xl font-black text-base shadow-lg hover:bg-kiwi-light transition-all border-none cursor-pointer"
+                    onClick={() => setIsDrawerOpen(true)}
+                    className="w-full py-4 bg-white text-kiwi-dark rounded-2xl font-black text-base shadow-lg hover:bg-kiwi-light transition-all border-none cursor-pointer"
                   >
-                  Compare Total Prices
+                    Compare Total Prices
                   </button>
+                </>
+              ) : (
+                <p className="text-sm text-white/80 leading-relaxed bg-white/5 rounded-2xl p-4">
+                  Your basket is empty. Add products from the list to compare
+                  their total price across supermarkets.
+                </p>
+              )}
+            </div>
 
+            {/* AI Assistant - placeholder for the upcoming AI-powered smart
+                search / recommendations feature. Kept visually distinct and
+                labelled "coming soon" until the backend is wired up. */}
+            <div className="bg-gradient-to-br from-kiwi/10 to-kiwi/5 rounded-3xl p-5 sm:p-8 border border-kiwi/20">
+              <div className="flex items-center justify-between mb-4">
+                <h4 className="text-kiwi font-black text-sm uppercase tracking-widest flex items-center gap-2">
+                  <span aria-hidden="true">🤖</span> AI Assistant
+                </h4>
+                <span className="text-[10px] font-black uppercase tracking-widest text-kiwi bg-kiwi/10 px-2 py-1 rounded-lg">
+                  Coming soon
+                </span>
               </div>
-            )}
+              <p className="text-base text-kiwi-dark/80 leading-relaxed mb-4">
+                Smarter shopping is on the way. Ask in plain language — e.g.
+                &quot;cheapest breakfast basket near me&quot; — and let the
+                assistant find the best deals for you.
+              </p>
+              <div className="flex items-center gap-2 bg-white/70 rounded-2xl px-4 py-3 border border-kiwi/10">
+                <span className="text-lg" aria-hidden="true">
+                  ✨
+                </span>
+                <input
+                  type="text"
+                  disabled
+                  placeholder="Ask the AI assistant…"
+                  aria-label="AI assistant (coming soon)"
+                  className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-kiwi-dark placeholder:text-kiwi-dark/40 cursor-not-allowed"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -569,6 +685,5 @@ function ProductComparison() {
     </div>
   )
 }
-
 
 export default ProductComparison

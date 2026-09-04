@@ -223,7 +223,7 @@ export default function StoreMap() {
         </div>
       </div>
 
-      <div ref={mapRef} className="w-full h-full min-h-[400px]" />
+      <div ref={mapRef} className="w-full h-full" />
       
       {(!isLoaded || mapError) && (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-gray-100/90 backdrop-blur-[2px] z-20">
