@@ -29,12 +29,14 @@ describe('ProductComparison Component', () => {
     vi.mocked(api.getSupermarkets).mockResolvedValue([])
   })
 
-  it('renders search input and daily essentials header', () => {
+  it('renders search input and todays picks header', () => {
     vi.mocked(api.getComparePrices).mockResolvedValue([])
     render(<ProductComparison />, { wrapper })
-    
+
     expect(screen.getByPlaceholderText(/Search for a product/i)).toBeDefined()
-    expect(screen.getByText(/Daily Essentials/i)).toBeDefined()
+    expect(
+      screen.getByRole('heading', { name: /Today's Picks/i }),
+    ).toBeDefined()
   })
 
   it('displays products when they are fetched', async () => {
@@ -47,8 +49,8 @@ describe('ProductComparison Component', () => {
         logo_url: 'logo.png',
         address: '123 Street',
         lat: -36.8485,
-        lng: 174.7633
-      }
+        lng: 174.7633,
+      },
     ]
     vi.mocked(api.getComparePrices).mockResolvedValue(mockProducts)
 
@@ -73,8 +75,8 @@ describe('ProductComparison Component', () => {
         logo_url: 'logo.png',
         address: '123 Street',
         lat: -36.8485,
-        lng: 174.7633
-      }
+        lng: 174.7633,
+      },
     ]
     vi.mocked(api.getComparePrices).mockResolvedValue(mockProducts)
 
