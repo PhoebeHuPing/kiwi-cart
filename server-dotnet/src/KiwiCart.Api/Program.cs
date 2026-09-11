@@ -236,6 +236,11 @@ builder.Services.AddScoped<IMealPlanService>(sp => new CachingMealPlanService(
     sp.GetRequiredService<IOptions<MealPlanCacheOptions>>(),
     sp.GetRequiredService<ILogger<CachingMealPlanService>>()));
 
+// Personalized suggestions (Phase 2). Aggregates the user's favorites, asks
+// the AI for relevant products, then reuses the price comparison service to
+// cost each and compute cross-store savings.
+builder.Services.AddScoped<ISuggestionService, SuggestionService>();
+
 // Auth0 JWT Authentication
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>

@@ -72,3 +72,26 @@ export interface MealPlanResponse {
   items: MealPlanItem[]
   estimated_total: number
 }
+
+/**
+ * One personalized suggestion for the signed-in user: the product to consider,
+ * a short AI-written reason, the cheapest matching product (null when no match
+ * was found), and the potential cross-store saving (null when fewer than two
+ * stores had a price). Mirrors the backend `SuggestionItem` DTO.
+ */
+export interface SuggestionItem {
+  product: string
+  reason: string
+  cheapest: PriceComparisonData | null
+  potential_saving: number | null
+}
+
+/**
+ * Personalized suggestions for the signed-in user, with the total potential
+ * saving across all suggestions. Mirrors the backend `SuggestionsResponse` DTO
+ * (`GET /api/v1/ai/suggestions`).
+ */
+export interface SuggestionsResponse {
+  items: SuggestionItem[]
+  total_potential_saving: number
+}

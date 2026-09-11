@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuth0 } from '@auth0/auth0-react'
 import { getFavorites, getComparePrices } from '../apis/products'
 import { Link } from 'react-router'
+import SuggestionCards from './SuggestionCards'
 
 export default function MyKitchen() {
   const { getAccessTokenSilently, user } = useAuth0()
@@ -52,6 +53,10 @@ export default function MyKitchen() {
           </div>
         </div>
       </header>
+
+      <div className="mb-8">
+        <SuggestionCards />
+      </div>
 
       {favoriteNames.length === 0 ? (
         <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-8 sm:p-16 text-center border-2 border-dashed border-gray-100">
