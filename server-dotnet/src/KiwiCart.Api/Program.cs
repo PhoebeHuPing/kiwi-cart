@@ -10,6 +10,9 @@ using KiwiCart.Infrastructure.StoreClients;
 using KiwiCart.Infrastructure.Services;
 using KiwiCart.Infrastructure.Repositories;
 using KiwiCart.Core.Interfaces;
+using KiwiCart.Core.DTOs;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 using Serilog;
@@ -90,6 +93,18 @@ builder.Services.AddRateLimiter(options =>
             PermitLimit = 5,
         });
     });
+
+    // Dedicated per-IP limit for AI endpoints. Gemini calls are billed/quota'd
+    // and slower than store calls, so this is kept independent and strict.
+    options.AddPolicy("ai", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+        {
+            Window = TimeSpan.FromMinutes(1),
+            PermitLimit = 5,
+        });
+    });
 });
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -159,6 +174,18 @@ builder.Services.AddHttpClient("Woolworths", c =>
 .AddPolicyHandler(circuitBreakerPolicy)
 .AddPolicyHandler(timeoutPolicy);
 
+// Gemini AI client. Longer per-attempt timeout than store calls (generation is
+// slower) and its own retry policy, independent of the supermarket circuit
+// breaker so AI failures never trip store traffic and vice versa.
+var geminiTimeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(30));
+builder.Services.AddHttpClient(GeminiClient.HttpClientName, c =>
+{
+    c.BaseAddress = new Uri("https://generativelanguage.googleapis.com/");
+    c.Timeout = TimeSpan.FromSeconds(35);
+})
+.AddPolicyHandler(retryPolicy)
+.AddPolicyHandler(geminiTimeoutPolicy);
+
 // Store API clients (Singleton)
 builder.Services.AddSingleton<PakNSaveClient>(sp => new PakNSaveClient(
     sp.GetRequiredService<PakNSaveTokenProvider>(),
@@ -187,6 +214,32 @@ builder.Services.AddScoped<IBucketService, BucketService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<IFavoritesService, FavoritesService>();
 builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
+// Gemini AI (Phase 0 base). Options bound from the "Gemini" config section;
+// the API key comes from user-secrets locally / Azure App Settings in prod.
+builder.Services.Configure<GeminiOptions>(
+    builder.Configuration.GetSection(GeminiOptions.SectionName));
+builder.Services.AddScoped<IGeminiClient, GeminiClient>();
+
+// Meal-plan response cache (Phase 1.4). The concrete planner is registered
+// directly, then wrapped by a caching decorator so identical prompts within
+// the TTL skip the billed Gemini call and the price fan-out. Size limit keeps
+// the free-text key space bounded; each entry has Size = 1.
+var mealPlanCacheSection = builder.Configuration.GetSection(MealPlanCacheOptions.SectionName);
+builder.Services.Configure<MealPlanCacheOptions>(mealPlanCacheSection);
+var mealPlanCacheOptions = mealPlanCacheSection.Get<MealPlanCacheOptions>() ?? new MealPlanCacheOptions();
+builder.Services.AddMemoryCache(o => o.SizeLimit = mealPlanCacheOptions.MaxEntries);
+builder.Services.AddScoped<MealPlanService>();
+builder.Services.AddScoped<IMealPlanService>(sp => new CachingMealPlanService(
+    sp.GetRequiredService<MealPlanService>(),
+    sp.GetRequiredService<IMemoryCache>(),
+    sp.GetRequiredService<IOptions<MealPlanCacheOptions>>(),
+    sp.GetRequiredService<ILogger<CachingMealPlanService>>()));
+
+// Personalized suggestions (Phase 2). Aggregates the user's favorites, asks
+// the AI for relevant products, then reuses the price comparison service to
+// cost each and compute cross-store savings.
+builder.Services.AddScoped<ISuggestionService, SuggestionService>();
 
 // Auth0 JWT Authentication
 builder.Services.AddAuthentication("Bearer")

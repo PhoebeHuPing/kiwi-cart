@@ -15,10 +15,9 @@ coverage
 
 # Dotenv env settings
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+!.env.*.example
 
 # IDEs and Editors
 .vs/
@@ -65,3 +64,6 @@ debug-request.ts
 
 # Sensitive JSON files
 *.local.json
+
+# Internal planning/notes docs (keep local, do not upload)
+docs/2026-08-27-optimization-and-ai-plan.md

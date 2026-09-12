@@ -12,6 +12,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             NotFoundException => (StatusCodes.Status404NotFound, "Not Found"),
             StoreApiException => (StatusCodes.Status502BadGateway, "Store API Error"),
+            GeminiApiException => (StatusCodes.Status502BadGateway, "AI Service Error"),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error")
         };
 

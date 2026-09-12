@@ -15,6 +15,7 @@ import {
 } from '../apis/products'
 import StoreMap from './StoreMap'
 import PriceDisplay from './ui/PriceDisplay'
+import AiAssistant from './AiAssistant'
 import { PriceComparisonData } from '../../models/products'
 import { useBasket } from '../contexts/BasketContext'
 
@@ -647,36 +648,9 @@ function ProductComparison() {
               )}
             </div>
 
-            {/* AI Assistant - placeholder for the upcoming AI-powered smart
-                search / recommendations feature. Kept visually distinct and
-                labelled "coming soon" until the backend is wired up. */}
-            <div className="bg-gradient-to-br from-kiwi/10 to-kiwi/5 rounded-3xl p-5 sm:p-8 border border-kiwi/20">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="text-kiwi font-black text-sm uppercase tracking-widest flex items-center gap-2">
-                  <span aria-hidden="true">🤖</span> AI Assistant
-                </h4>
-                <span className="text-[10px] font-black uppercase tracking-widest text-kiwi bg-kiwi/10 px-2 py-1 rounded-lg">
-                  Coming soon
-                </span>
-              </div>
-              <p className="text-base text-kiwi-dark/80 leading-relaxed mb-4">
-                Smarter shopping is on the way. Ask in plain language — e.g.
-                &quot;cheapest breakfast basket near me&quot; — and let the
-                assistant find the best deals for you.
-              </p>
-              <div className="flex items-center gap-2 bg-white/70 rounded-2xl px-4 py-3 border border-kiwi/10">
-                <span className="text-lg" aria-hidden="true">
-                  ✨
-                </span>
-                <input
-                  type="text"
-                  disabled
-                  placeholder="Ask the AI assistant…"
-                  aria-label="AI assistant (coming soon)"
-                  className="flex-1 bg-transparent border-none outline-none text-sm font-medium text-kiwi-dark placeholder:text-kiwi-dark/40 cursor-not-allowed"
-                />
-              </div>
-            </div>
+            {/* AI Assistant - plain-language meal planning powered by the
+                backend Gemini meal-plan endpoint. */}
+            <AiAssistant />
           </div>
         </div>
       </div>
