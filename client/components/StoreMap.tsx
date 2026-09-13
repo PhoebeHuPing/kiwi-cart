@@ -207,8 +207,10 @@ export default function StoreMap() {
   }, [mapInstance, supermarkets])
 
   return (
-    <div className="w-full h-full relative bg-gray-50 rounded-xl overflow-hidden shadow-inner border border-gray-100">
-      <div className="absolute top-3 left-3 right-3 z-10">
+    <div className="w-full h-full relative flex flex-col overflow-hidden">
+      {/* Search row: sits above the map in normal flow so it never
+          overlaps the map content or the card title. */}
+      <div className="flex-shrink-0 p-3">
         <div className="relative group">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-kiwi transition-colors" aria-hidden="true">
             📍
@@ -218,13 +220,16 @@ export default function StoreMap() {
             type="text"
             aria-label="Search for a location"
             placeholder="Search for a location..."
-            className="w-full pl-9 pr-4 py-2.5 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-gray-100 focus:ring-2 focus:ring-kiwi/20 focus:border-kiwi outline-none text-sm transition-all placeholder:text-gray-600"
+            className="w-full pl-9 pr-4 py-2.5 bg-white rounded-xl shadow-sm border border-gray-200 focus:ring-2 focus:ring-kiwi/20 focus:border-kiwi outline-none text-sm transition-all placeholder:text-gray-600"
           />
         </div>
       </div>
 
-      <div ref={mapRef} className="w-full h-full" />
-      
+      {/* Map fills the remaining space below the search row. */}
+      <div className="relative flex-1 min-h-0">
+        <div ref={mapRef} className="w-full h-full" />
+      </div>
+
       {(!isLoaded || mapError) && (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-gray-100/90 backdrop-blur-[2px] z-20">
           {mapError ? (

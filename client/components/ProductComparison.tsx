@@ -22,7 +22,20 @@ import { useBasket } from '../contexts/BasketContext'
 interface GroupedProduct {
   product_name: string
   image_url: string
+  product_id?: string
   options: PriceComparisonData[]
+}
+
+/**
+ * Normalize a product name for display: capitalize the first letter of each
+ * word so all-lowercase source names (e.g. "natures fresh toast bread white")
+ * render consistently ("Natures Fresh Toast Bread White"). Words already
+ * containing uppercase (brand casing like "UHT") are left untouched.
+ */
+function toTitleCase(input: string): string {
+  return input.replace(/\S+/g, (word) =>
+    /[A-Z]/.test(word) ? word : word.charAt(0).toUpperCase() + word.slice(1),
+  )
 }
 
 function ProductComparison() {
@@ -138,12 +151,26 @@ function ProductComparison() {
   }
 
   // Group the flat array of products by their name and ensure one lowest price per supermarket.
+  // Priority 1: If both items have product_id and match → merge (Foodstuffs exact match)
+  // Priority 2: Fall back to name-based matching
   // This prevents multiple results for the same product at different locations of the same brand.
   const groupedProducts = displayedProducts?.reduce(
     (acc: GroupedProduct[], current) => {
-      const existingProduct = acc.find(
-        (p) => p.product_name === current.product_name,
-      )
+      let existingProduct: GroupedProduct | undefined
+
+      // Priority 1: Try to find by product_id (if both have it)
+      if (current.product_id) {
+        existingProduct = acc.find(
+          (p) => p.product_id && p.product_id === current.product_id,
+        )
+      }
+
+      // Priority 2: Fall back to name-based matching
+      if (!existingProduct) {
+        existingProduct = acc.find(
+          (p) => p.product_name === current.product_name,
+        )
+      }
 
       if (existingProduct) {
         const existingOptionIndex = existingProduct.options.findIndex(
@@ -166,6 +193,7 @@ function ProductComparison() {
         acc.push({
           product_name: current.product_name,
           image_url: current.image_url,
+          product_id: current.product_id,
           options: [current],
         })
       }
@@ -186,8 +214,8 @@ function ProductComparison() {
     <div className="min-h-screen bg-background pb-12">
       <div className="py-8">
         {/* Search and Navigation Header (Sticky) */}
-        <div className="sticky top-0 z-40 -mx-4 px-4 py-4 mb-12 bg-background/95 backdrop-blur-md border-b border-transparent transition-all data-[stuck]:border-gray-100">
-          <div className="flex flex-col gap-6">
+        <div className="sticky top-0 z-40 -mx-4 px-4 py-3 mb-12 bg-background/95 backdrop-blur-md border-b border-transparent transition-all data-[stuck]:border-gray-100">
+          <div className="flex flex-col gap-4">
             <div className="flex items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 focus-within:ring-4 focus-within:ring-kiwi/10 transition-all relative">
               <span className="text-3xl ml-2" aria-hidden="true">
                 🔍
@@ -245,7 +273,7 @@ function ProductComparison() {
                             </div>
                             <div>
                               <h4 className="font-bold text-sm text-kiwi-dark line-clamp-1">
-                                {item.product_name}
+                                {toTitleCase(item.display_product_name || item.product_name)}
                               </h4>
                               <div className="flex items-center gap-1.5 mt-0.5">
                                 <img
@@ -298,9 +326,9 @@ function ProductComparison() {
                 <button
                   key={cat.name}
                   onClick={() => setSearchTerm(cat.name)}
-                  className="px-4 py-2 md:px-6 md:py-3 bg-white rounded-xl md:rounded-2xl text-sm md:text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105 whitespace-nowrap flex-shrink-0"
+                  className="px-3 py-1.5 md:px-4 md:py-2 bg-white rounded-xl text-sm md:text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105 whitespace-nowrap flex-shrink-0"
                 >
-                  <span className="text-lg md:text-xl">{cat.icon}</span>
+                  <span className="text-base md:text-lg">{cat.icon}</span>
                   {cat.name}
                 </button>
               ))}
@@ -399,22 +427,31 @@ function ProductComparison() {
                       {/* Content Area */}
                       <div className="p-4 sm:p-6 flex flex-col flex-1">
                         <div className="flex-1">
-                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2">
-                            {group.product_name}
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2 min-h-[3.5rem] sm:min-h-[4rem]">
+                            {toTitleCase(group.options[0]?.display_product_name || group.product_name)}
                           </h3>
-                          <div className="flex items-center gap-4 sm:gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
-                            <div className="w-14 h-14 sm:w-20 sm:h-20 bg-white rounded-xl p-2 sm:p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+                          {/* Volume Display */}
+                          {bestOption.volume && (
+                            <div className="mb-4 text-sm font-semibold text-gray-600">
+                              <span className="text-gray-700">{bestOption.volume}</span>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-3 sm:gap-4 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
+                            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-xl p-2 shadow-sm flex-shrink-0 flex items-center justify-center">
                               <img
                                 src={bestOption.logo_url}
                                 alt=""
-                                className="w-full h-full object-contain"
+                                className="max-w-full max-h-full object-contain"
                               />
                             </div>
-                            <div className="flex flex-col">
-                              <span className="text-xs sm:text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-xs font-black text-kiwi-dark uppercase tracking-widest leading-none mb-1.5">
                                 Best Price At
                               </span>
-                              <span className="text-lg sm:text-xl font-black text-kiwi-dark leading-tight">
+                              <span
+                                className="text-base sm:text-lg font-black text-kiwi-dark leading-tight line-clamp-2 break-words cursor-help"
+                                title={bestOption.supermarket_name}
+                              >
                                 {bestOption.supermarket_name}
                               </span>
                             </div>
@@ -575,16 +612,16 @@ function ProductComparison() {
               The column itself is the sticky element; its containing block is
               the tall flex row above, so it stays pinned while that row is in
               view instead of scrolling away with a short inner wrapper. */}
-          <div className="lg:w-80 space-y-6 flex-shrink-0 w-full lg:sticky lg:top-28 lg:self-start">
+          <div className="lg:w-80 space-y-6 flex-shrink-0 w-full lg:sticky lg:top-40 lg:self-start lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:pr-1 scrollbar-hide">
             {/* Nearby Stores map */}
-            <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-sm border border-gray-100">
-              <h3 className="text-lg sm:text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
+            <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-gray-100">
+              <h3 className="text-lg sm:text-xl font-black text-kiwi-dark mb-4 flex items-center gap-2">
                 <span className="text-2xl" aria-hidden="true">
                   🗺️
                 </span>{' '}
                 Nearby Stores
               </h3>
-              <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-100">
+              <div className="h-56 bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-100">
                 <StoreMap />
               </div>
             </div>

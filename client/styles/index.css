@@ -29,3 +29,14 @@
 .animate-spin-slow {
   animation: spin 2s linear infinite;
 }
+
+/* Hide scrollbars while keeping scroll functionality.
+   Used by the category filter row and the sticky product sidebar. */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and legacy Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and other WebKit browsers */
+}
