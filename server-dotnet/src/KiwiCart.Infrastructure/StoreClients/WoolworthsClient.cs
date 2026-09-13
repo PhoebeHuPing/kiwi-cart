@@ -20,6 +20,7 @@ public class WoolworthsClient : StoreApiClient
     }
 
     public override string StoreName => "Woolworths";
+    public override string StoreBrand => "Woolworths";
 
     protected override async Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
         string term, string token, CancellationToken ct)
@@ -57,10 +58,45 @@ public class WoolworthsClient : StoreApiClient
                 if (p.TryGetProperty("type", out var type) && type.GetString() != "Product")
                     continue;
 
-                var name = p.GetProperty("name").GetString() ?? "";
+                // Skip items without a name property. Woolworths mixes non-product
+                // entries (ads, category tiles) into the items array; calling
+                // GetProperty("name") on those throws and aborts the whole search.
+                if (!p.TryGetProperty("name", out var nameEl))
+                    continue;
+
+                var name = nameEl.GetString() ?? "";
                 var price = p.TryGetProperty("price", out var priceObj)
                     && priceObj.TryGetProperty("salePrice", out var salePrice)
                     ? salePrice.GetDecimal() : 0m;
+
+                // Extract brand from API
+                var brand = p.TryGetProperty("brand", out var br) ? br.GetString() : null;
+
+                // Extract volume and unit price from size object
+                string? volume = null;
+                string? unitPrice = null;
+                if (p.TryGetProperty("size", out var sizeObj))
+                {
+                    // Try to get volumeSize (e.g., "250mL")
+                    if (sizeObj.TryGetProperty("volumeSize", out var vs))
+                    {
+                        volume = vs.GetString();
+                    }
+
+                    // Try to get unit price directly (e.g., "5.2" for "$5.2/1L")
+                    if (sizeObj.TryGetProperty("cupPrice", out var cp) && sizeObj.TryGetProperty("cupMeasure", out var cm))
+                    {
+                        var cupPriceVal = cp.TryGetDecimal(out var cpVal) ? cpVal : 0m;
+                        var cupMeasureStr = cm.GetString() ?? "";
+                        if (cupPriceVal > 0 && !string.IsNullOrEmpty(cupMeasureStr))
+                        {
+                            unitPrice = $"${cupPriceVal:F2}/{cupMeasureStr}";
+                        }
+                    }
+                }
+
+                // Normalize product name by prepending brand if needed
+                var displayProductName = NormalizeProductName(name, brand);
 
                 // Extract image URL (Woolworths uses images.big / images.small)
                 string? imageUrl = null;
@@ -75,14 +111,18 @@ public class WoolworthsClient : StoreApiClient
                 results.Add(new PriceResult
                 {
                     ProductName = name,
+                    DisplayProductName = displayProductName,
                     ImageUrl = imageUrl,
                     StoreName = StoreName,
                     StoreBrand = "Woolworths",
+                    Brand = brand,  // Store the actual product brand from API
                     LogoUrl = "/images/woolworths.webp",
-                    Address = "Grey Lynn, Auckland",
-                    Lat = -36.8645,
-                    Lng = 174.7431,
+                    Address = "Quay St, Auckland CBD",
+                    Lat = -36.8475,
+                    Lng = 174.767,
                     Price = price, // Already in dollars
+                    Volume = volume,
+                    UnitPrice = unitPrice,
                     RetrievedAt = DateTime.UtcNow
                 });
             }

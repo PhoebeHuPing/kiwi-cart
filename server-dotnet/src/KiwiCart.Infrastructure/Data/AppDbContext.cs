@@ -24,6 +24,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.Brand).HasColumnName("brand").HasMaxLength(200);
             e.Property(p => p.Category).HasColumnName("category").HasMaxLength(200);
             e.Property(p => p.ImageUrl).HasColumnName("image_url").HasMaxLength(1000);
+            e.Property(p => p.ExternalProductId).HasColumnName("external_product_id").HasMaxLength(100);
         });
 
         modelBuilder.Entity<Store>(e =>
@@ -45,6 +46,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.StoreId).HasColumnName("store_id");
             e.Property(p => p.Amount).HasColumnName("amount").HasPrecision(10, 2);
             e.Property(p => p.RetrievedAt).HasColumnName("retrieved_at");
+            e.Property(p => p.Volume).HasColumnName("volume").HasMaxLength(100);
+            e.Property(p => p.UnitPrice).HasColumnName("unit_price").HasMaxLength(50);
             e.HasIndex(p => new { p.ProductId, p.StoreId }).IsUnique();
         });
 

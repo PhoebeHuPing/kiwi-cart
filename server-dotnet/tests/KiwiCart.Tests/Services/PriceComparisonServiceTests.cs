@@ -14,47 +14,52 @@ public class PriceComparisonServiceTests
     private readonly Mock<IPriceCalculator> _calculator = new();
     private readonly PriceComparisonService _sut;
 
+    private static readonly string[] AllBrands = { "PakNSave", "NewWorld", "Woolworths" };
+
     public PriceComparisonServiceTests()
     {
+        _aggregator.SetupGet(a => a.KnownStoreBrands).Returns(AllBrands);
+        _calculator.Setup(c => c.CalculateUnitPrice(It.IsAny<string>(), It.IsAny<decimal>()))
+            .Returns("");
         _sut = new PriceComparisonService(
             _cache.Object, _aggregator.Object, _calculator.Object,
             NullLogger<PriceComparisonService>.Instance);
     }
 
     [Fact]
-    public async Task CompareAsync_CacheHit_ReturnsCachedResults()
+    public async Task CompareAsync_CacheCompleteForAllStores_ReturnsCacheWithoutFetching()
     {
+        // Cache has a row for every known store brand -> considered complete.
         var cached = new List<PriceResult>
         {
-            new() { ProductName = "Milk", StoreName = "PakNSave", Price = 3.50m },
-            new() { ProductName = "Milk", StoreName = "Woolworths", Price = 4.00m }
+            new() { ProductName = "Milk", StoreBrand = "PakNSave", StoreName = "Pak'nSave", Price = 3.50m },
+            new() { ProductName = "Milk", StoreBrand = "NewWorld", StoreName = "New World", Price = 3.90m },
+            new() { ProductName = "Milk", StoreBrand = "Woolworths", StoreName = "Woolworths", Price = 4.00m }
         };
         _cache.Setup(c => c.GetCachedPricesAsync("Milk", It.IsAny<CancellationToken>()))
             .ReturnsAsync(cached);
-        _calculator.Setup(c => c.CalculateUnitPrice(It.IsAny<string>(), It.IsAny<decimal>()))
-            .Returns("$3.50/L");
 
         var results = await _sut.CompareAsync("Milk");
 
-        Assert.Equal(2, results.Count);
+        Assert.Equal(3, results.Count);
         Assert.Equal(3.50m, results[0].Price); // sorted cheapest first
-        _aggregator.Verify(a => a.SearchAllStoresAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _aggregator.Verify(a => a.SearchStoresAsync(It.IsAny<IReadOnlyCollection<string>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Fact]
-    public async Task CompareAsync_CacheMiss_FetchesFromAggregator()
+    public async Task CompareAsync_FullCacheMiss_FetchesAllStores()
     {
         _cache.Setup(c => c.GetCachedPricesAsync("Bread", It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<PriceResult>());
         var fresh = new List<PriceResult>
         {
-            new() { ProductName = "Bread", StoreName = "NewWorld", Price = 4.50m },
-            new() { ProductName = "Bread", StoreName = "PakNSave", Price = 3.80m }
+            new() { ProductName = "Bread", StoreBrand = "NewWorld", Price = 4.50m },
+            new() { ProductName = "Bread", StoreBrand = "PakNSave", Price = 3.80m }
         };
-        _aggregator.Setup(a => a.SearchAllStoresAsync("Bread", It.IsAny<CancellationToken>()))
+        _aggregator.Setup(a => a.SearchStoresAsync(
+                It.Is<IReadOnlyCollection<string>>(b => b.Count == 3),
+                "Bread", It.IsAny<CancellationToken>()))
             .ReturnsAsync(fresh);
-        _calculator.Setup(c => c.CalculateUnitPrice(It.IsAny<string>(), It.IsAny<decimal>()))
-            .Returns("");
 
         var results = await _sut.CompareAsync("Bread");
 
@@ -63,19 +68,49 @@ public class PriceComparisonServiceTests
     }
 
     [Fact]
+    public async Task CompareAsync_PartialCache_BackfillsOnlyMissingStores()
+    {
+        // Cache has only Pak'nSave; the other two brands must be live-fetched
+        // and merged so the product is not shown as Pak'nSave-exclusive.
+        _cache.Setup(c => c.GetCachedPricesAsync("Calci-Yum", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<PriceResult>
+            {
+                new() { ProductName = "Calci-Yum", StoreBrand = "PakNSave", StoreName = "Pak'nSave", Price = 1.19m }
+            });
+
+        var missing = new List<PriceResult>
+        {
+            new() { ProductName = "Calci-Yum", StoreBrand = "NewWorld", StoreName = "New World", Price = 1.49m },
+            new() { ProductName = "Calci-Yum", StoreBrand = "Woolworths", StoreName = "Woolworths", Price = 1.60m }
+        };
+        _aggregator.Setup(a => a.SearchStoresAsync(
+                It.Is<IReadOnlyCollection<string>>(b =>
+                    b.Count == 2 && b.Contains("NewWorld") && b.Contains("Woolworths") && !b.Contains("PakNSave")),
+                "Calci-Yum", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(missing);
+
+        var results = await _sut.CompareAsync("Calci-Yum");
+
+        Assert.Equal(3, results.Count);
+        Assert.Contains(results, r => r.StoreBrand == "PakNSave");
+        Assert.Contains(results, r => r.StoreBrand == "NewWorld");
+        Assert.Contains(results, r => r.StoreBrand == "Woolworths");
+        Assert.Equal(1.19m, results[0].Price); // sorted cheapest first
+    }
+
+    [Fact]
     public async Task CompareAsync_ResultsSortedByPrice()
     {
         _cache.Setup(c => c.GetCachedPricesAsync("Eggs", It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<PriceResult>());
-        _aggregator.Setup(a => a.SearchAllStoresAsync("Eggs", It.IsAny<CancellationToken>()))
+        _aggregator.Setup(a => a.SearchStoresAsync(
+                It.IsAny<IReadOnlyCollection<string>>(), "Eggs", It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<PriceResult>
             {
-                new() { ProductName = "Eggs", StoreName = "C", Price = 9.00m },
-                new() { ProductName = "Eggs", StoreName = "A", Price = 5.00m },
-                new() { ProductName = "Eggs", StoreName = "B", Price = 7.00m }
+                new() { ProductName = "Eggs", StoreBrand = "C", Price = 9.00m },
+                new() { ProductName = "Eggs", StoreBrand = "A", Price = 5.00m },
+                new() { ProductName = "Eggs", StoreBrand = "B", Price = 7.00m }
             });
-        _calculator.Setup(c => c.CalculateUnitPrice(It.IsAny<string>(), It.IsAny<decimal>()))
-            .Returns("");
 
         var results = await _sut.CompareAsync("Eggs");
 

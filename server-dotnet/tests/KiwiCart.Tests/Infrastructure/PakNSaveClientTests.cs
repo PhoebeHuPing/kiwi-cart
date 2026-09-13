@@ -48,6 +48,57 @@ public class PakNSaveClientTests
     }
 
     [Fact]
+    public async Task SearchAsync_ExtractsBrandProductIdAndUnitPrice()
+    {
+        // Foodstuffs (Pak'nSave/New World) return price and comparativePrice in
+        // cents, plus a separate brand field. The client should convert cents to
+        // dollars, build the unit-price string, capture productId, and prepend
+        // the brand to the display name when absent.
+        var responseJson = JsonSerializer.Serialize(new
+        {
+            products = new[]
+            {
+                new
+                {
+                    name = "Blue Milk",
+                    productId = "5090710-EA-000",
+                    brand = "Anchor",
+                    singlePrice = new
+                    {
+                        price = 360,
+                        comparativePrice = new
+                        {
+                            pricePerUnit = 180,          // cents → $1.80
+                            measureDescription = "1L"
+                        }
+                    }
+                }
+            }
+        });
+
+        var handler = CreateMockHandler(HttpStatusCode.OK, responseJson);
+        var httpClient = new HttpClient(handler.Object) { BaseAddress = new Uri("https://api-prod.paknsave.co.nz") };
+        var factory = CreateFactory("PakNSave", httpClient);
+
+        var tokenProvider = new FakeTokenProvider("test-token");
+        var client = new PakNSaveClient(tokenProvider, factory, NullLogger<PakNSaveClient>.Instance);
+
+        var results = await client.SearchAsync("Milk");
+
+        Assert.Single(results);
+        var r = results[0];
+        Assert.Equal("Blue Milk", r.ProductName);
+        Assert.Equal("Anchor", r.Brand);
+        Assert.Equal("5090710-EA-000", r.ProductId);
+        Assert.Equal(3.60m, r.Price);
+        Assert.Equal("$1.80/1L", r.UnitPrice);
+        // Brand missing from the raw name → prepended for display.
+        Assert.Equal("Anchor Blue Milk", r.DisplayProductName);
+        // Image URL falls back to the fsimg CDN using the simple product id.
+        Assert.Equal("https://a.fsimg.co.nz/product/retail/fan/image/400x400/5090710.png", r.ImageUrl);
+    }
+
+    [Fact]
     public async Task SearchAsync_ReturnsEmpty_OnFailure()
     {
         var handler = CreateMockHandler(HttpStatusCode.InternalServerError, "{}");

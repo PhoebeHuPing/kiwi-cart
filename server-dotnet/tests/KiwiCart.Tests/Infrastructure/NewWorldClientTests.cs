@@ -46,6 +46,52 @@ public class NewWorldClientTests
     }
 
     [Fact]
+    public async Task SearchAsync_ExtractsBrandProductIdAndUnitPrice()
+    {
+        // New World shares the Foodstuffs response shape with Pak'nSave: cents
+        // for price/pricePerUnit, a separate brand field, and productId.
+        var responseJson = JsonSerializer.Serialize(new
+        {
+            products = new[]
+            {
+                new
+                {
+                    name = "Lite Milk",
+                    productId = "5000522-EA-000",
+                    brand = "Anchor",
+                    singlePrice = new
+                    {
+                        price = 373,
+                        comparativePrice = new
+                        {
+                            pricePerUnit = 373,          // cents → $3.73
+                            measureDescription = "1L"
+                        }
+                    }
+                }
+            }
+        });
+
+        var handler = CreateMockHandler(HttpStatusCode.OK, responseJson);
+        var httpClient = new HttpClient(handler.Object) { BaseAddress = new Uri("https://api-prod.newworld.co.nz") };
+        var factory = CreateFactory("NewWorld", httpClient);
+
+        var tokenProvider = new FakeNewWorldTokenProvider("test-token");
+        var client = new NewWorldClient(tokenProvider, factory, NullLogger<NewWorldClient>.Instance);
+
+        var results = await client.SearchAsync("Milk");
+
+        Assert.Single(results);
+        var r = results[0];
+        Assert.Equal("Lite Milk", r.ProductName);
+        Assert.Equal("Anchor", r.Brand);
+        Assert.Equal("5000522-EA-000", r.ProductId);
+        Assert.Equal(3.73m, r.Price);
+        Assert.Equal("$3.73/1L", r.UnitPrice);
+        Assert.Equal("Anchor Lite Milk", r.DisplayProductName);
+    }
+
+    [Fact]
     public async Task SearchAsync_ReturnsEmpty_OnFailure()
     {
         var handler = CreateMockHandler(HttpStatusCode.InternalServerError, "{}");

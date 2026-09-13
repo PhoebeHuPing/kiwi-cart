@@ -18,6 +18,9 @@ public abstract class StoreApiClient
 
     public abstract string StoreName { get; }
 
+    /// <summary>Stable brand identifier used as the cache/store key (e.g. PakNSave, NewWorld, Woolworths).</summary>
+    public abstract string StoreBrand { get; }
+
     public async Task<IReadOnlyList<PriceResult>> SearchAsync(string term, CancellationToken ct = default)
     {
         try
@@ -48,4 +51,21 @@ public abstract class StoreApiClient
     /// </summary>
     protected abstract Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
         string term, string token, CancellationToken ct);
+
+    /// <summary>
+    /// Normalize product name by prepending brand if not already present.
+    /// Example: "Calci-Yum Milk..." with brand "Anchor" → "Anchor Calci-Yum Milk..."
+    /// </summary>
+    protected static string NormalizeProductName(string productName, string? brand)
+    {
+        if (string.IsNullOrEmpty(brand) || string.IsNullOrEmpty(productName))
+            return productName;
+
+        // Check if product name already contains brand (case-insensitive)
+        if (productName.Contains(brand, StringComparison.OrdinalIgnoreCase))
+            return productName;
+
+        // Prepend brand to product name
+        return $"{brand} {productName}".Trim();
+    }
 }

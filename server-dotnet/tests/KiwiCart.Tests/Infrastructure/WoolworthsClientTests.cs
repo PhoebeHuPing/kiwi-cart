@@ -49,6 +49,123 @@ public class WoolworthsClientTests
     }
 
     [Fact]
+    public async Task SearchAsync_SkipsItemsMissingName_WithoutCrashing()
+    {
+        // Regression: the live Woolworths API mixes non-product entries (ads,
+        // category tiles) into the items array. Some have no "name" property and
+        // no "type" == "Product" marker. The old code called p.GetProperty("name")
+        // directly, which threw KeyNotFoundException and aborted the entire
+        // foreach, so a single dirty entry made the whole store return zero
+        // products. This test reproduces that shape and asserts the good products
+        // still come through.
+        var responseJson = JsonSerializer.Serialize(new
+        {
+            products = new
+            {
+                items = new object[]
+                {
+                    // dirty: no name, no type at all
+                    new { price = new { salePrice = 1.00 } },
+                    // dirty: type present but still no name
+                    new { type = "Product", price = new { salePrice = 2.00 } },
+                    // good product
+                    new { name = "Milk Standard 2L", type = "Product", price = new { salePrice = 3.16 } }
+                }
+            }
+        });
+
+        var handler = CreateMockHandler(HttpStatusCode.OK, responseJson);
+        var httpClient = new HttpClient(handler.Object) { BaseAddress = new Uri("https://www.woolworths.co.nz") };
+        var factory = CreateFactory("Woolworths", httpClient);
+
+        var tokenProvider = new FakeWoolworthsTokenProvider("session-cookie");
+        var client = new WoolworthsClient(tokenProvider, factory, NullLogger<WoolworthsClient>.Instance);
+
+        var results = await client.SearchAsync("Milk");
+
+        // Only the well-formed product survives; the two dirty entries are skipped.
+        Assert.Single(results);
+        Assert.Equal("Milk Standard 2L", results[0].ProductName);
+        Assert.Equal(3.16m, results[0].Price);
+    }
+
+    [Fact]
+    public async Task SearchAsync_ExtractsBrandVolumeAndUnitPrice()
+    {
+        // Woolworths returns brand, size.volumeSize and size.cupPrice/cupMeasure.
+        var responseJson = JsonSerializer.Serialize(new
+        {
+            products = new
+            {
+                items = new object[]
+                {
+                    new
+                    {
+                        name = "Anchor Blue Milk",
+                        type = "Product",
+                        brand = "Anchor",
+                        price = new { salePrice = 3.60 },
+                        size = new { volumeSize = "2L", cupPrice = 1.80, cupMeasure = "1L" }
+                    }
+                }
+            }
+        });
+
+        var handler = CreateMockHandler(HttpStatusCode.OK, responseJson);
+        var httpClient = new HttpClient(handler.Object) { BaseAddress = new Uri("https://www.woolworths.co.nz") };
+        var factory = CreateFactory("Woolworths", httpClient);
+
+        var tokenProvider = new FakeWoolworthsTokenProvider("session-cookie");
+        var client = new WoolworthsClient(tokenProvider, factory, NullLogger<WoolworthsClient>.Instance);
+
+        var results = await client.SearchAsync("Milk");
+
+        Assert.Single(results);
+        var r = results[0];
+        Assert.Equal("Anchor", r.Brand);
+        Assert.Equal("2L", r.Volume);
+        Assert.Equal("$1.80/1L", r.UnitPrice);
+        // Name already contains the brand, so it must not be duplicated.
+        Assert.Equal("Anchor Blue Milk", r.DisplayProductName);
+    }
+
+    [Fact]
+    public async Task SearchAsync_PrependsBrand_WhenNameMissingBrand()
+    {
+        // When the product name does not already start with the brand, the
+        // brand is prepended for the display name.
+        var responseJson = JsonSerializer.Serialize(new
+        {
+            products = new
+            {
+                items = new object[]
+                {
+                    new
+                    {
+                        name = "Blue Milk",
+                        type = "Product",
+                        brand = "Anchor",
+                        price = new { salePrice = 3.60 }
+                    }
+                }
+            }
+        });
+
+        var handler = CreateMockHandler(HttpStatusCode.OK, responseJson);
+        var httpClient = new HttpClient(handler.Object) { BaseAddress = new Uri("https://www.woolworths.co.nz") };
+        var factory = CreateFactory("Woolworths", httpClient);
+
+        var tokenProvider = new FakeWoolworthsTokenProvider("session-cookie");
+        var client = new WoolworthsClient(tokenProvider, factory, NullLogger<WoolworthsClient>.Instance);
+
+        var results = await client.SearchAsync("Milk");
+
+        Assert.Single(results);
+        Assert.Equal("Blue Milk", results[0].ProductName);
+        Assert.Equal("Anchor Blue Milk", results[0].DisplayProductName);
+    }
+
+    [Fact]
     public async Task SearchAsync_ReturnsEmpty_OnFailure()
     {
         var handler = CreateMockHandler(HttpStatusCode.InternalServerError, "{}");

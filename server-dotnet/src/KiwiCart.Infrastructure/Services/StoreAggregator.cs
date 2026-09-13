@@ -16,9 +16,22 @@ public class StoreAggregator : IStoreAggregator
         _logger = logger;
     }
 
+    public IReadOnlyCollection<string> KnownStoreBrands =>
+        _clients.Select(c => c.StoreBrand).ToList();
+
     public async Task<IReadOnlyList<PriceResult>> SearchAllStoresAsync(string term, CancellationToken ct = default)
     {
         var tasks = _clients.Select(client => SearchStoreAsync(client, term, ct));
+        var results = await Task.WhenAll(tasks);
+        return results.SelectMany(r => r).ToList();
+    }
+
+    public async Task<IReadOnlyList<PriceResult>> SearchStoresAsync(
+        IReadOnlyCollection<string> storeBrands, string term, CancellationToken ct = default)
+    {
+        var tasks = _clients
+            .Where(c => storeBrands.Contains(c.StoreBrand))
+            .Select(client => SearchStoreAsync(client, term, ct));
         var results = await Task.WhenAll(tasks);
         return results.SelectMany(r => r).ToList();
     }

@@ -22,6 +22,7 @@ public class PakNSaveClient : StoreApiClient
     }
 
     public override string StoreName => "Pak'nSave";
+    public override string StoreBrand => "PakNSave";
 
     protected override async Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
         string term, string token, CancellationToken ct)
@@ -65,10 +66,35 @@ public class PakNSaveClient : StoreApiClient
                 var priceInCents = p.TryGetProperty("singlePrice", out var sp)
                     && sp.TryGetProperty("price", out var priceEl)
                     ? priceEl.GetDecimal() : 0m;
+                var price = priceInCents / 100m;
+
+                // Extract productId, displayName (volume), and brand
+                var productId = p.TryGetProperty("productId", out var pid) ? pid.GetString() : null;
+                var displayName = p.TryGetProperty("displayName", out var dn) ? dn.GetString() : null;
+                var brand = p.TryGetProperty("brand", out var br) ? br.GetString() : null;
+
+                // Normalize product name by prepending brand if needed
+                var displayProductName = NormalizeProductName(name, brand);
+
+                // Extract unit price from singlePrice.comparativePrice object
+                string? unitPrice = null;
+                if (p.TryGetProperty("singlePrice", out var singlePrice)
+                    && singlePrice.TryGetProperty("comparativePrice", out var compPrice))
+                {
+                    // comparativePrice is an object with pricePerUnit, unitQuantityUom, measureDescription
+                    if (compPrice.ValueKind == System.Text.Json.JsonValueKind.Object
+                        && compPrice.TryGetProperty("pricePerUnit", out var ppu)
+                        && compPrice.TryGetProperty("measureDescription", out var md))
+                    {
+                        var ppuInCents = ppu.GetDecimal();
+                        var ppuInDollars = ppuInCents / 100m;
+                        var measure = md.GetString() ?? "1L";
+                        unitPrice = $"${ppuInDollars:F2}/{measure}";
+                    }
+                }
 
                 // Extract image URL from API response (fallback to fsimg CDN)
-                var productId = p.TryGetProperty("productId", out var pid) ? pid.GetString() ?? "" : "";
-                var simpleId = productId.Split('-')[0];
+                var simpleId = productId?.Split('-')[0] ?? "";
                 string? imageUrl = null;
                 if (p.TryGetProperty("images", out var images)
                     && images.TryGetProperty("primaryImages", out var primary)
@@ -83,14 +109,19 @@ public class PakNSaveClient : StoreApiClient
                 results.Add(new PriceResult
                 {
                     ProductName = name,
+                    DisplayProductName = displayProductName,
                     ImageUrl = imageUrl,
                     StoreName = StoreName,
                     StoreBrand = "PakNSave",
+                    Brand = brand, // Store the actual product brand
                     LogoUrl = "/images/pak-n-save.webp",
                     Address = "Henderson, West Auckland",
                     Lat = -36.8819,
                     Lng = 174.6336,
-                    Price = priceInCents / 100m,
+                    Price = price,
+                    ProductId = productId,
+                    Volume = displayName,
+                    UnitPrice = unitPrice,
                     RetrievedAt = DateTime.UtcNow
                 });
             }

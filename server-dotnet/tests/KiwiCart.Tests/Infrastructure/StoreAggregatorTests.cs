@@ -75,6 +75,8 @@ internal class StubStoreClient : StoreApiClient
 
     public override string StoreName { get; }
 
+    public override string StoreBrand => StoreName;
+
     protected override Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
         string term, string token, CancellationToken ct)
         => Task.FromResult<IReadOnlyList<PriceResult>?>(_results);
@@ -97,6 +99,8 @@ internal class FailingStoreClient : StoreApiClient
     }
 
     public override string StoreName { get; }
+
+    public override string StoreBrand => StoreName;
 
     protected override Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
         string term, string token, CancellationToken ct)
