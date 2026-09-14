@@ -115,6 +115,48 @@ export async function getNearbySupermarkets(
 }
 
 /**
+ * Finds the nearest store of a given brand that has an external_store_id,
+ * within the specified radius (in km). Uses Haversine formula.
+ * Returns the store object or null if none within radius.
+ */
+export async function getNearestStoreWithExternalId(
+  brand: string,
+  lat: number,
+  lng: number,
+  radiusKm: number = 5
+): Promise<{
+  id: number;
+  name: string;
+  address: string;
+  brand: string;
+  external_store_id: string;
+  latitude: number;
+  longitude: number;
+} | null> {
+  const stores = await db('stores')
+    .where('brand', 'like', `%${brand}%`)
+    .whereNotNull('external_store_id')
+    .whereNot('external_store_id', '')
+    .select('*')
+
+  if (!stores.length) return null
+
+  let nearest: typeof stores[0] | null = null
+  let minDist = Infinity
+
+  for (const store of stores) {
+    if (!store.latitude || !store.longitude) continue
+    const dist = calculateDistance(lat, lng, store.latitude, store.longitude)
+    if (dist <= radiusKm && dist < minDist) {
+      minDist = dist
+      nearest = store
+    }
+  }
+
+  return nearest
+}
+
+/**
  * Haversine formula to calculate the great-circle distance between two points on a sphere.
  * Returns distance in kilometers.
  */

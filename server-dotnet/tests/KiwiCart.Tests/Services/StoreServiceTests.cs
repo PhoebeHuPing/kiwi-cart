@@ -56,14 +56,16 @@ public class StoreServiceTests
     }
 
     [Fact]
-    public async Task GetNearestStoreWithExternalId_ReturnsNull_WhenNoneHaveExternalId()
+    public async Task GetNearestStoreWithExternalId_ReturnsFallbackStore_WhenNoneHaveExternalId()
     {
         using var db = CreateDb(); // seed stores have no external ids
         var sut = new StoreService(db);
 
         var store = await sut.GetNearestStoreWithExternalIdAsync("PakNSave", -41.30, 174.80);
 
-        Assert.Null(store);
+        // Should return a store even without external_store_id (fallback behavior)
+        Assert.NotNull(store);
+        Assert.Equal("PakNSave", store.Brand);
     }
 
     [Fact]

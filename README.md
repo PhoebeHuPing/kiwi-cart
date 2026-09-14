@@ -1,6 +1,6 @@
 # KiwiCart - NZ Supermarket Price Sharing
 
-🔗 **Live Demo:** [https://kiwicart.azurewebsites.net/](https://kiwicart.azurewebsites.net/)
+🔗 **Live Demo:** [https://kiwi-cart.azurewebsites.net/](https://kiwi-cart.azurewebsites.net/)
 
 ![KiwiCart Screenshot](assets/kiwicart.jpeg)
 

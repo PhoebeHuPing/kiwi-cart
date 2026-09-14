@@ -38,7 +38,7 @@ app:
   cors:
     allowed-origins:
       - http://localhost:5173
-      - https://kiwicart.azurewebsites.net
+      - https://kiwi-cart.azurewebsites.net
   rate-limit:
     requests-per-minute: 60
 

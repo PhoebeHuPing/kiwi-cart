@@ -103,6 +103,29 @@ public class PriceComparisonServiceTests
     }
 
     [Fact]
+    public async Task CompareAsync_MissingExternalStoreIds_DoesNotDropBrands()
+    {
+        _stores.Setup(s => s.GetNearestStoreWithExternalIdAsync(
+                It.IsAny<string>(), It.IsAny<double>(), It.IsAny<double>(),
+                It.IsAny<double>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((KiwiCart.Core.Entities.Store?)null);
+        _cache.Setup(c => c.GetCachedPricesAsync("Milk", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<PriceResult>());
+        _aggregator.Setup(a => a.SearchStoresAsync(
+                It.IsAny<IReadOnlyCollection<string>>(),
+                "Milk", It.IsAny<CancellationToken>(),
+                It.IsAny<IReadOnlyDictionary<string, string>?>()))
+            .ReturnsAsync(new List<PriceResult>());
+
+        await _sut.CompareAsync("Milk", lat: -36.85, lng: 174.76);
+
+        _aggregator.Verify(a => a.SearchStoresAsync(
+            It.IsAny<IReadOnlyCollection<string>>(),
+            "Milk", It.IsAny<CancellationToken>(),
+            It.IsAny<IReadOnlyDictionary<string, string>?>()), Times.Once);
+    }
+
+    [Fact]
     public async Task CompareAsync_PartialCache_BackfillsOnlyMissingStores()
     {
         // Cache has only Pak'nSave; the other two brands must be live-fetched

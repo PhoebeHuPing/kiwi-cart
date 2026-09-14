@@ -1,23 +1,22 @@
 package nz.co.kiwicart.util;
 
-/**
- * Geographic utility methods.
- */
-public final class GeoUtils {
+import nz.co.kiwicart.entity.Store;
 
-    private GeoUtils() {}
+public class GeoUtils {
 
-    /**
-     * Calculate the Haversine distance between two coordinates in kilometers.
-     */
-    public static double calculateDistanceKm(double lat1, double lon1, double lat2, double lon2) {
-        double R = 6371; // Earth's radius in km
+    private static final double EARTH_RADIUS_KM = 6371.0;
+
+    public static double distanceKm(double lat1, double lng1, double lat2, double lng2) {
         double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
+        double dLng = Math.toRadians(lng2 - lng1);
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                Math.sin(dLng / 2) * Math.sin(dLng / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
+        return EARTH_RADIUS_KM * c;
+    }
+
+    public static double distanceKm(Store store, double lat, double lng) {
+        return distanceKm(store.getLatitude(), store.getLongitude(), lat, lng);
     }
 }

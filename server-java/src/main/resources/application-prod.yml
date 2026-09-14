@@ -35,7 +35,7 @@ spring:
 app:
   cors:
     allowed-origins:
-      - https://kiwicart.azurewebsites.net
+      - https://kiwi-cart.azurewebsites.net
       - https://kiwi-cart.azurewebsites.net
   rate-limit:
     requests-per-minute: 60

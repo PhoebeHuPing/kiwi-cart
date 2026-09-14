@@ -16,6 +16,9 @@ public class PriceResult
     [JsonPropertyName("supermarket_name")]
     public string StoreName { get; set; } = string.Empty;
 
+    [JsonPropertyName("store_name")]
+    public string? StoreNameOverride { get; set; } // e.g., "Auckland City" for location-based results
+
     [JsonPropertyName("logo_url")]
     public string? LogoUrl { get; set; }
 

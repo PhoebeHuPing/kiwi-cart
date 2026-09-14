@@ -12,10 +12,26 @@ const router = express.Router()
  * GET /api/v1/products/compare
  * Core endpoint for price comparison. It fetches cached results from the DB
  * and fallback to real-time results if cache is missing or stale (> 24h).
+ * 
+ * Query params:
+ *   - q: search term (default: 'Milk')
+ *   - lat: user latitude (optional)
+ *   - lng: user longitude (optional)
+ * 
+ * When lat/lng provided, resolves the nearest store within 5km for each brand
+ * that supports per-store pricing (Pak'nSave, New World). Stores beyond 5km
+ * are dropped. Woolworths uses national pricing (no store-specific lookup).
  */
 router.get('/compare', async (req, res) => {
   const searchTerm = (req.query.q as string) || 'Milk'
-  console.log(`Searching for: ${searchTerm}`)
+  const lat = req.query.lat ? parseFloat(req.query.lat as string) : undefined
+  const lng = req.query.lng ? parseFloat(req.query.lng as string) : undefined
+
+  const hasLocation = lat !== undefined && lng !== undefined && !isNaN(lat!) && !isNaN(lng!)
+  console.log(`Searching for: ${searchTerm}, location: ${hasLocation ? `${lat},${lng}` : 'none'}`)
+
+  // Nearby radius in km (must match .NET's StoreService.NearbyRadiusKm)
+  const NEARBY_RADIUS_KM = 5
 
   try {
     // 1. Try to fetch from local cache (Database)
@@ -36,14 +52,76 @@ router.get('/compare', async (req, res) => {
 
     console.log('Cache missing or stale. Fetching real-time prices...')
 
-    // 2. Fetch real-time prices from all major brands in parallel
+    // 2. Resolve nearest stores for brands that support per-store pricing (PNS, NW)
+    // Drop the brand if no store within 5km
+    const selectedStores: Record<string, {
+      storeId: string;
+      name: string;
+      address: string;
+      lat: number;
+      lng: number;
+    }> = {}
+    const droppedBrands: string[] = []
+
+    if (hasLocation) {
+      // Pak'nSave: find nearest within 5km
+      const pnsStore = await db.getNearestStoreWithExternalId('PakNSave', lat!, lng!, NEARBY_RADIUS_KM)
+      if (pnsStore) {
+        selectedStores['PakNSave'] = {
+          storeId: pnsStore.external_store_id,
+          name: pnsStore.name,
+          address: pnsStore.address,
+          lat: pnsStore.latitude,
+          lng: pnsStore.longitude
+        }
+        console.log(`PNS: selected ${pnsStore.name} (${pnsStore.external_store_id}) within 5km`)
+      } else {
+        droppedBrands.push('PakNSave')
+        console.log('PNS: no store within 5km, dropping')
+      }
+
+      // New World: find nearest within 5km
+      const nwStore = await db.getNearestStoreWithExternalId('NewWorld', lat!, lng!, NEARBY_RADIUS_KM)
+      if (nwStore) {
+        selectedStores['NewWorld'] = {
+          storeId: nwStore.external_store_id,
+          name: nwStore.name,
+          address: nwStore.address,
+          lat: nwStore.latitude,
+          lng: nwStore.longitude
+        }
+        console.log(`NW: selected ${nwStore.name} (${nwStore.external_store_id}) within 5km`)
+      } else {
+        droppedBrands.push('NewWorld')
+        console.log('NW: no store within 5km, dropping')
+      }
+
+      // Note: Woolworths uses national pricing (no store-specific lookup) - it's always included
+    }
+
+    // 3. Fetch real-time prices from all major brands in parallel
+    // Pass store-specific info when available
+    const pnsOptions = selectedStores['PakNSave'] ? {
+      storeId: selectedStores['PakNSave'].storeId,
+      address: selectedStores['PakNSave'].address,
+      lat: selectedStores['PakNSave'].lat,
+      lng: selectedStores['PakNSave'].lng
+    } : undefined
+
+    const nwOptions = selectedStores['NewWorld'] ? {
+      storeId: selectedStores['NewWorld'].storeId,
+      address: selectedStores['NewWorld'].address,
+      lat: selectedStores['NewWorld'].lat,
+      lng: selectedStores['NewWorld'].lng
+    } : undefined
+
     const [pnsResults, nwResults, wwResults] = await Promise.all([
-      fetchPaknsavePrices(searchTerm),
-      fetchNewWorldPrices(searchTerm),
+      pnsOptions ? fetchPaknsavePrices(searchTerm, pnsOptions) : Promise.resolve([]),
+      nwOptions ? fetchNewWorldPrices(searchTerm, nwOptions) : Promise.resolve([]),
       fetchWoolworthsPrices(searchTerm),
     ])
 
-    // 3. Combine real-time results
+    // 4. Combine results (PNS/NW may be empty if dropped)
     const combined = [...pnsResults, ...nwResults, ...wwResults]
       .map((item) => ({
         ...item,
@@ -51,8 +129,9 @@ router.get('/compare', async (req, res) => {
       }))
       .sort((a, b) => a.price - b.price)
 
-    // 4. Update the cache in the background (don't block the response)
+    // 5. Update the cache in the background (don't block the response)
     // We only upsert the top results or unique items to keep the DB clean
+    // Note: this cache write is NOT location-aware (same bug as .NET)
     combined.forEach(item => {
       db.upsertPrice({
         product_name: item.product_name,

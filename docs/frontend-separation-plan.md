@@ -1,7 +1,7 @@
 # Option A: Separate React Frontend from Node.js API
 
 ## Goal
-- `kiwicart.azurewebsites.net` → React static files only (keeps the domain)
+- `kiwi-cart.azurewebsites.net` → React static files only (keeps the domain)
 - `kiwicart-api.azurewebsites.net` → .NET backend API (already deployed)
 - Node.js backend retired from production
 
@@ -20,7 +20,7 @@ The existing `vite build` already outputs to `dist/`. No server-side code needed
 Ensure `index.html` handles client-side routing (SPA fallback).
 
 ### 3. Configure Azure App Service for Static Files
-Option: Change `kiwicart.azurewebsites.net` to serve static files:
+Option: Change `kiwi-cart.azurewebsites.net` to serve static files:
 - Switch runtime to Node 22
 - Use a minimal `server.js` that serves `dist/` with SPA fallback:
 ```js
@@ -36,7 +36,7 @@ Or switch to Azure Static Web Apps (free tier) and point custom domain.
 ### 4. Update CORS on .NET Backend
 In `Program.cs`, ensure CORS allows the frontend origin:
 ```csharp
-policy.WithOrigins("https://kiwicart.azurewebsites.net")
+policy.WithOrigins("https://kiwi-cart.azurewebsites.net")
 ```
 Already configured ✅
 
@@ -55,15 +55,15 @@ Add to Azure App Service (`kiwicart`) settings:
 
 ### 7. Auth0 Configuration
 Update Auth0 dashboard:
-- Allowed Callback URLs: keep `https://kiwicart.azurewebsites.net`
-- Allowed Origins: keep `https://kiwicart.azurewebsites.net`
+- Allowed Callback URLs: keep `https://kiwi-cart.azurewebsites.net`
+- Allowed Origins: keep `https://kiwi-cart.azurewebsites.net`
 - API Audience: ensure .NET backend validates tokens from same Auth0 tenant
 
 ### 8. DNS / Domain
-No changes needed — `kiwicart.azurewebsites.net` stays as-is.
+No changes needed — `kiwi-cart.azurewebsites.net` stays as-is.
 
 ## Verification
-- [ ] `https://kiwicart.azurewebsites.net` loads React app
+- [ ] `https://kiwi-cart.azurewebsites.net` loads React app
 - [ ] Search calls `https://kiwicart-api.azurewebsites.net/api/v1/products/compare?q=Milk`
 - [ ] CORS headers present on API responses
 - [ ] Auth0 login still works
@@ -74,7 +74,7 @@ No changes needed — `kiwicart.azurewebsites.net` stays as-is.
 ## Modern Hosting Alternatives for Step 3
 
 ### Option 3A: pm2 serve (keep App Service + domain, zero code)
-Keep `kiwicart.azurewebsites.net` as a Node App Service but serve only static files.
+Keep `kiwi-cart.azurewebsites.net` as a Node App Service but serve only static files.
 - Deploy only `dist/` folder
 - Set Startup Command in Azure Portal → Configuration → General settings:
   ```
@@ -95,7 +95,7 @@ Keep `kiwicart.azurewebsites.net` as a Node App Service but serve only static fi
   }
   ```
 - New domain: `*.azurestaticapps.net` (or configure custom domain)
-- ⚠️ Cannot use `kiwicart.azurewebsites.net` — that belongs to App Service
+- ⚠️ Cannot use `kiwi-cart.azurewebsites.net` — that belongs to App Service
 - Can add custom domain (e.g., `kiwicart.co.nz`) to both Static Web Apps and API
 
 ### Option 3C: Vercel / Netlify / Cloudflare Pages
@@ -105,7 +105,7 @@ Keep `kiwicart.azurewebsites.net` as a Node App Service but serve only static fi
 - ⚠️ Same as 3B — different domain unless you own a custom one
 
 ### Recommendation
-- **Keep `kiwicart.azurewebsites.net`** → Use Option 3A (pm2 serve)
+- **Keep `kiwi-cart.azurewebsites.net`** → Use Option 3A (pm2 serve)
 - **Best practice for portfolio/production** → Use Option 3B (Azure Static Web Apps) + custom domain
 - **Best DX** → Use Option 3C (Vercel) + custom domain
 
@@ -114,7 +114,7 @@ Keep `kiwicart.azurewebsites.net` as a Node App Service but serve only static fi
 ## API Protection: Restrict .NET API to Frontend Only
 
 ### Current Protection (already in place)
-- CORS: only `localhost:5173` and `kiwicart.azurewebsites.net` allowed
+- CORS: only `localhost:5173` and `kiwi-cart.azurewebsites.net` allowed
 - Rate Limiting: 60 requests/min per IP
 - Auth0 JWT: on `[Authorize]` endpoints (favorites, delete)
 

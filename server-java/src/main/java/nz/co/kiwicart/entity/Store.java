@@ -29,6 +29,6 @@ public class Store {
 
     private Double longitude;
 
-    @Column(name = "external_id")
-    private String externalId;
+    @Column(name = "external_store_id")
+    private String externalStoreId;
 }

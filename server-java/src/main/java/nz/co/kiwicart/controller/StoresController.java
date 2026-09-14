@@ -42,7 +42,7 @@ public class StoresController {
         var allStores = storeRepository.findAll();
         var nearby = allStores.stream()
                 .filter(store -> store.getLatitude() != null && store.getLongitude() != null)
-                .filter(store -> GeoUtils.calculateDistanceKm(lat, lng, store.getLatitude(), store.getLongitude()) <= radius)
+                .filter(store -> GeoUtils.distanceKm(lat, lng, store.getLatitude(), store.getLongitude()) <= radius)
                 .toList();
         return ResponseEntity.ok(nearby);
     }

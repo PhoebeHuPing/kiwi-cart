@@ -52,13 +52,15 @@ public class ProductsController {
 
     @GetMapping("/compare")
     @Operation(summary = "Compare prices", description = "Search and compare prices across all supermarkets")
-    @Cacheable(value = "compareResults", key = "#query", condition = "#query != null && !#query.isBlank()")
+    @Cacheable(value = "compareResults", key = "#query + '_' + #lat + '_' + #lng", condition = "#query != null && !#query.isBlank()")
     public ResponseEntity<List<PriceResult>> compare(
-            @RequestParam(name = "q", defaultValue = "") String query) {
+            @RequestParam(name = "q", defaultValue = "") String query,
+            @RequestParam(name = "lat", required = false) Double lat,
+            @RequestParam(name = "lng", required = false) Double lng) {
         if (query.isBlank()) {
             return ResponseEntity.ok(List.of());
         }
-        return ResponseEntity.ok(priceComparisonService.compare(query.trim()));
+        return ResponseEntity.ok(priceComparisonService.compare(query.trim(), lat, lng));
     }
 
     @PostMapping("/compare-bucket")
@@ -90,7 +92,7 @@ public class ProductsController {
         var allStores = storeRepository.findAll();
         var nearby = allStores.stream()
                 .filter(store -> store.getLatitude() != null && store.getLongitude() != null)
-                .filter(store -> GeoUtils.calculateDistanceKm(lat, lng, store.getLatitude(), store.getLongitude()) <= radius)
+                .filter(store -> GeoUtils.distanceKm(lat, lng, store.getLatitude(), store.getLongitude()) <= radius)
                 .toList();
         return ResponseEntity.ok(nearby);
     }
