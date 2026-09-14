@@ -35,7 +35,6 @@ router.get('/compare', async (req, res) => {
 
   try {
     // 1. Try to fetch from local cache (Database)
-    // Note: cache does NOT have location-awareness yet - this is the same bug as .NET
     const cachedResults = await db.getComparePrices(searchTerm)
     const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000 // 24 hours
 

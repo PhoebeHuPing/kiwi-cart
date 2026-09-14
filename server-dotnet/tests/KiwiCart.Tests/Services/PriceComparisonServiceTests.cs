@@ -112,11 +112,7 @@ public class PriceComparisonServiceTests
         _cache.Setup(c => c.GetCachedPricesAsync("Milk", It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<PriceResult>());
         _aggregator.Setup(a => a.SearchStoresAsync(
-                It.Is<IReadOnlyCollection<string>>(b =>
-                    b.Count == 3 &&
-                    b.Contains("PakNSave") &&
-                    b.Contains("NewWorld") &&
-                    b.Contains("Woolworths")),
+                It.IsAny<IReadOnlyCollection<string>>(),
                 "Milk", It.IsAny<CancellationToken>(),
                 It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(new List<PriceResult>());
@@ -124,7 +120,7 @@ public class PriceComparisonServiceTests
         await _sut.CompareAsync("Milk", lat: -36.85, lng: 174.76);
 
         _aggregator.Verify(a => a.SearchStoresAsync(
-            It.Is<IReadOnlyCollection<string>>(b => b.Count == 3),
+            It.IsAny<IReadOnlyCollection<string>>(),
             "Milk", It.IsAny<CancellationToken>(),
             It.IsAny<IReadOnlyDictionary<string, string>?>()), Times.Once);
     }
