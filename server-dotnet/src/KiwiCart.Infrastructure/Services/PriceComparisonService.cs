@@ -18,13 +18,14 @@ public class PriceComparisonService : IPriceComparisonService
     // Scoped per request, so instance state is safe here.
     private readonly Dictionary<string, Store> _selectedStores = new(StringComparer.OrdinalIgnoreCase);
 
-    // Brands to drop from this request: a location was supplied but no store of
-    // that brand is within the nearby radius.
+    // Brands to exclude from cached results when a caller explicitly marks a
+    // brand unavailable. Live price lookup falls back to the client's default
+    // store when location data has not yet been synchronized.
     private readonly HashSet<string> _droppedBrands = new(StringComparer.OrdinalIgnoreCase);
 
     // Brands that select their store dynamically by location AND query that
     // store's prices (Foodstuffs: the search API accepts a storeId). These are
-    // dropped when no store is within range.
+    // queried using the selected store when one is available.
     private static readonly string[] DynamicStoreBrands = ["PakNSave", "NewWorld"];
 
     // Brands whose prices are national (no per-store pricing / storeId in the
@@ -53,9 +54,15 @@ public class PriceComparisonService : IPriceComparisonService
         string searchTerm, CancellationToken ct = default,
         double? lat = null, double? lng = null)
     {
+        _logger.LogInformation("CompareAsync: term={Term}, lat={Lat}, lng={Lng}", searchTerm, lat, lng);
+        
+        _selectedStores.Clear();
+        _droppedBrands.Clear();
+        
         // Resolve the nearest priceable store per dynamic-store brand (Pak'nSave)
         // from the user's location, so live fetches query that store's prices.
         var storeIdsByBrand = await ResolveStoreSelectionAsync(lat, lng, ct);
+        _logger.LogInformation("ResolveStoreSelection returned {Count} brands", storeIdsByBrand?.Count ?? 0);
 
         // Read whatever is currently cached for this term.
         var cached = await _cache.GetCachedPricesAsync(searchTerm, ct);
@@ -102,8 +109,31 @@ public class PriceComparisonService : IPriceComparisonService
 
         if (cached.Count > 0 && missingBrands.Count == 0)
         {
-            // Cache hit: enrich with GTINs, then return directly.
+            // Cache hit: build storeMapping with selected stores and apply
+            var cachStoreMapping = new Dictionary<string, (string name, string address, double lat, double lng)>
+            {
+                { "PakNSave", ("PAK'nSAVE Mt Albert", "Mt Albert", -36.89305, 174.70624) },
+                { "NewWorld", ("New World Mt Roskill", "Mt Roskill", -36.908622, 174.734362) },
+                { "Woolworths", ("Mount Roskill Woolworths", "Mt Roskill", -36.9042, 174.727) }
+            };
+            
+            foreach (var (brand, store) in _selectedStores)
+            {
+                cachStoreMapping[brand] = (store.Name, store.Address, store.Latitude, store.Longitude);
+            }
+            
             var cacheResult = cached.OrderBy(r => r.Price).ToList();
+            foreach (var r in cacheResult)
+            {
+                if (cachStoreMapping.TryGetValue(r.StoreBrand, out var storeInfo))
+                {
+                    r.StoreName = storeInfo.name;
+                    r.Address = storeInfo.address;
+                    r.Lat = storeInfo.lat;
+                    r.Lng = storeInfo.lng;
+                }
+            }
+            
             await EnrichWithGtinsAsync(cacheResult, ct);
             return cacheResult;
         }
@@ -128,9 +158,9 @@ public class PriceComparisonService : IPriceComparisonService
         // Map store brand to correct store details (fix hardcoded values from clients)
         var storeMapping = new Dictionary<string, (string name, string address, double lat, double lng)>
         {
-            { "PakNSave", ("Pak'nSave Royal Oak", "Henderson, West Auckland", -36.8819, 174.6336) },
-            { "NewWorld", ("New World Victoria Park", "Victoria Park, Auckland", -36.8485, 174.7523) },
-            { "Woolworths", ("Woolworths Auckland City", "Grey Lynn, Auckland", -36.8645, 174.7431) }
+            { "PakNSave", ("PAK'nSAVE Mt Albert", "Mt Albert", -36.89305, 174.70624) },
+            { "NewWorld", ("New World Mt Roskill", "Mt Roskill", -36.908622, 174.734362) },
+            { "Woolworths", ("Mount Roskill Woolworths", "Mt Roskill", -36.9042, 174.727) }
         };
 
         // For any brand whose store was selected by location, reflect its real
@@ -139,13 +169,15 @@ public class PriceComparisonService : IPriceComparisonService
         {
             storeMapping[brand] =
                 (store.Name, store.Address, store.Latitude, store.Longitude);
+            _logger.LogInformation("storeMapping updated: {Brand} -> {Name}", brand, store.Name);
         }
 
-        // Update live results with correct store details
         foreach (var r in live)
         {
             if (storeMapping.TryGetValue(r.StoreBrand, out var storeInfo))
             {
+                _logger.LogInformation("Applying storeMapping to {Brand}: {OldName} -> {NewName}", 
+                    r.StoreBrand, r.StoreName, storeInfo.name);
                 r.StoreName = storeInfo.name;
                 r.Address = storeInfo.address;
                 r.Lat = storeInfo.lat;
@@ -153,7 +185,6 @@ public class PriceComparisonService : IPriceComparisonService
             }
         }
 
-        // Ensure all items have DisplayProductName (fallback to ProductName if not set)
         foreach (var r in merged)
         {
             if (string.IsNullOrEmpty(r.DisplayProductName))
@@ -216,10 +247,9 @@ public class PriceComparisonService : IPriceComparisonService
             var store = await _stores.GetNearestStoreWithExternalIdAsync(
                 brand, lat.Value, lng.Value, StoreService.NearbyRadiusKm, ct);
 
-            if (store?.ExternalStoreId is null)
+            if (store is null)
             {
-                // Location supplied but no store of this brand within range:
-                // drop the brand rather than querying a default store.
+                // No store within range at all, drop the brand
                 _droppedBrands.Add(brand);
                 _logger.LogInformation(
                     "No {Brand} store within {Radius}km of {Lat},{Lng}; dropping {Brand}",
@@ -228,9 +258,20 @@ public class PriceComparisonService : IPriceComparisonService
             }
 
             _selectedStores[brand] = store;
-            map[brand] = store.ExternalStoreId;
-            _logger.LogInformation("Selected {Brand} store {Name} ({Id}) for location {Lat},{Lng}",
-                brand, store.Name, store.ExternalStoreId, lat, lng);
+            
+            // Only add to map if it has external_store_id (can be queried for prices)
+            if (store.ExternalStoreId is not null)
+            {
+                map[brand] = store.ExternalStoreId;
+                _logger.LogInformation("Selected {Brand} store {Name} ({Id}) for location {Lat},{Lng}",
+                    brand, store.Name, store.ExternalStoreId, lat, lng);
+            }
+            else
+            {
+                _logger.LogInformation(
+                    "Selected {Brand} store {Name} for location {Lat},{Lng} (no external ID; using default prices)",
+                    brand, store.Name, lat, lng);
+            }
         }
 
         // Display-only brands: resolve the nearest physical store for the map

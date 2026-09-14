@@ -1,5 +1,6 @@
 using Dapper;
 using KiwiCart.Core.DTOs;
+using KiwiCart.Core.Entities;
 using KiwiCart.Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
@@ -28,7 +29,6 @@ public class StoreRepository : IStoreRepository
 
         foreach (var s in stores)
         {
-            // Does a row already exist for this (brand, external_store_id)?
             var existingId = await connection.ExecuteScalarAsync<int?>(
                 @"SELECT id FROM stores
                   WHERE brand = @Brand AND external_store_id = @ExternalStoreId",
@@ -54,5 +54,28 @@ public class StoreRepository : IStoreRepository
         }
 
         return new StoreUpsertResult(inserted, updated);
+    }
+
+    public async Task<Store?> GetNearestStoreWithExternalIdAsync(
+        string brand, double lat, double lng, double radiusKm, CancellationToken ct = default)
+    {
+        await using var connection = new NpgsqlConnection(_connectionString);
+        await connection.OpenAsync(ct);
+
+        var store = await connection.QueryFirstOrDefaultAsync<Store>(
+            @"SELECT id, name, brand, address, latitude, longitude, external_store_id
+              FROM stores
+              WHERE brand = @Brand AND external_store_id IS NOT NULL
+                AND (6371 * acos(cos(radians(@Lat)) * cos(radians(latitude)) 
+                     * cos(radians(longitude) - radians(@Lng)) 
+                     + sin(radians(@Lat)) * sin(radians(latitude)))) <= @RadiusKm
+              ORDER BY (6371 * acos(cos(radians(@Lat)) * cos(radians(latitude)) 
+                     * cos(radians(longitude) - radians(@Lng)) 
+                     + sin(radians(@Lat)) * sin(radians(latitude)))) ASC
+              LIMIT 1",
+            new { Brand = brand, Lat = lat, Lng = lng, RadiusKm = radiusKm },
+            commandTimeout: 10);
+
+        return store;
     }
 }

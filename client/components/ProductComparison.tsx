@@ -40,6 +40,25 @@ function toTitleCase(input: string): string {
   )
 }
 
+function extractStoreLocation(supermarketName: string): string {
+  if (!supermarketName) return supermarketName
+
+  const patterns = [
+    { regex: /^Pak'nSave\s+(.+)$/ },
+    { regex: /^New World\s+(.+)$/ },
+    { regex: /^Woolworths\s+(.+)$/ },
+  ]
+
+  for (const { regex } of patterns) {
+    const match = supermarketName.match(regex)
+    if (match && match[1]) {
+      return match[1]
+    }
+  }
+
+  return supermarketName
+}
+
 // Number of product cards shown per "page"; the Load more button reveals
 // another batch of this size.
 const PRODUCTS_PER_PAGE = 30
@@ -117,7 +136,7 @@ function ProductComparison() {
     if (!location) return []
     const map = new Map<
       string,
-      { name: string; address: string; latitude: number; longitude: number }
+      { name: string; storeName: string; address: string; latitude: number; longitude: number }
     >()
     for (const p of displayedProducts ?? []) {
       if (
@@ -128,6 +147,7 @@ function ProductComparison() {
       ) {
         map.set(p.supermarket_name, {
           name: p.supermarket_name,
+          storeName: p.store_name_override || p.supermarket_name,
           address: p.address ?? '',
           latitude: p.lat,
           longitude: p.lng,
@@ -374,7 +394,7 @@ function ProductComparison() {
                                   className="w-3 h-3 object-contain"
                                 />
                                 <span className="text-xs text-gray-600 font-bold uppercase tracking-tight">
-                                  {item.supermarket_name}
+                                  {extractStoreLocation(item.supermarket_name)}
                                 </span>
                               </div>
                             </div>
@@ -617,60 +637,49 @@ function ProductComparison() {
 
                       {/* Expanded Pricing Table - High Legibility & Responsive Fix */}
                       {isExpanded && (
-                        <div className="bg-gray-50/80 border-t border-gray-100 p-4 sm:p-6 space-y-4 animate-in fade-in slide-in-from-top-2">
+                        <div className="bg-gray-50/80 border-t border-gray-100 p-4 sm:p-6 space-y-3 animate-in fade-in slide-in-from-top-2 w-full">
                           <p className="text-xs font-black text-gray-600 uppercase tracking-[0.2em] mb-2 ml-1">
                             Available Store Prices
                           </p>
                           {group.options.map((option, optIdx) => (
                             <div
                               key={optIdx}
-                              className={`flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 sm:p-5 rounded-2xl border transition-all gap-4 ${
+                              className={`flex items-center gap-4 bg-white p-5 sm:p-6 rounded-2xl border transition-all ${
                                 optIdx === 0
                                   ? 'border-kiwi/30 shadow-md ring-1 ring-kiwi/5'
                                   : 'border-gray-100 shadow-sm'
                               }`}
                             >
-                              <div className="flex items-center gap-4 min-w-0">
-                                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-50 rounded-xl p-2 flex items-center justify-center flex-shrink-0">
-                                  <img
-                                    src={option.logo_url}
-                                    alt=""
-                                    className="w-full h-full object-contain"
-                                  />
-                                </div>
-                                <div className="min-w-0">
-                                  <span className="block font-black text-base sm:text-lg text-kiwi-dark leading-tight truncate">
-                                    {option.supermarket_name}
-                                  </span>
-                                  {option.address && (
-                                    <span className="text-xs sm:text-sm text-gray-600 font-medium flex items-center gap-1 mt-0.5 truncate">
-                                      📍 {option.address.split(',')[0]}
-                                    </span>
-                                  )}
+                              <div className="w-12 h-12 bg-gray-50 rounded-lg p-1.5 flex items-center justify-center flex-shrink-0">
+                                <img
+                                  src={option.logo_url}
+                                  alt=""
+                                  className="w-full h-full object-contain"
+                                />
+                              </div>
+
+                              <div className="flex-1 min-w-0 pr-3">
+                                <div className="text-sm text-gray-700 font-semibold line-clamp-2">
+                                  {extractStoreLocation(option.supermarket_name)}
                                 </div>
                               </div>
 
-                              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0">
-                                <span className="sm:hidden text-xs font-black text-gray-600 uppercase tracking-widest">
-                                  Price
+                              <div className="text-right flex-shrink-0">
+                                <span className="font-black text-lg text-kiwi-dark">
+                                  ${option.price.toFixed(2)}
                                 </span>
-                                <div className="text-right">
-                                  <div className="flex flex-col items-end">
-                                    <span className="font-black text-xl sm:text-2xl text-kiwi-dark tracking-tighter">
-                                      ${option.price.toFixed(2)}
-                                    </span>
-                                    {option.unit_price && (
-                                      <span className="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-tighter -mt-1">
-                                        {option.unit_price}
-                                      </span>
-                                    )}
-                                    {optIdx === 0 && (
-                                      <span className="mt-1 px-2 py-0.5 bg-kiwi-dark text-white text-xs font-black uppercase tracking-widest rounded-lg">
-                                        Cheapest
-                                      </span>
-                                    )}
+                                {option.unit_price && (
+                                  <div className="text-xs font-bold text-gray-600">
+                                    {option.unit_price}
                                   </div>
-                                </div>
+                                )}
+                                {optIdx === 0 && (
+                                  <div className="mt-1">
+                                    <span className="inline-block px-2 py-1 bg-kiwi-dark text-white text-xs font-black rounded-lg">
+                                      CHEAPEST
+                                    </span>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           ))}

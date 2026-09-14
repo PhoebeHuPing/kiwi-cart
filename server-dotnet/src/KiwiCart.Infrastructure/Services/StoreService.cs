@@ -27,11 +27,21 @@ public class StoreService : IStoreService
             return null;
 
         var stores = await _db.Stores.AsNoTracking()
-            .Where(s => s.Brand == brand && s.ExternalStoreId != null)
+            .Where(s => s.Brand == brand)
             .ToListAsync(ct);
 
-        // Only return the nearest store if it falls within the given radius;
-        // otherwise the brand has no store close enough.
+        // First, try to return nearest store WITH external_store_id within radius
+        var storeWithId = stores
+            .Where(s => s.ExternalStoreId != null)
+            .Select(s => new { Store = s, Distance = Haversine(lat, lng, s.Latitude, s.Longitude) })
+            .Where(x => x.Distance <= radiusKm)
+            .OrderBy(x => x.Distance)
+            .FirstOrDefault();
+
+        if (storeWithId != null)
+            return storeWithId.Store;
+
+        // Fallback: return nearest store (with or without external_store_id) within radius
         return stores
             .Select(s => new { Store = s, Distance = Haversine(lat, lng, s.Latitude, s.Longitude) })
             .Where(x => x.Distance <= radiusKm)
