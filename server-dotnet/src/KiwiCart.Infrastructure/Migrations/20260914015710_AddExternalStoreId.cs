@@ -10,79 +10,26 @@ namespace KiwiCart.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "external_store_id",
-                table: "stores",
-                type: "character varying(100)",
-                maxLength: 100,
-                nullable: true);
+            // Idempotent: this migration may run against a database where the
+            // column/index were already added out-of-band (e.g. a shared CI
+            // database). Guard with IF NOT EXISTS so a re-run cannot fail with
+            // "column already exists" (Postgres 42701).
+            migrationBuilder.Sql(
+                "ALTER TABLE stores ADD COLUMN IF NOT EXISTS external_store_id character varying(100);");
 
-            migrationBuilder.UpdateData(
-                table: "stores",
-                keyColumn: "id",
-                keyValue: 1,
-                column: "external_store_id",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "stores",
-                keyColumn: "id",
-                keyValue: 2,
-                column: "external_store_id",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "stores",
-                keyColumn: "id",
-                keyValue: 3,
-                column: "external_store_id",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "stores",
-                keyColumn: "id",
-                keyValue: 4,
-                column: "external_store_id",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "stores",
-                keyColumn: "id",
-                keyValue: 5,
-                column: "external_store_id",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "stores",
-                keyColumn: "id",
-                keyValue: 6,
-                column: "external_store_id",
-                value: null);
-
-            migrationBuilder.UpdateData(
-                table: "stores",
-                keyColumn: "id",
-                keyValue: 7,
-                column: "external_store_id",
-                value: null);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_stores_brand_external_store_id",
-                table: "stores",
-                columns: new[] { "brand", "external_store_id" },
-                unique: true);
+            migrationBuilder.Sql(
+                "CREATE UNIQUE INDEX IF NOT EXISTS \"IX_stores_brand_external_store_id\" " +
+                "ON stores (brand, external_store_id);");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_stores_brand_external_store_id",
-                table: "stores");
+            migrationBuilder.Sql(
+                "DROP INDEX IF EXISTS \"IX_stores_brand_external_store_id\";");
 
-            migrationBuilder.DropColumn(
-                name: "external_store_id",
-                table: "stores");
+            migrationBuilder.Sql(
+                "ALTER TABLE stores DROP COLUMN IF EXISTS external_store_id;");
         }
     }
 }
