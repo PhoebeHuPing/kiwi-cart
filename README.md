@@ -34,7 +34,7 @@ KiwiCart is built on the principles of transparency and ethical data sourcing.
 - [x] Integrated Google Maps store locator
 - [x] User favorites and shopping lists
 - [ ] Historical price tracking and trend charts
-- [ ] Gemini AI smart shopping recommendations
+- [x] Gemini AI smart shopping recommendations
 - [ ] Mobile-optimized PWA (Progressive Web App)
 
 ## Getting Started
