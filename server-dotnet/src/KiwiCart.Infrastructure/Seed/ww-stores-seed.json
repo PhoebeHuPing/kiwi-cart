@@ -1,0 +1,1856 @@
+{
+  "stores": [
+    {
+      "siteNo": 9114,
+      "name": "Morrinsville Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "66 Studholme Street",
+      "suburb": "Morrinsville",
+      "postcode": "3300",
+      "latitude": -37.6569,
+      "longitude": 175.5276
+    },
+    {
+      "siteNo": 9435,
+      "name": "Metro Halsey Street",
+      "division": "COUNTDOWN",
+      "addressLine1": "104 Pakenham Street West,Auckland Central 1010",
+      "suburb": "Auckland Central",
+      "postcode": "1010",
+      "latitude": -36.8432,
+      "longitude": 174.7554
+    },
+    {
+      "siteNo": 9124,
+      "name": "Tikipunga Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Paramount Parade & Wanaka St",
+      "suburb": "Tikipunga, Whangarei",
+      "postcode": "112",
+      "latitude": -35.6832,
+      "longitude": 174.321
+    },
+    {
+      "siteNo": 9183,
+      "name": "Timaru Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "9 Browne Street",
+      "suburb": "Timaru",
+      "postcode": "7910",
+      "latitude": -44.4026,
+      "longitude": 171.2539
+    },
+    {
+      "siteNo": 9489,
+      "name": "Queensgate Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Queensgate Shopping Centre, 35 Bloomfield Terrace",
+      "suburb": "Lower Hutt",
+      "postcode": "5010",
+      "latitude": -41.2104,
+      "longitude": 174.908
+    },
+    {
+      "siteNo": 9168,
+      "name": "Stoke Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Putaitai Street & Main Road",
+      "suburb": "Stoke",
+      "postcode": "7011",
+      "latitude": -41.3117,
+      "longitude": 173.2338
+    },
+    {
+      "siteNo": 9033,
+      "name": "Bridge Street Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Bridge & Anglesea Street",
+      "suburb": "Hamilton",
+      "postcode": "3204",
+      "latitude": -37.7934,
+      "longitude": 175.2863
+    },
+    {
+      "siteNo": 9115,
+      "name": "Ashburton South Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "2 South St",
+      "suburb": "Ashburton",
+      "postcode": "7700",
+      "latitude": -43.9085,
+      "longitude": 171.7418
+    },
+    {
+      "siteNo": 9427,
+      "name": "Trafalgar Park Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Paru paru Rd & Halifax St",
+      "suburb": "Nelson",
+      "postcode": "7010",
+      "latitude": -41.2702,
+      "longitude": 173.2815
+    },
+    {
+      "siteNo": 9146,
+      "name": "Kelston Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Great North & West Coast Road",
+      "suburb": "Glen Eden",
+      "postcode": "602",
+      "latitude": -36.9096,
+      "longitude": 174.6635
+    },
+    {
+      "siteNo": 9130,
+      "name": "Carlyle Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "33 Carlyle Street",
+      "suburb": "Napier",
+      "postcode": "4110",
+      "latitude": -39.4928,
+      "longitude": 176.9113
+    },
+    {
+      "siteNo": 9113,
+      "name": "Fraser Cove Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Fraser Cover Shopping Centre, 229 - 233 Fraser St",
+      "suburb": "Tauranga",
+      "postcode": "3112",
+      "latitude": -37.7141,
+      "longitude": 176.1513
+    },
+    {
+      "siteNo": 9444,
+      "name": "Meadowbank Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "35-47 St Johns Road",
+      "suburb": "Meadowbank",
+      "postcode": "1072",
+      "latitude": -36.8759,
+      "longitude": 174.8276
+    },
+    {
+      "siteNo": 9156,
+      "name": "Lower Hutt Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "261 High Street",
+      "suburb": "Lower Hutt",
+      "postcode": "5010",
+      "latitude": -41.2074,
+      "longitude": 174.9059
+    },
+    {
+      "siteNo": 9164,
+      "name": "Huntly Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "16 - 18 Tumate Mahuta Drive",
+      "suburb": "Huntly",
+      "postcode": "3700",
+      "latitude": -37.5641,
+      "longitude": 175.1585
+    },
+    {
+      "siteNo": 9524,
+      "name": "Dunedin South Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "323 Andersons Bay Road",
+      "suburb": "Dunedin",
+      "postcode": "9012",
+      "latitude": -45.8926,
+      "longitude": 170.5027
+    },
+    {
+      "siteNo": 9405,
+      "name": "Newmarket Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Level 3, Westfield Newmarket, 277 Broadway, Newmarket",
+      "suburb": "Newmarket",
+      "postcode": "1023",
+      "latitude": -36.8719,
+      "longitude": 174.7763
+    },
+    {
+      "siteNo": 9433,
+      "name": "Hastings Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "301 Queen Street West",
+      "suburb": "Hastings",
+      "postcode": "4122",
+      "latitude": -39.6388,
+      "longitude": 176.8421
+    },
+    {
+      "siteNo": 9431,
+      "name": "Hawera Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "39 Nelson St",
+      "suburb": "Hawera",
+      "postcode": "4610",
+      "latitude": -39.5874,
+      "longitude": 174.2823
+    },
+    {
+      "siteNo": 9284,
+      "name": "Rangiora East Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "40-54 Ivory Street",
+      "suburb": "Rangiora, Christchurch",
+      "postcode": "7400",
+      "latitude": -43.3074,
+      "longitude": 172.5989
+    },
+    {
+      "siteNo": 9522,
+      "name": "Waikanae Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Ngaio Road",
+      "suburb": "Waikanae",
+      "postcode": "5391",
+      "latitude": -40.8763,
+      "longitude": 175.0652
+    },
+    {
+      "siteNo": 9212,
+      "name": "Redwoodtown Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Weld St & Alabama Rd",
+      "suburb": "Blenheim",
+      "postcode": "7201",
+      "latitude": -41.5297,
+      "longitude": 173.9552
+    },
+    {
+      "siteNo": 9013,
+      "name": "Waitangi Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "9 Puketona Road",
+      "suburb": "Paihia",
+      "postcode": "204",
+      "latitude": -35.2792,
+      "longitude": 174.0813
+    },
+    {
+      "siteNo": 9702,
+      "name": "Flaxmere Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "4 Swansea Road",
+      "suburb": "Flaxmere",
+      "postcode": "4120",
+      "latitude": -39.624811,
+      "longitude": 176.78653
+    },
+    {
+      "siteNo": 9040,
+      "name": "Richmond Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "144 Salisbury Rd, Richmond",
+      "suburb": "Richmond",
+      "postcode": "7020",
+      "latitude": -41.3342,
+      "longitude": 173.2018
+    },
+    {
+      "siteNo": 9095,
+      "name": "Putaruru Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Tirau Street",
+      "suburb": "Putaruru",
+      "postcode": "3411",
+      "latitude": -38.0473,
+      "longitude": 175.7806
+    },
+    {
+      "siteNo": 9293,
+      "name": "Taupo Central Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr of Spa Rd and Tongariro St",
+      "suburb": "Taupo",
+      "postcode": "3330",
+      "latitude": -38.6826,
+      "longitude": 176.0713
+    },
+    {
+      "siteNo": 9502,
+      "name": "Kerikeri Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Kerikeri & Butler Rds",
+      "suburb": "Kerikeri",
+      "postcode": "230",
+      "latitude": -35.2291,
+      "longitude": 173.9459
+    },
+    {
+      "siteNo": 9202,
+      "name": "Takanini Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "228 Great South Road",
+      "suburb": "Takanini",
+      "postcode": "2112",
+      "latitude": -37.0476,
+      "longitude": 174.9271
+    },
+    {
+      "siteNo": 9424,
+      "name": "Kelvin Grove Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "7 Fernlea Ave",
+      "suburb": "Kelvin Grove, Palmerston North",
+      "postcode": "4414",
+      "latitude": -40.3301,
+      "longitude": 175.6534
+    },
+    {
+      "siteNo": 9221,
+      "name": "Chartwell Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Chartwell Mall, Lyndon Court",
+      "suburb": "Chartwell, Hamilton",
+      "postcode": "3210",
+      "latitude": -37.7505,
+      "longitude": 175.278
+    },
+    {
+      "siteNo": 9249,
+      "name": "Metro Herne Bay",
+      "division": "COUNTDOWN",
+      "addressLine1": "1 Kelmarna Avenue",
+      "suburb": "Herne Bay",
+      "postcode": "1011",
+      "latitude": -36.8465,
+      "longitude": 174.7335
+    },
+    {
+      "siteNo": 9151,
+      "name": "Whanganui Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Trafalgar Sqr, Cnr Taupo Quay & Wilson Street",
+      "suburb": "Whanganui",
+      "postcode": "4500",
+      "latitude": -39.9358,
+      "longitude": 175.0532
+    },
+    {
+      "siteNo": 9501,
+      "name": "Feilding Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Kimbolton & Welds Streets",
+      "suburb": "Feilding",
+      "postcode": "4702",
+      "latitude": -40.2252,
+      "longitude": 175.5686
+    },
+    {
+      "siteNo": 9460,
+      "name": "Paraparaumu Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Coastlands Shopping Centre",
+      "suburb": "Paraparaumu",
+      "postcode": "5032",
+      "latitude": -40.9174,
+      "longitude": 175.0055
+    },
+    {
+      "siteNo": 9432,
+      "name": "Dinsdale Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "47 Whatawhata Road",
+      "suburb": "Dinsdale, Hamilton",
+      "postcode": "3204",
+      "latitude": -37.7964,
+      "longitude": 175.2454
+    },
+    {
+      "siteNo": 9128,
+      "name": "Greenlane Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "326 Great South Road",
+      "suburb": "Greenlane, Auckland",
+      "postcode": "1051",
+      "latitude": -36.8893,
+      "longitude": 174.7937
+    },
+    {
+      "siteNo": 9162,
+      "name": "Tauranga Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "618 Cameron Road",
+      "suburb": "Tauranga",
+      "postcode": "3112",
+      "latitude": -37.7004,
+      "longitude": 176.1577
+    },
+    {
+      "siteNo": 9554,
+      "name": "Belfast Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "755 Main North Road",
+      "suburb": "Belfast, Christchurch",
+      "postcode": "8051",
+      "latitude": -43.4483,
+      "longitude": 172.6297
+    },
+    {
+      "siteNo": 9508,
+      "name": "Newtown Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "3 John Street",
+      "suburb": "Mount Cook",
+      "postcode": "6021",
+      "latitude": -41.3075,
+      "longitude": 174.7771
+    },
+    {
+      "siteNo": 9191,
+      "name": "Invercargill Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "172 Tay Street",
+      "suburb": "Invercargill",
+      "postcode": "9810",
+      "latitude": -46.4122,
+      "longitude": 168.3582
+    },
+    {
+      "siteNo": 9175,
+      "name": "Kaiapoi Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "87-97 Hilton Street",
+      "suburb": "Kaiapoi",
+      "postcode": "7630",
+      "latitude": -43.3854,
+      "longitude": 172.658
+    },
+    {
+      "siteNo": 9098,
+      "name": "Masterton Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Workshop & Queen Sts",
+      "suburb": "Masterton",
+      "postcode": "5810",
+      "latitude": -40.9525,
+      "longitude": 175.6589
+    },
+    {
+      "siteNo": 9169,
+      "name": "Moorhouse Ave Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "347 Moorhouse Ave",
+      "suburb": "Christchurch",
+      "postcode": "8011",
+      "latitude": -43.5387,
+      "longitude": 172.6417
+    },
+    {
+      "siteNo": 9464,
+      "name": "Waiata Shores Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "2 Periko Way",
+      "suburb": "Takanini",
+      "postcode": "2112",
+      "latitude": -37.036,
+      "longitude": 174.9057
+    },
+    {
+      "siteNo": 9173,
+      "name": "Fairy Springs Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "54 Fairy Springs Road",
+      "suburb": "Rotorua",
+      "postcode": "3015",
+      "latitude": -38.1201,
+      "longitude": 176.228
+    },
+    {
+      "siteNo": 9103,
+      "name": "St James Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Hukunui & Thomas Rds",
+      "suburb": "Rototuna, Hamilton",
+      "postcode": "3210",
+      "latitude": -37.7322,
+      "longitude": 175.2732
+    },
+    {
+      "siteNo": 9449,
+      "name": "Te Awamutu Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "180 Sloane Street",
+      "suburb": "Te Awamutu",
+      "postcode": "3800",
+      "latitude": -38.0118,
+      "longitude": 175.3259
+    },
+    {
+      "siteNo": 9578,
+      "name": "Springlands Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "133 Middle Renwick Road",
+      "suburb": "Blenheim",
+      "postcode": "7201",
+      "latitude": -41.5092,
+      "longitude": 173.9351
+    },
+    {
+      "siteNo": 9197,
+      "name": "Sunnynook Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Sycamore Dr & Sunnynook Rd",
+      "suburb": "Sunnynook",
+      "postcode": "620",
+      "latitude": -36.759,
+      "longitude": 174.7408
+    },
+    {
+      "siteNo": 9282,
+      "name": "Te Rapa Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "8 Eagle Way",
+      "suburb": "Te Rapa, Hamilton",
+      "postcode": "3200",
+      "latitude": -37.7464,
+      "longitude": 175.2343
+    },
+    {
+      "siteNo": 9159,
+      "name": "Nelson Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "35 St Vincent Street",
+      "suburb": "Nelson",
+      "postcode": "7010",
+      "latitude": -41.2727,
+      "longitude": 173.2773
+    },
+    {
+      "siteNo": 9530,
+      "name": "Karori Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Karori Shopping Centre, Karori Road",
+      "suburb": "Karori",
+      "postcode": "6012",
+      "latitude": -41.2843,
+      "longitude": 174.7386
+    },
+    {
+      "siteNo": 9094,
+      "name": "Auckland City Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "76 Quay Street",
+      "suburb": "Auckland",
+      "postcode": "1010",
+      "latitude": -36.845,
+      "longitude": 174.773
+    },
+    {
+      "siteNo": 9133,
+      "name": "The Valley Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "The Valley Mega Centre, 1 Vickers Road",
+      "suburb": "Waiwhakaiho, New Plymouth",
+      "postcode": "4312",
+      "latitude": -39.0475,
+      "longitude": 174.115
+    },
+    {
+      "siteNo": 9102,
+      "name": "Levin Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Bristol & Stanley Sts",
+      "suburb": "Levin",
+      "postcode": "5510",
+      "latitude": -40.6203,
+      "longitude": 175.2868
+    },
+    {
+      "siteNo": 9546,
+      "name": "Aotea Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "3A Whitford Brown Ave, Papakowhai",
+      "suburb": "Porirua",
+      "postcode": "5024",
+      "latitude": -41.1202,
+      "longitude": 174.8668
+    },
+    {
+      "siteNo": 9031,
+      "name": "Crofton Downs Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "124 Churchill Drive",
+      "suburb": "Crofton Downs",
+      "postcode": "6035",
+      "latitude": -41.2572,
+      "longitude": 174.7659
+    },
+    {
+      "siteNo": 9011,
+      "name": "Paeroa Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "27 Belmont Road",
+      "suburb": "Paeroa",
+      "postcode": "3600",
+      "latitude": -37.3784,
+      "longitude": 175.6681
+    },
+    {
+      "siteNo": 9034,
+      "name": "Mount Roskill Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "112 Stoddard Road",
+      "suburb": "Mt Roskill, Auckland",
+      "postcode": "1041",
+      "latitude": -36.9042,
+      "longitude": 174.727
+    },
+    {
+      "siteNo": 9177,
+      "name": "Beachlands Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "129 Beachlands Rd",
+      "suburb": "Beachlands",
+      "postcode": "2018",
+      "latitude": -36.8898,
+      "longitude": 175.0083
+    },
+    {
+      "siteNo": 9032,
+      "name": "Dargaville Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Dargaville Plaza, Victoria St",
+      "suburb": "Dargaville",
+      "postcode": "310",
+      "latitude": -35.9394,
+      "longitude": 173.8729
+    },
+    {
+      "siteNo": 9149,
+      "name": "Lynnmall Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Lynnmall Shopping Centre, Great North Road",
+      "suburb": "New Lynn",
+      "postcode": "600",
+      "latitude": -36.9073,
+      "longitude": 174.6843
+    },
+    {
+      "siteNo": 9100,
+      "name": "The Palms Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "The Palms Plaza, Marshland Road",
+      "suburb": "Shirley",
+      "postcode": "8061",
+      "latitude": -43.5054,
+      "longitude": 172.6643
+    },
+    {
+      "siteNo": 9528,
+      "name": "New Plymouth Central Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "174 Courtenay Street",
+      "suburb": "New Plymouth",
+      "postcode": "4310",
+      "latitude": -39.0564,
+      "longitude": 174.0823
+    },
+    {
+      "siteNo": 9118,
+      "name": "Mosgiel Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "55 Gordon Rd",
+      "suburb": "Mosgiel, Dunedin",
+      "postcode": "9024",
+      "latitude": -45.8806,
+      "longitude": 170.3519
+    },
+    {
+      "siteNo": 9141,
+      "name": "Botany Downs Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Te Irirangi & Ti Rakau Drives",
+      "suburb": "Botany Downs",
+      "postcode": "2010",
+      "latitude": -36.9299,
+      "longitude": 174.9112
+    },
+    {
+      "siteNo": 9180,
+      "name": "Woolworths Colombo St",
+      "division": "COUNTDOWN",
+      "addressLine1": "219 Colombo Street",
+      "suburb": "Christchurch",
+      "postcode": "8023",
+      "latitude": -43.5533,
+      "longitude": 172.6356
+    },
+    {
+      "siteNo": 9474,
+      "name": "Kilbirnie Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "47 Bay Road",
+      "suburb": "Kilbirnie",
+      "postcode": "6022",
+      "latitude": -41.3195,
+      "longitude": 174.7946
+    },
+    {
+      "siteNo": 9181,
+      "name": "Ashburton Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr East & Peter Streets",
+      "suburb": "Ashburton",
+      "postcode": "7700",
+      "latitude": -43.902,
+      "longitude": 171.7519
+    },
+    {
+      "siteNo": 9147,
+      "name": "Westgate Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Westgate Shopping Centre, Cnr Westgate & Fern Hill Drive",
+      "suburb": "Massey",
+      "postcode": "614",
+      "latitude": -36.8209,
+      "longitude": 174.6141
+    },
+    {
+      "siteNo": 9518,
+      "name": "Amberley Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Brakensfield Retail Centre, 129 Carters Road",
+      "suburb": "Amberley",
+      "postcode": "7410",
+      "latitude": -43.1569,
+      "longitude": 172.7301
+    },
+    {
+      "siteNo": 9190,
+      "name": "Dunedin Central Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "309 Cumberland Street",
+      "suburb": "Dunedin",
+      "postcode": "9016",
+      "latitude": -45.8742,
+      "longitude": 170.5064
+    },
+    {
+      "siteNo": 9048,
+      "name": "Regent Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "11 Kamo Road",
+      "suburb": "Regent, Whangarei",
+      "postcode": "112",
+      "latitude": -35.7146,
+      "longitude": 174.3227
+    },
+    {
+      "siteNo": 9472,
+      "name": "Papamoa Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Papamoa Shopping Centre, Domain Rd, Royal Palm Beach",
+      "suburb": "Papamoa",
+      "postcode": "3118",
+      "latitude": -37.699,
+      "longitude": 176.2838
+    },
+    {
+      "siteNo": 9050,
+      "name": "Bureta Park Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "44 - 50 Bureta Rd, Otumoetai",
+      "suburb": "Tauranga",
+      "postcode": "3110",
+      "latitude": -37.6683,
+      "longitude": 176.1533
+    },
+    {
+      "siteNo": 9469,
+      "name": "Greymouth Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "174 Mawhera Quay",
+      "suburb": "Greymouth",
+      "postcode": "7805",
+      "latitude": -42.4487,
+      "longitude": 171.2141
+    },
+    {
+      "siteNo": 9061,
+      "name": "Orewa Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Moenui Avenue",
+      "suburb": "Orewa",
+      "postcode": "931",
+      "latitude": -36.5883,
+      "longitude": 174.6961
+    },
+    {
+      "siteNo": 9090,
+      "name": "Christchurch Airport Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "530 - 546A Memorial Avenue",
+      "suburb": "Christchurch",
+      "postcode": "8053",
+      "latitude": -43.4899,
+      "longitude": 172.5477
+    },
+    {
+      "siteNo": 9161,
+      "name": "Manukau Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "652 Great South Road",
+      "suburb": "Manukau",
+      "postcode": "2104",
+      "latitude": -36.987,
+      "longitude": 174.8838
+    },
+    {
+      "siteNo": 9140,
+      "name": "Lynfield Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "570 Hillsborough Road",
+      "suburb": "Lynfield",
+      "postcode": "1041",
+      "latitude": -36.9256,
+      "longitude": 174.7231
+    },
+    {
+      "siteNo": 9400,
+      "name": "Manurewa Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "227 Browns Road",
+      "suburb": "Manurewa",
+      "postcode": "2102",
+      "latitude": -37.0177,
+      "longitude": 174.8649
+    },
+    {
+      "siteNo": 9475,
+      "name": "Tawa Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "5 William Earp Place",
+      "suburb": "Tawa",
+      "postcode": "5028",
+      "latitude": -41.1865,
+      "longitude": 174.8308
+    },
+    {
+      "siteNo": 9463,
+      "name": "Waipukurau Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Rautaniwha St",
+      "suburb": "Waipukurau",
+      "postcode": "4200",
+      "latitude": -39.9954,
+      "longitude": 176.5576
+    },
+    {
+      "siteNo": 9237,
+      "name": "Takapuna Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Barry's Point Road",
+      "suburb": "Takapuna",
+      "postcode": "0622",
+      "latitude": -36.7913,
+      "longitude": 174.7655
+    },
+    {
+      "siteNo": 9182,
+      "name": "Oamaru Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "108-116 Thames St",
+      "suburb": "Oamaru",
+      "postcode": "9400",
+      "latitude": -45.0971,
+      "longitude": 170.9704
+    },
+    {
+      "siteNo": 9486,
+      "name": "Mangere East Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "359 Massey Rd",
+      "suburb": "Mangere",
+      "postcode": "2024",
+      "latitude": -36.9667,
+      "longitude": 174.8251
+    },
+    {
+      "siteNo": 9429,
+      "name": "Waikiwi Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr North Road & Durham Street",
+      "suburb": "Waikiwi, Invercargill",
+      "postcode": "9810",
+      "latitude": -46.3751,
+      "longitude": 168.3471
+    },
+    {
+      "siteNo": 9216,
+      "name": "St Lukes Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Saint Lukes Shopping Centre, Cnr St Lukes Rd & Morningside Dr",
+      "suburb": "Mt Albert, Auckland",
+      "postcode": "1025",
+      "latitude": -36.8838,
+      "longitude": 174.7342
+    },
+    {
+      "siteNo": 9238,
+      "name": "Gisborne Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "109-115 Carnarvon St",
+      "suburb": "Gisborne",
+      "postcode": "4010",
+      "latitude": -38.6619,
+      "longitude": 178.0182
+    },
+    {
+      "siteNo": 9414,
+      "name": "Taupo South Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "16 Kokomea Village Drive",
+      "suburb": "Taupo",
+      "postcode": "3330",
+      "latitude": -38.722,
+      "longitude": 176.0793
+    },
+    {
+      "siteNo": 9584,
+      "name": "Alexandra Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "106 Centennial Avenue",
+      "suburb": "Alexandra",
+      "postcode": "9320",
+      "latitude": -45.2491,
+      "longitude": 169.3853
+    },
+    {
+      "siteNo": 9123,
+      "name": "Pt Chevalier Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "13 Pt Chevalier Road",
+      "suburb": "Point Chevalier, Auckland",
+      "postcode": "1022",
+      "latitude": -36.8698,
+      "longitude": 174.7102
+    },
+    {
+      "siteNo": 9458,
+      "name": "Meadowlands Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Meadowlands Drive & Whitford Road",
+      "suburb": "Howick",
+      "postcode": "2014",
+      "latitude": -36.9135,
+      "longitude": 174.929
+    },
+    {
+      "siteNo": 9533,
+      "name": "Warkworth Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "20 - 26 Neville Street",
+      "suburb": "Warkworth",
+      "postcode": "910",
+      "latitude": -36.3995,
+      "longitude": 174.6643
+    },
+    {
+      "siteNo": 9448,
+      "name": "Te Puke Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Queen & Boucher St",
+      "suburb": "Te Puke",
+      "postcode": "3119",
+      "latitude": -37.7846,
+      "longitude": 176.3251
+    },
+    {
+      "siteNo": 9064,
+      "name": "Northwest Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "7 Fred Taylor Drive, Northwest Town Centre",
+      "suburb": "Westgate, Massey",
+      "postcode": "814",
+      "latitude": -36.8197,
+      "longitude": 174.6113
+    },
+    {
+      "siteNo": 9478,
+      "name": "Avonhead Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Withells Road & Merrin St",
+      "suburb": "Avonhead",
+      "postcode": "8042",
+      "latitude": -43.5112,
+      "longitude": 172.5573
+    },
+    {
+      "siteNo": 9049,
+      "name": "Whitianga Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "24 Joan Gaskell Drive",
+      "suburb": "Whitianga",
+      "postcode": "3510",
+      "latitude": -36.8337,
+      "longitude": 175.6944
+    },
+    {
+      "siteNo": 9160,
+      "name": "Blenheim Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "51 Arthur Street",
+      "suburb": "Blenheim",
+      "postcode": "7201",
+      "latitude": -41.5136,
+      "longitude": 173.9543
+    },
+    {
+      "siteNo": 9038,
+      "name": "Lincoln Road Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "185-187 Universal Drive",
+      "suburb": "Henderson",
+      "postcode": "610",
+      "latitude": -36.8569,
+      "longitude": 174.6314
+    },
+    {
+      "siteNo": 9185,
+      "name": "Mailer St Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "43 Mailer Street",
+      "suburb": "Dunedin",
+      "postcode": "9011",
+      "latitude": -45.881,
+      "longitude": 170.4796
+    },
+    {
+      "siteNo": 9535,
+      "name": "Petone Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "45 Jackson Street",
+      "suburb": "Petone",
+      "postcode": "5012",
+      "latitude": -41.2229,
+      "longitude": 174.8722
+    },
+    {
+      "siteNo": 9066,
+      "name": "Cable Car Lane Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "280 - 284 LAMBTON QUAY",
+      "suburb": "Wellington",
+      "postcode": "6011",
+      "latitude": -41.2843,
+      "longitude": 174.7743
+    },
+    {
+      "siteNo": 9198,
+      "name": "Milford Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Milford Shopping Centre, Milford Rd",
+      "suburb": "Milford",
+      "postcode": "620",
+      "latitude": -36.772,
+      "longitude": 174.7661
+    },
+    {
+      "siteNo": 9459,
+      "name": "Balclutha Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "8 - 12 Clyde Street",
+      "suburb": "Balclutha",
+      "postcode": "9230",
+      "latitude": -46.2369,
+      "longitude": 169.7408
+    },
+    {
+      "siteNo": 9062,
+      "name": "Stratford Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "21A - 27 Broadway",
+      "suburb": "Stratford",
+      "postcode": "4332",
+      "latitude": -39.3272,
+      "longitude": 174.2795
+    },
+    {
+      "siteNo": 9453,
+      "name": "Katikati Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "123 - 131 Main Road",
+      "suburb": "Katikati",
+      "postcode": "3129",
+      "latitude": -37.5597,
+      "longitude": 175.9158
+    },
+    {
+      "siteNo": 9143,
+      "name": "Bethlehem Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "19 Bethlehem Road",
+      "suburb": "Tauranga",
+      "postcode": "3110",
+      "latitude": -37.6947,
+      "longitude": 176.1088
+    },
+    {
+      "siteNo": 9158,
+      "name": "Johnsonville Mall Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Moorefield Road",
+      "suburb": "Johnsonville",
+      "postcode": "6037",
+      "latitude": -41.223,
+      "longitude": 174.8051
+    },
+    {
+      "siteNo": 9037,
+      "name": "Rototuna Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "3 Fergy Place",
+      "suburb": "Rototuna North",
+      "postcode": "3210",
+      "latitude": -37.7232,
+      "longitude": 175.2595
+    },
+    {
+      "siteNo": 9224,
+      "name": "Browns Bay Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Anzac & Clyde Rds",
+      "suburb": "Browns Bay",
+      "postcode": "630",
+      "latitude": -36.7175,
+      "longitude": 174.7474
+    },
+    {
+      "siteNo": 9415,
+      "name": "Bayfair Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Bayfair Shopping Centre, 1 - 19 Givern Rd",
+      "suburb": "Mt Maunganui, Tauranga",
+      "postcode": "3116",
+      "latitude": -37.6757,
+      "longitude": 176.2241
+    },
+    {
+      "siteNo": 9065,
+      "name": "Wainuiomata Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "9 Te Ara Raukura, Upper Hutt, 5014",
+      "suburb": "Lower Hutt",
+      "postcode": "5014",
+      "latitude": -41.2607,
+      "longitude": 174.9437
+    },
+    {
+      "siteNo": 9145,
+      "name": "Birkenhead Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Highbury Pass & Birkenhead Ave",
+      "suburb": "Birkenhead",
+      "postcode": "626",
+      "latitude": -36.8113,
+      "longitude": 174.7248
+    },
+    {
+      "siteNo": 9193,
+      "name": "Mount Wellington Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Penrose Rd & Mt Wellington Hway",
+      "suburb": "Mt Wellington",
+      "postcode": "1060",
+      "latitude": -36.9094,
+      "longitude": 174.8372
+    },
+    {
+      "siteNo": 9465,
+      "name": "Palmerston North Broadway Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Albert & Main St",
+      "suburb": "Palmerston North",
+      "postcode": "4410",
+      "latitude": -40.35,
+      "longitude": 175.6238
+    },
+    {
+      "siteNo": 9131,
+      "name": "Rolleston Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Mccauley St & Rolleston Dr",
+      "suburb": "Rolleston, Christchurch",
+      "postcode": "7614",
+      "latitude": -43.594,
+      "longitude": 172.3861
+    },
+    {
+      "siteNo": 9069,
+      "name": "Awapuni Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "520 Pioneer Highway",
+      "suburb": "Palmerston North",
+      "postcode": "4412",
+      "latitude": -40.3703,
+      "longitude": 175.5804
+    },
+    {
+      "siteNo": 9430,
+      "name": "Otorohanga Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "119-123 Maniapoto St",
+      "suburb": "Ototohanga",
+      "postcode": "3900",
+      "latitude": -38.19,
+      "longitude": 175.2099
+    },
+    {
+      "siteNo": 9192,
+      "name": "Hamilton Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Anglesea & Liverpool Streets",
+      "suburb": "Hamilton",
+      "postcode": "3204",
+      "latitude": -37.7813,
+      "longitude": 175.2734
+    },
+    {
+      "siteNo": 9170,
+      "name": "Whakatane Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "105-125 Commerce St",
+      "suburb": "Whakatane",
+      "postcode": "3120",
+      "latitude": -37.9561,
+      "longitude": 176.9949
+    },
+    {
+      "siteNo": 9119,
+      "name": "Rangitikei St Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Rangitikei & Featherston St",
+      "suburb": "Palmerston North",
+      "postcode": "4471",
+      "latitude": -40.3503,
+      "longitude": 175.6065
+    },
+    {
+      "siteNo": 9204,
+      "name": "Pakuranga Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Pakuranga Town Centre",
+      "suburb": "Pakuranga",
+      "postcode": "2010",
+      "latitude": -36.913,
+      "longitude": 174.8686
+    },
+    {
+      "siteNo": 9171,
+      "name": "Greville Road Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "65 Greville Road",
+      "suburb": "Pinehill",
+      "postcode": "632",
+      "latitude": -36.7309,
+      "longitude": 174.7222
+    },
+    {
+      "siteNo": 9428,
+      "name": "Auckland Airport Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Georgebolt Memorial & Cnr John Goulter Dr",
+      "suburb": "Mangere",
+      "postcode": "2022",
+      "latitude": -36.9976,
+      "longitude": 174.789
+    },
+    {
+      "siteNo": 9541,
+      "name": "Tokoroa Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "12 - 20 O'Sullivan Dr",
+      "suburb": "Tokoroa",
+      "postcode": "3420",
+      "latitude": -38.222,
+      "longitude": 175.8737
+    },
+    {
+      "siteNo": 9144,
+      "name": "Papakura Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "2 Averill Street",
+      "suburb": "Papakura",
+      "postcode": "2110",
+      "latitude": -37.0636,
+      "longitude": 174.9442
+    },
+    {
+      "siteNo": 9155,
+      "name": "Palmerston North Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Ferguson & Ashley Streets",
+      "suburb": "Palmerston North",
+      "postcode": "4410",
+      "latitude": -40.3578,
+      "longitude": 175.615
+    },
+    {
+      "siteNo": 9058,
+      "name": "Queenstown Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "30 Grant Rd",
+      "suburb": "Frankton, Queenstown",
+      "postcode": "9300",
+      "latitude": -45.0136,
+      "longitude": 168.7418
+    },
+    {
+      "siteNo": 9248,
+      "name": "Mairangi Bay Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "3 Ramsgate Terrace",
+      "suburb": "Mairangi Bay",
+      "postcode": "630",
+      "latitude": -36.739,
+      "longitude": 174.7526
+    },
+    {
+      "siteNo": 9096,
+      "name": "Manukau City Mall Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Shop 99 Manukau City Centre, Cnr Great South & Wiri Station Rds",
+      "suburb": "Manukau",
+      "postcode": "2104",
+      "latitude": -36.9929,
+      "longitude": 174.8822
+    },
+    {
+      "siteNo": 9014,
+      "name": "Roselands Mall Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "90-96 Great South Road, Papakura",
+      "suburb": "Papakura",
+      "postcode": "2110",
+      "latitude": -37.0589,
+      "longitude": 174.9412
+    },
+    {
+      "siteNo": 9495,
+      "name": "Motueka Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "108 High Street",
+      "suburb": "Motueka",
+      "postcode": "7120",
+      "latitude": -41.1097,
+      "longitude": 173.011
+    },
+    {
+      "siteNo": 9534,
+      "name": "Helensville Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "43 Commercial Road",
+      "suburb": "Helensville",
+      "postcode": "800",
+      "latitude": -36.6772,
+      "longitude": 174.4506
+    },
+    {
+      "siteNo": 9163,
+      "name": "Glenfield Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Glenfield Mall, Bentley Ave",
+      "suburb": "Glenfield",
+      "postcode": "629",
+      "latitude": -36.7818,
+      "longitude": 174.7229
+    },
+    {
+      "siteNo": 9485,
+      "name": "New Brighton Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "12 Hawke Street",
+      "suburb": "New Brighton, Christchurch",
+      "postcode": "8083",
+      "latitude": -43.5067,
+      "longitude": 172.7298
+    },
+    {
+      "siteNo": 9174,
+      "name": "Northlands Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Main North Rd & Sawyers Arms Rd",
+      "suburb": "Papanui, Christchurch",
+      "postcode": "8051",
+      "latitude": -43.4917,
+      "longitude": 172.6116
+    },
+    {
+      "siteNo": 9063,
+      "name": "Vogeltown Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "30 Hori Street",
+      "suburb": "Vogeltown, New Plymouth",
+      "postcode": "4310",
+      "latitude": -39.0776,
+      "longitude": 174.0829
+    },
+    {
+      "siteNo": 9529,
+      "name": "Three Kings Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "532 Mt Albert Road",
+      "suburb": "Three Kings, Auckland",
+      "postcode": "1042",
+      "latitude": -36.9093,
+      "longitude": 174.7551
+    },
+    {
+      "siteNo": 9477,
+      "name": "Northcote Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Pearn Crescent",
+      "suburb": "Northcote",
+      "postcode": "627",
+      "latitude": -36.8003,
+      "longitude": 174.7448
+    },
+    {
+      "siteNo": 9452,
+      "name": "Te Aroha Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "85 Whitaker Street",
+      "suburb": "Te Aroha",
+      "postcode": "3320",
+      "latitude": -37.545,
+      "longitude": 175.7139
+    },
+    {
+      "siteNo": 9194,
+      "name": "Henderson Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "West City Shopping Centre, 7 Catherine Street",
+      "suburb": "Henderson",
+      "postcode": "612",
+      "latitude": -36.8808,
+      "longitude": 174.6328
+    },
+    {
+      "siteNo": 9547,
+      "name": "Johnsonville Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "71 Johnsonville Road",
+      "suburb": "Johnsonville",
+      "postcode": "6037",
+      "latitude": -41.2241,
+      "longitude": 174.808
+    },
+    {
+      "siteNo": 9195,
+      "name": "Whangarei Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Whangarei Retail Centre, Okara Drive",
+      "suburb": "Whangarei",
+      "postcode": "110",
+      "latitude": -35.7308,
+      "longitude": 174.3273
+    },
+    {
+      "siteNo": 9213,
+      "name": "Timaru North Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "The Showgrounds, 233 Evans Street",
+      "suburb": "Timaru",
+      "postcode": "7910",
+      "latitude": -44.3718,
+      "longitude": 171.2423
+    },
+    {
+      "siteNo": 9092,
+      "name": "Gore Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "24 Medway Street",
+      "suburb": "Gore",
+      "postcode": "9710",
+      "latitude": -46.0985,
+      "longitude": 168.9441
+    },
+    {
+      "siteNo": 9442,
+      "name": "Andersons Bay Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "560 Andersons Bay Road",
+      "suburb": "Dunedin",
+      "postcode": "9012",
+      "latitude": -45.8967,
+      "longitude": 170.5092
+    },
+    {
+      "siteNo": 9091,
+      "name": "Onehunga Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Church St & Selwyn St",
+      "suburb": "Onehunga, Auckland",
+      "postcode": "1061",
+      "latitude": -36.9231,
+      "longitude": 174.7832
+    },
+    {
+      "siteNo": 9077,
+      "name": "Waimakariri Junction Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "6 Hakarau Road",
+      "suburb": "Kaiapoi, Waimakariri",
+      "postcode": "7630",
+      "latitude": -43.3766,
+      "longitude": 172.6481
+    },
+    {
+      "siteNo": 9057,
+      "name": "Ponsonby Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "4 Williamson Ave",
+      "suburb": "Ponsonby",
+      "postcode": "1021",
+      "latitude": -36.8585,
+      "longitude": 174.7489
+    },
+    {
+      "siteNo": 9106,
+      "name": "Papatoetoe Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Hunters Plaza, 217 Great South Rd",
+      "suburb": "Papatoetoe",
+      "postcode": "2025",
+      "latitude": -36.971,
+      "longitude": 174.8605
+    },
+    {
+      "siteNo": 9243,
+      "name": "Howick Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "35 Cook St",
+      "suburb": "Howick",
+      "postcode": "2014",
+      "latitude": -36.8959,
+      "longitude": 174.9328
+    },
+    {
+      "siteNo": 9178,
+      "name": "Eastgate Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "6 Buckleys Rd",
+      "suburb": "Linwood, Christchurch",
+      "postcode": "8062",
+      "latitude": -43.5323,
+      "longitude": 172.6297
+    },
+    {
+      "siteNo": 9437,
+      "name": "Metro Albert Street Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "AMP Centre, Ground Floor",
+      "suburb": "Auckland",
+      "postcode": "1010",
+      "latitude": -36.8436,
+      "longitude": 174.7654
+    },
+    {
+      "siteNo": 9235,
+      "name": "Mount Eden Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Valley & Dominion Roads",
+      "suburb": "Mt Eden, Auckland",
+      "postcode": "1024",
+      "latitude": -36.8773,
+      "longitude": 174.7516
+    },
+    {
+      "siteNo": 9551,
+      "name": "Hobsonville Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "124 Hobsonville Road",
+      "suburb": "Hobsonville",
+      "postcode": "618",
+      "latitude": -36.7974,
+      "longitude": 174.6474
+    },
+    {
+      "siteNo": 9030,
+      "name": "Waiheke Island Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "13 - 19 Belgium St, Waiheke Island",
+      "suburb": "Ostend",
+      "postcode": "1081",
+      "latitude": -36.795,
+      "longitude": 175.0459
+    },
+    {
+      "siteNo": 9154,
+      "name": "Porirua Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Parumoana St & Lyttleton Avenue",
+      "suburb": "Porirua",
+      "postcode": "5022",
+      "latitude": -41.1339,
+      "longitude": 174.8413
+    },
+    {
+      "siteNo": 9176,
+      "name": "Church Corner Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Riccarton Road & Hansons Lane",
+      "suburb": "Riccarton, Christchurch",
+      "postcode": "8041",
+      "latitude": -43.5327,
+      "longitude": 172.573
+    },
+    {
+      "siteNo": 9233,
+      "name": "Pokeno Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "58 Great South Road",
+      "suburb": "Pokeno",
+      "postcode": "2402",
+      "latitude": -37.2453,
+      "longitude": 175.0225
+    },
+    {
+      "siteNo": 9153,
+      "name": "Cambridge Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Queen & Empire Streets",
+      "suburb": "Cambridge",
+      "postcode": "3434",
+      "latitude": -37.8923,
+      "longitude": 175.4702
+    },
+    {
+      "siteNo": 9292,
+      "name": "Ferrymead Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "999 Ferry Rd",
+      "suburb": "Ferrymead, Christchurch",
+      "postcode": "8023",
+      "latitude": -43.5569,
+      "longitude": 172.7023
+    },
+    {
+      "siteNo": 9521,
+      "name": "St Johns Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "130-140 Felton Mathew Avenue",
+      "suburb": "St Johns",
+      "postcode": "1072",
+      "latitude": -36.8794,
+      "longitude": 174.852
+    },
+    {
+      "siteNo": 9199,
+      "name": "Pukekohe Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Tobin & Seddon Sts",
+      "suburb": "Pukekohe",
+      "postcode": "2120",
+      "latitude": -37.1996,
+      "longitude": 174.9022
+    },
+    {
+      "siteNo": 9290,
+      "name": "Nelson Junction Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "33 Cadillac Way",
+      "suburb": "Nelson",
+      "postcode": "7010",
+      "latitude": -41.2977069,
+      "longitude": 173.241518
+    },
+    {
+      "siteNo": 9504,
+      "name": "Silverdale Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "40 Hibiscus Coast Highway",
+      "suburb": "Silverdale",
+      "postcode": "932",
+      "latitude": -36.6139,
+      "longitude": 174.6807
+    },
+    {
+      "siteNo": 9129,
+      "name": "Victoria Ave Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "433 Victoria Ave",
+      "suburb": "Wanganui",
+      "postcode": "4500",
+      "latitude": -39.925,
+      "longitude": 175.0381
+    },
+    {
+      "siteNo": 9283,
+      "name": "Metro Auckland Victoria Street West",
+      "division": "COUNTDOWN",
+      "addressLine1": "19-25 Victoria Street",
+      "suburb": "Auckland",
+      "postcode": "1010",
+      "latitude": -36.8486,
+      "longitude": 174.7647
+    },
+    {
+      "siteNo": 9107,
+      "name": "Pukekohe South Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "186-192 Manukau Rd",
+      "suburb": "Pukekohe",
+      "postcode": "2120",
+      "latitude": -37.2106,
+      "longitude": 174.9113
+    },
+    {
+      "siteNo": 9121,
+      "name": "Hornby Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "17 Chappie Place",
+      "suburb": "Hornby, Christchurch",
+      "postcode": "8042",
+      "latitude": -43.5428,
+      "longitude": 172.527
+    },
+    {
+      "siteNo": 9120,
+      "name": "Matamata Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Arawa & Gouk Sts",
+      "suburb": "Matamata",
+      "postcode": "3400",
+      "latitude": -37.8088,
+      "longitude": 175.774
+    },
+    {
+      "siteNo": 9157,
+      "name": "Upper Hutt Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "13-19 Queen Street",
+      "suburb": "Upper Hutt",
+      "postcode": "5372",
+      "latitude": -41.1227,
+      "longitude": 175.071
+    },
+    {
+      "siteNo": 9189,
+      "name": "Rotorua Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "246 Fenton Street",
+      "suburb": "Rotorua",
+      "postcode": "3010",
+      "latitude": -38.1427,
+      "longitude": 176.254
+    },
+    {
+      "siteNo": 9142,
+      "name": "Highland Park Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "507 Pakuranga Road",
+      "suburb": "Highland Park",
+      "postcode": "2010",
+      "latitude": -36.8995,
+      "longitude": 174.9082
+    },
+    {
+      "siteNo": 9242,
+      "name": "Whangaparaoa Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Whangaparaoa & Wade Drive",
+      "suburb": "Whangaparaoa",
+      "postcode": "943",
+      "latitude": -36.6365,
+      "longitude": 174.7466
+    },
+    {
+      "siteNo": 9136,
+      "name": "Napier Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Munroe & Dickens Streets",
+      "suburb": "Napier",
+      "postcode": "4110",
+      "latitude": -39.4928,
+      "longitude": 176.9138
+    },
+    {
+      "siteNo": 9425,
+      "name": "Spotswood Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Manadon St & South Rd",
+      "suburb": "New Plymouth",
+      "postcode": "4310",
+      "latitude": -39.0759,
+      "longitude": 174.0339
+    },
+    {
+      "siteNo": 9473,
+      "name": "Claudelands Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "160 Peachgrove Road",
+      "suburb": "Hamilton East",
+      "postcode": "3216",
+      "latitude": -37.7785,
+      "longitude": 175.299
+    },
+    {
+      "siteNo": 9068,
+      "name": "Grey Lynn Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "271 Richmond Rd",
+      "suburb": "Grey Lynn, Auckland",
+      "postcode": "1022",
+      "latitude": -36.8546,
+      "longitude": 174.7318
+    },
+    {
+      "siteNo": 9206,
+      "name": "Te Atatu South Woolworths",
+      "division": "COUNTDOWN",
+      "addressLine1": "Cnr Edmonton & Te Atatu Roads",
+      "suburb": "Te Atatu South",
+      "postcode": "610",
+      "latitude": -36.8657,
+      "longitude": 174.6463
+    }
+  ],
+  "failures": [
+    {
+      "siteNo": 9538,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9927,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9597,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9075,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9217,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9265,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9231,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9450,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9201,
+      "error": "Error: HTTP 404"
+    },
+    {
+      "siteNo": 9467,
+      "error": "Error: HTTP 404"
+    }
+  ]
+}

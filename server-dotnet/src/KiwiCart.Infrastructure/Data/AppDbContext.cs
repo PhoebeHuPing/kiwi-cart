@@ -37,6 +37,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.Latitude).HasColumnName("latitude");
             e.Property(p => p.Longitude).HasColumnName("longitude");
             e.Property(p => p.Address).HasColumnName("address").HasMaxLength(500);
+            e.Property(p => p.ExternalStoreId).HasColumnName("external_store_id").HasMaxLength(100);
+            // A retailer's store id is unique within that brand.
+            e.HasIndex(p => new { p.Brand, p.ExternalStoreId }).IsUnique();
         });
 
         modelBuilder.Entity<Price>(e =>
