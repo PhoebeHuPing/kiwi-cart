@@ -3,6 +3,7 @@ using System.Threading.RateLimiting;
 using System.Globalization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using KiwiCart.Api.Middleware;
 using KiwiCart.Infrastructure.Data;
 using KiwiCart.Infrastructure.TokenProviders;
@@ -42,6 +43,26 @@ if (args.Length > 0 && args[0] == "export-gtins")
 
     var count = await KiwiCart.Infrastructure.Seed.GtinSeed.ExportAsync(conn, output);
     Console.WriteLine($"Exported {count} product_gtins rows to {output}");
+    return;
+}
+
+// One-off admin command: import GTIN seed data from embedded JSON.
+// Usage: dotnet run -- seed-gtins
+if (args.Length > 0 && args[0] == "seed-gtins")
+{
+    var cfg = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: true)
+        .AddJsonFile("appsettings.Development.json", optional: true)
+        .AddEnvironmentVariables()
+        .Build();
+    var conn = cfg.GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException("DefaultConnection not configured");
+
+    await using var connection = new NpgsqlConnection(conn);
+    await connection.OpenAsync();
+    
+    var inserted = KiwiCart.Infrastructure.Seed.GtinSeed.ImportEmbedded(connection);
+    Console.WriteLine($"Imported {inserted} product_gtins rows from embedded seed");
     return;
 }
 
