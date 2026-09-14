@@ -10,9 +10,12 @@ import ProductComparison from './components/ProductComparison.tsx'
 import DeveloperProfile from './components/DeveloperProfile.tsx'
 import MyKitchen from './components/MyKitchen.tsx'
 import FeedbackBoard from './components/FeedbackBoard.tsx'
+import AdminGtin from './components/AdminGtin.tsx'
 
 // Protect the My Kitchen route so only authenticated users can access it
 const ProtectedMyKitchen = withAuthenticationRequired(MyKitchen)
+// Hidden admin tools; requires login, and the page itself gates on the admin role.
+const ProtectedAdminGtin = withAuthenticationRequired(AdminGtin)
 
 export const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +24,7 @@ export const routes = createBrowserRouter(
       <Route path="developer" element={<DeveloperProfile />} />
       <Route path="kitchen" element={<ProtectedMyKitchen />} />
       <Route path="feedback" element={<FeedbackBoard />} />
+      <Route path="admin" element={<ProtectedAdminGtin />} />
     </Route>,
   ),
 )
