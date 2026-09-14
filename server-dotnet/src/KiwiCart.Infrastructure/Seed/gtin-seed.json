@@ -1,0 +1,3062 @@
+[
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5000518-EA-000",
+    "gtin": null,
+    "productName": "Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5000519-EA-000",
+    "gtin": null,
+    "productName": "Calci \u002B Trim Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5000520-EA-000",
+    "gtin": null,
+    "productName": "Trim Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5000521-EA-000",
+    "gtin": null,
+    "productName": "Trim Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5000522-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5000523-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5000527-EA-000",
+    "gtin": null,
+    "productName": "Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5002730-EA-000",
+    "gtin": null,
+    "productName": "Blue UHT Longlife Milk",
+    "productBrand": "Anchor",
+    "productSize": "250ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5004752-EA-000",
+    "gtin": null,
+    "productName": "Standard UHT Milk",
+    "productBrand": "Pams",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5004771-EA-000",
+    "gtin": null,
+    "productName": "Lite UHT Milk",
+    "productBrand": "Pams",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5007415-EA-000",
+    "gtin": null,
+    "productName": "Zero Lacto Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5010431-EA-000",
+    "gtin": null,
+    "productName": "Chocolate Flavoured Milk",
+    "productBrand": "Nippy\u0027s",
+    "productSize": "375ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5010693-EA-000",
+    "gtin": null,
+    "productName": "Calci-Yum Chocolate Flavour Milk",
+    "productBrand": "Anchor",
+    "productSize": "250ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5014608-EA-000",
+    "gtin": null,
+    "productName": "Long Life Milk Chocolate",
+    "productBrand": "Meadow Fresh",
+    "productSize": "250ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5016750-EA-000",
+    "gtin": null,
+    "productName": "Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5017792-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5025424-EA-000",
+    "gtin": null,
+    "productName": "Calci \u002B Trim Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5027100-EA-000",
+    "gtin": null,
+    "productName": "Cultured Buttermilk",
+    "productBrand": "Meadow Fresh",
+    "productSize": "600g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5027127-EA-000",
+    "gtin": null,
+    "productName": "Organic Homogenised Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5027129-EA-000",
+    "gtin": null,
+    "productName": "Organic Non-homogenised Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5027131-EA-000",
+    "gtin": null,
+    "productName": "Organic Lite Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5027208-EA-000",
+    "gtin": null,
+    "productName": "Protein\u002B Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5027893-EA-000",
+    "gtin": null,
+    "productName": "Organic Milk",
+    "productBrand": "Naturalea",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5045266-EA-000",
+    "gtin": null,
+    "productName": "Chocolate Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5045269-EA-000",
+    "gtin": null,
+    "productName": "Chocolate Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "300ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5090710-EA-000",
+    "gtin": null,
+    "productName": "Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "300ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5112558-EA-000",
+    "gtin": null,
+    "productName": "Organic Light Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5123764-EA-000",
+    "gtin": null,
+    "productName": "Organic Homogenised Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5201479-EA-000",
+    "gtin": null,
+    "productName": "Standard Milk",
+    "productBrand": "Pams Value",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5201486-EA-000",
+    "gtin": null,
+    "productName": "Trim Milk",
+    "productBrand": "Pams Value",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5201487-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Pams Value",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5201489-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Pams Value",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5201490-EA-000",
+    "gtin": null,
+    "productName": "Standard Milk",
+    "productBrand": "Pams Value",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5201800-EA-000",
+    "gtin": null,
+    "productName": "Standard Milk",
+    "productBrand": "Pams Value",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5201801-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Pams Value",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5255601-EA-000",
+    "gtin": null,
+    "productName": "Non-Homogenised Jersey Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5255602-EA-000",
+    "gtin": null,
+    "productName": "Homogenised Jersey Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5266045-EA-000",
+    "gtin": null,
+    "productName": "Pure New Zealand A2 Sheep Milk",
+    "productBrand": "Fernglen Farm",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5266784-EA-000",
+    "gtin": null,
+    "productName": "Standard Milk",
+    "productBrand": "Simply Milk",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5266790-EA-000",
+    "gtin": null,
+    "productName": "Lite Reduced Fat Milk",
+    "productBrand": "Simply Milk",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5266988-EA-000",
+    "gtin": null,
+    "productName": "A2 Full Cream Jersey Cow Milk",
+    "productBrand": "Jersey Girl Organics",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5283856-EA-000",
+    "gtin": null,
+    "productName": "A2 Protein Homogenised Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5290920-EA-000",
+    "gtin": null,
+    "productName": "Half \u0026 Half Jersey Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5300750-EA-000",
+    "gtin": null,
+    "productName": "Standard Milk",
+    "productBrand": "Simply Milk",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5305169-EA-000",
+    "gtin": null,
+    "productName": "Whole Milk",
+    "productBrand": "Kaipaki Dairies",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5305891-EA-000",
+    "gtin": null,
+    "productName": "Lactose Free A2 Comfort Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5314866-EA-000",
+    "gtin": null,
+    "productName": "Calci Low Fat Milk",
+    "productBrand": "Simply Milk",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5317043-EA-000",
+    "gtin": null,
+    "productName": "Lactose Free With A2 Protein Comfort Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5334116-EA-000",
+    "gtin": null,
+    "productName": "Fresh Creamy Half \u0026 Half Milk",
+    "productBrand": "Puhoi Valley",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "NewWorld",
+    "externalProductId": "5337881-EA-000",
+    "gtin": null,
+    "productName": "Zero Lacto Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5000518-EA-000",
+    "gtin": null,
+    "productName": "Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5000519-EA-000",
+    "gtin": null,
+    "productName": "Calci \u002B Trim Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5000520-EA-000",
+    "gtin": null,
+    "productName": "Trim Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5000521-EA-000",
+    "gtin": null,
+    "productName": "Trim Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5000522-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5000523-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5000527-EA-000",
+    "gtin": "00000094152210",
+    "productName": "Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5002727-EA-000",
+    "gtin": null,
+    "productName": "Blue UHT Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5002730-EA-000",
+    "gtin": null,
+    "productName": "Blue UHT Longlife Milk",
+    "productBrand": "Anchor",
+    "productSize": "250ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5004752-EA-000",
+    "gtin": "09415077177066",
+    "productName": "Standard UHT Milk",
+    "productBrand": "Pams",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5004771-EA-000",
+    "gtin": null,
+    "productName": "Lite UHT Milk",
+    "productBrand": "Pams",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5007415-EA-000",
+    "gtin": null,
+    "productName": "Zero Lacto Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5008663-EA-000",
+    "gtin": null,
+    "productName": "Instant Whole Milk Powder",
+    "productBrand": "Eclipse Premium",
+    "productSize": "1kg",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5010691-EA-000",
+    "gtin": null,
+    "productName": "Calci-Yum Milk With Banana Flavour",
+    "productBrand": "Anchor",
+    "productSize": "250ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5010693-EA-000",
+    "gtin": null,
+    "productName": "Calci-Yum Chocolate Flavour Milk",
+    "productBrand": "Anchor",
+    "productSize": "250ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5010694-EA-000",
+    "gtin": null,
+    "productName": "Calci-Yum Strawberry Flavour Milk",
+    "productBrand": "Anchor",
+    "productSize": "250ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5014608-EA-000",
+    "gtin": null,
+    "productName": "Long Life Milk Chocolate",
+    "productBrand": "Meadow Fresh",
+    "productSize": "250ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5016749-EA-000",
+    "gtin": null,
+    "productName": "Silver Top Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5016750-EA-000",
+    "gtin": "00000094154672",
+    "productName": "Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5017792-EA-000",
+    "gtin": null,
+    "productName": "Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5025424-EA-000",
+    "gtin": null,
+    "productName": "Calci \u002B Trim Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5027100-EA-000",
+    "gtin": null,
+    "productName": "Cultured Buttermilk",
+    "productBrand": "Meadow Fresh",
+    "productSize": "600g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5027127-EA-000",
+    "gtin": null,
+    "productName": "Organic Homogenised Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5027129-EA-000",
+    "gtin": null,
+    "productName": "Organic Non-homogenised Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5027131-EA-000",
+    "gtin": null,
+    "productName": "Organic Lite Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5027208-EA-000",
+    "gtin": null,
+    "productName": "Protein\u002B Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5033117-EA-000",
+    "gtin": null,
+    "productName": "Premium Whole Goat Milk UHT",
+    "productBrand": "Living Planet",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5090710-EA-000",
+    "gtin": null,
+    "productName": "Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "300ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5112558-EA-000",
+    "gtin": null,
+    "productName": "Organic Light Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5123764-EA-000",
+    "gtin": null,
+    "productName": "Organic Homogenised Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5201479-EA-000",
+    "gtin": "09415077379187",
+    "productName": "Standard Milk",
+    "productBrand": "Pams Value",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5201486-EA-000",
+    "gtin": "09415077379200",
+    "productName": "Trim Milk",
+    "productBrand": "Pams Value",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5201487-EA-000",
+    "gtin": "09415077379194",
+    "productName": "Lite Milk",
+    "productBrand": "Pams Value",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5201489-EA-000",
+    "gtin": "09415077379170",
+    "productName": "Lite Milk",
+    "productBrand": "Pams Value",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5201490-EA-000",
+    "gtin": "09415077379163",
+    "productName": "Standard Milk",
+    "productBrand": "Pams Value",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5201800-EA-000",
+    "gtin": "09415077379217",
+    "productName": "Standard Milk",
+    "productBrand": "Pams Value",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5201801-EA-000",
+    "gtin": "09415077379224",
+    "productName": "Lite Milk",
+    "productBrand": "Pams Value",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5255601-EA-000",
+    "gtin": null,
+    "productName": "Non-Homogenised Jersey Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5255602-EA-000",
+    "gtin": null,
+    "productName": "Homogenised Jersey Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5266045-EA-000",
+    "gtin": null,
+    "productName": "Pure New Zealand A2 Sheep Milk",
+    "productBrand": "Fernglen Farm",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5266784-EA-000",
+    "gtin": null,
+    "productName": "Standard Milk",
+    "productBrand": "Simply Milk",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5266790-EA-000",
+    "gtin": null,
+    "productName": "Lite Reduced Fat Milk",
+    "productBrand": "Simply Milk",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5283856-EA-000",
+    "gtin": null,
+    "productName": "A2 Protein Homogenised Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5290920-EA-000",
+    "gtin": null,
+    "productName": "Half \u0026 Half Jersey Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5300750-EA-000",
+    "gtin": null,
+    "productName": "Standard Milk",
+    "productBrand": "Simply Milk",
+    "productSize": "3l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5305891-EA-000",
+    "gtin": null,
+    "productName": "Lactose Free A2 Comfort Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "1.5l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5314866-EA-000",
+    "gtin": null,
+    "productName": "Calci Low Fat Milk",
+    "productBrand": "Simply Milk",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5317043-EA-000",
+    "gtin": null,
+    "productName": "Lactose Free With A2 Protein Comfort Milk",
+    "productBrand": "Lewis Road Creamery",
+    "productSize": "750ml",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5337881-EA-000",
+    "gtin": null,
+    "productName": "Zero Lacto Blue Milk",
+    "productBrand": "Anchor",
+    "productSize": "2l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "PakNSave",
+    "externalProductId": "5349666-EA-000",
+    "gtin": null,
+    "productName": "Protein\u002B Fresh Lite Milk",
+    "productBrand": "Anchor",
+    "productSize": "1l",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "10060",
+    "gtin": "09421030000098",
+    "productName": "lewis road creamery milk jersey homogenised",
+    "productBrand": "lewis road creamery",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "10785",
+    "gtin": "09421030000081",
+    "productName": "lewis road creamery milk jersey non homogenised",
+    "productBrand": "lewis road creamery",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "117739",
+    "gtin": "09415767068025",
+    "productName": "boss iced coffee vanilla latte",
+    "productBrand": "boss",
+    "productSize": "237mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "120207",
+    "gtin": "09300652809985",
+    "productName": "sanitarium so good oat milk no added sugar",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "133693",
+    "gtin": "09421030000586",
+    "productName": "lewis road creamery milk a2 protein homogenised",
+    "productBrand": "lewis road creamery",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "140173",
+    "gtin": "09339687227389",
+    "productName": "woolworths milk buns soft \u0026 glazed",
+    "productBrand": "woolworths",
+    "productSize": "300g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "148781",
+    "gtin": "09341650001599",
+    "productName": "vitasoy oat milky uht milk",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "150166",
+    "gtin": "09339687246106",
+    "productName": "macro organic oat milk unsweetened",
+    "productBrand": "macro organic",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "150443",
+    "gtin": "07501058649942",
+    "productName": "nestl\u00E9 carnation evaporated milk creamy",
+    "productBrand": "nestl\u00E9 carnation",
+    "productSize": "340mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "151917",
+    "gtin": "07501058650979",
+    "productName": "nestl\u00E9 carnation evaporated milk light \u0026 creamy",
+    "productBrand": "nestl\u00E9 carnation",
+    "productSize": "340mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "15659",
+    "gtin": "09421908118016",
+    "productName": "trident coconut milk ",
+    "productBrand": "trident",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "156666",
+    "gtin": "09421030000739",
+    "productName": "lewis road creamery flavoured milk chocolate lactose free",
+    "productBrand": "lewis road creamery",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "160019",
+    "gtin": "07613287012128",
+    "productName": "nestl\u00E9 coffee \u0026 milk ",
+    "productBrand": "nestl\u00E9",
+    "productSize": "395g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "168",
+    "gtin": null,
+    "productName": "tcc coconut milk premium",
+    "productBrand": "tcc",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "169496",
+    "gtin": "05411188115434",
+    "productName": "alpro soya soy milk barista",
+    "productBrand": "alpro soya",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "171100",
+    "gtin": "09421906089141",
+    "productName": "otis oat milk the barista one",
+    "productBrand": "otis",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "171176",
+    "gtin": "05411188119753",
+    "productName": "alpro soy milk coconut barista",
+    "productBrand": "alpro",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "171242",
+    "gtin": "09421030000777",
+    "productName": "lewis road creamery flavoured milk chocolate lactose free",
+    "productBrand": "lewis road creamery",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "171352",
+    "gtin": "05411188125341",
+    "productName": "alpro almond milk barista",
+    "productBrand": "alpro",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "171355",
+    "gtin": "09421906089134",
+    "productName": "otis oat milk the everyday one",
+    "productBrand": "otis",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "171537",
+    "gtin": "09400556017780",
+    "productName": "nestl\u00E9 highlander condensed milk sweetened lite",
+    "productBrand": "nestl\u00E9 highlander",
+    "productSize": "410g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "171712",
+    "gtin": "09300652805949",
+    "productName": "so good almond milk high protein",
+    "productBrand": "so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "172854",
+    "gtin": "05411188127697",
+    "productName": "alpro plant based oat milk barista",
+    "productBrand": "alpro plant based",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "175034",
+    "gtin": "09415767068049",
+    "productName": "boss iced coffee double espresso",
+    "productBrand": "boss",
+    "productSize": "237mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "176011",
+    "gtin": "09415724000006",
+    "productName": "fresha valley milk barista",
+    "productBrand": "fresha valley",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "190448",
+    "gtin": "09421903594204",
+    "productName": "boring oat milk original",
+    "productBrand": "boring",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "191451",
+    "gtin": "09421903594198",
+    "productName": "boring oat milk barista",
+    "productBrand": "boring",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "206055",
+    "gtin": "09348470000481",
+    "productName": "inside out oat milk unsweetened",
+    "productBrand": "inside out",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "209424",
+    "gtin": "09341650001711",
+    "productName": "vitasoy rice milk long life",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "212840",
+    "gtin": "09341650001735",
+    "productName": "vitasoy soy milky regular uht milk",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "215455",
+    "gtin": "09300633903305",
+    "productName": "macro organic soy milk ",
+    "productBrand": "macro organic",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "219845",
+    "gtin": "09415652001007",
+    "productName": "puhoi valley flavoured milk real chocolate",
+    "productBrand": "puhoi valley",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "219879",
+    "gtin": "09349277001251",
+    "productName": "bickford\u0027s iced coffee almond milk",
+    "productBrand": "bickford\u0027s",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "220067",
+    "gtin": "09349277001428",
+    "productName": "bickford\u0027s flavoured milk iced chocolate almond milk",
+    "productBrand": "bickford\u0027s",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "220413",
+    "gtin": "09421030001057",
+    "productName": "lewis road lactose free a2 comfort milk",
+    "productBrand": "lewis road",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "223940",
+    "gtin": "09421004015912",
+    "productName": "baby steps goat milk stage 3 toddler milk drink from 12-36 months",
+    "productBrand": "baby steps goat milk stage 3",
+    "productSize": "900g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "236704",
+    "gtin": "09421902960871",
+    "productName": "a2 platinum premium stage 4 junior milk drink from 4 years",
+    "productBrand": "a2 platinum premium stage 4",
+    "productSize": "900g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "237175",
+    "gtin": "09421902960611",
+    "productName": "a2 platinum premium stage 3 toddler milk drink from 1 year",
+    "productBrand": "a2 platinum premium stage 3",
+    "productSize": "900g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "239021",
+    "gtin": "09415767067035",
+    "productName": "boss iced coffee caramel latte",
+    "productBrand": "boss",
+    "productSize": "237mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "24318",
+    "gtin": "09300652510911",
+    "productName": "sanitarium so good soy milk regular long life",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "265579",
+    "gtin": "09310052877019",
+    "productName": "anchor uht milk lite blue",
+    "productBrand": "anchor",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "269645",
+    "gtin": "09300605710245",
+    "productName": "nestl\u00E9 highlander condensed milk sweetened",
+    "productBrand": "nestl\u00E9 highlander",
+    "productSize": "395g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "269671",
+    "gtin": "09415262030923",
+    "productName": "anchor uht milk blue top",
+    "productBrand": "anchor",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "269685",
+    "gtin": "09415262047969",
+    "productName": "anchor milk powder standard blue",
+    "productBrand": "anchor",
+    "productSize": "1kg",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "269692",
+    "gtin": "09415262050044",
+    "productName": "anchor milk powder instant",
+    "productBrand": "anchor",
+    "productSize": "400g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "269748",
+    "gtin": "09414090282511",
+    "productName": "meadow fresh calci trim milk ",
+    "productBrand": "meadow fresh",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "269758",
+    "gtin": "09414090282504",
+    "productName": "meadow fresh milk standard uht",
+    "productBrand": "meadow fresh",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "269759",
+    "gtin": "09414090282603",
+    "productName": "meadow fresh milk lite reduced fat uht",
+    "productBrand": "meadow fresh",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "274781",
+    "gtin": "09300652812572",
+    "productName": "sanitarium so good oat milk chocolate",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282635",
+    "gtin": "09415522864626",
+    "productName": "meadow fresh milk standard original",
+    "productBrand": "meadow fresh",
+    "productSize": "600mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282636",
+    "gtin": "09414090874952",
+    "productName": "meadow fresh milk farmhouse- full cream",
+    "productBrand": "meadow fresh",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282640",
+    "gtin": "09415262722026",
+    "productName": "anchor calci yum flavoured milk chocolate",
+    "productBrand": "anchor calci yum",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282657",
+    "gtin": "09414090880465",
+    "productName": "naturalea organic milk organic whole",
+    "productBrand": "naturalea organic",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282699",
+    "gtin": "09415522000277",
+    "productName": "meadow fresh milk organic standard",
+    "productBrand": "meadow fresh",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282720",
+    "gtin": "09415262722088",
+    "productName": "anchor calci yum flavoured milk strawberry",
+    "productBrand": "anchor calci yum",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282726",
+    "gtin": "00000094148152",
+    "productName": "anchor milk trim 99.7% fat free",
+    "productBrand": "anchor",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282729",
+    "gtin": "09414090875300",
+    "productName": "meadow fresh milk trim calci-trim",
+    "productBrand": "meadow fresh",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282732",
+    "gtin": "09414090875157",
+    "productName": "meadow fresh milk lite",
+    "productBrand": "meadow fresh",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282759",
+    "gtin": "09415262722057",
+    "productName": "anchor calci yum flavoured milk banana",
+    "productBrand": "anchor calci yum",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282764",
+    "gtin": "09414742036417",
+    "productName": "woolworths milk standard",
+    "productBrand": "woolworths",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282765",
+    "gtin": "09414742036455",
+    "productName": "woolworths milk standard",
+    "productBrand": "woolworths",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282766",
+    "gtin": "09414742036462",
+    "productName": "woolworths milk lite",
+    "productBrand": "woolworths",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282767",
+    "gtin": "09414742036714",
+    "productName": "woolworths milk trim",
+    "productBrand": "woolworths",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282768",
+    "gtin": "09414742036509",
+    "productName": "woolworths milk standard",
+    "productBrand": "woolworths",
+    "productSize": "3L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282769",
+    "gtin": "09414742036516",
+    "productName": "woolworths milk lite",
+    "productBrand": "woolworths",
+    "productSize": "3L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282772",
+    "gtin": "09414742036424",
+    "productName": "woolworths milk lite",
+    "productBrand": "woolworths",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282773",
+    "gtin": "09414742036523",
+    "productName": "woolworths milk trim",
+    "productBrand": "woolworths",
+    "productSize": "3L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282780",
+    "gtin": "09414742036431",
+    "productName": "woolworths milk trim",
+    "productBrand": "woolworths",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282792",
+    "gtin": "00000094155105",
+    "productName": "meadow fresh milk trim",
+    "productBrand": "meadow fresh",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282793",
+    "gtin": "00000094155006",
+    "productName": "meadow fresh milk standard original",
+    "productBrand": "meadow fresh",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282794",
+    "gtin": "09415522514019",
+    "productName": "meadow fresh milk standard original",
+    "productBrand": "meadow fresh",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282801",
+    "gtin": "09415724200406",
+    "productName": "fresha valley milk standard a2",
+    "productBrand": "fresha valley",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282817",
+    "gtin": "00000094152463",
+    "productName": "anchor milk trim 99.7% fat free",
+    "productBrand": "anchor",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282819",
+    "gtin": "00000094152210",
+    "productName": "anchor milk standard blue",
+    "productBrand": "anchor",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282821",
+    "gtin": "00000094136616",
+    "productName": "anchor calci\u002B milk trim",
+    "productBrand": "anchor calci\u002B",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282827",
+    "gtin": "00000094141009",
+    "productName": "anchor calci\u002B milk trim",
+    "productBrand": "anchor calci\u002B",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282843",
+    "gtin": "00000094160512",
+    "productName": "anchor milk lite 98.5% fat free",
+    "productBrand": "anchor",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282848",
+    "gtin": "00000094127317",
+    "productName": "anchor milk standard blue",
+    "productBrand": "anchor",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "282849",
+    "gtin": "00000094127348",
+    "productName": "anchor milk lite 98.5% fat free",
+    "productBrand": "anchor",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "285486",
+    "gtin": "09348470000917",
+    "productName": "inside out oat milk collagen unsweetened",
+    "productBrand": "inside out",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "288162",
+    "gtin": "09348470000894",
+    "productName": "inside out almond milk collagen unsweetened",
+    "productBrand": "inside out",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "310675",
+    "gtin": "09310232954523",
+    "productName": "vitasoy oat unsweetened uht milk ",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "320518",
+    "gtin": "09400556010637",
+    "productName": "uncle tobys milk oaties breakfast cereal",
+    "productBrand": "uncle tobys",
+    "productSize": "500g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "321191",
+    "gtin": "09415748003137",
+    "productName": "ceres organics coconut milk ",
+    "productBrand": "ceres organics",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "321700",
+    "gtin": "09414832293560",
+    "productName": "meadow fresh calci strong flavoured milk chocolate uht",
+    "productBrand": "meadow fresh calci strong",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "321702",
+    "gtin": "09414832293577",
+    "productName": "meadow fresh calci strong flavoured milk strawberry uht",
+    "productBrand": "meadow fresh calci strong",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "322115",
+    "gtin": "09414832293591",
+    "productName": "meadow fresh calci strong flavoured milk chocolate uht",
+    "productBrand": "meadow fresh calci strong",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "333133",
+    "gtin": "09415724200109",
+    "productName": "fresh valley milk standard",
+    "productBrand": "fresh valley",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "333141",
+    "gtin": "09415724200208",
+    "productName": "fresha valley milk lite reduced fat",
+    "productBrand": "fresha valley",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "334369",
+    "gtin": "09300652811643",
+    "productName": "so good oat milk extra creamy",
+    "productBrand": "so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "347540",
+    "gtin": "09300605152410",
+    "productName": "nestl\u00E9 kit kat milk chocolate bars share pack",
+    "productBrand": "nestl\u00E9 kit kat",
+    "productSize": "252g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "348593",
+    "gtin": "09300605152397",
+    "productName": "nestl\u00E9 kit kat milk chocolate bars fun size share pack",
+    "productBrand": "nestl\u00E9 kit kat",
+    "productSize": "154g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "353044",
+    "gtin": "09421903234513",
+    "productName": "no ordinary plant milk ",
+    "productBrand": "no ordinary",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "360740",
+    "gtin": "09300605152144",
+    "productName": "nestl\u00E9 kit kat milk chocolate block ",
+    "productBrand": "nestl\u00E9 kit kat",
+    "productSize": "160g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "387164",
+    "gtin": "09341650001643",
+    "productName": "vitasoy oat unsweetened bottle milk ",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "405757",
+    "gtin": "09415652000451",
+    "productName": "puhoi valley flavoured milk real chocolate",
+    "productBrand": "puhoi valley",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "405770",
+    "gtin": "09415652000468",
+    "productName": "puhoi valley flavoured milk real chocolate",
+    "productBrand": "puhoi valley",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "405773",
+    "gtin": "09415652000475",
+    "productName": "puhoi valley flavoured milk caramel \u0026 white chocolate",
+    "productBrand": "puhoi valley",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "421287",
+    "gtin": "09311336030076",
+    "productName": "nippys flavoured milk chocolate",
+    "productBrand": "nippys",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "421288",
+    "gtin": "09311336030069",
+    "productName": "nippys iced coffee ",
+    "productBrand": "nippys",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "42937",
+    "gtin": "09341650001698",
+    "productName": "vitasoy calci plus soy uht milk ",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "446628",
+    "gtin": "09415652000482",
+    "productName": "puhoi valley flavoured milk caramel \u0026 white chocolate",
+    "productBrand": "puhoi valley",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "479925",
+    "gtin": "09300652806045",
+    "productName": "sanitarium up \u0026 go flavoured milk protein energize choc hit",
+    "productBrand": "sanitarium up \u0026 go",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "481067",
+    "gtin": "09300633553869",
+    "productName": "smitten cat milk lactose free",
+    "productBrand": "smitten",
+    "productSize": "3x250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "484358",
+    "gtin": "09415652000529",
+    "productName": "puhoi organic milk light",
+    "productBrand": "puhoi organic",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "484362",
+    "gtin": "09415652000536",
+    "productName": "puhoi organic milk light",
+    "productBrand": "puhoi organic",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "505668",
+    "gtin": "00000094130997",
+    "productName": "lewis road creamery flavoured milk double caramel butterscotch",
+    "productBrand": "lewis road creamery",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "520615",
+    "gtin": "09348470001372",
+    "productName": "inside out almond milk barista",
+    "productBrand": "inside out",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "524362",
+    "gtin": "09421903483621",
+    "productName": "lewis road creamery flavoured milk chocolate milk",
+    "productBrand": "lewis road creamery",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "532552",
+    "gtin": "09415652000574",
+    "productName": "puhoi valley flavoured milk arabica espresso",
+    "productBrand": "puhoi valley",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "546293",
+    "gtin": "09415522002332",
+    "productName": "meadow fresh milk standard original",
+    "productBrand": "meadow fresh",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "546294",
+    "gtin": "09415522002325",
+    "productName": "meadow fresh milk lite",
+    "productBrand": "meadow fresh",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "546320",
+    "gtin": "09415522002349",
+    "productName": "meadow fresh milk trim",
+    "productBrand": "meadow fresh",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "546321",
+    "gtin": "09415522002318",
+    "productName": "meadow fresh milk trim calci-trim",
+    "productBrand": "meadow fresh",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "5535",
+    "gtin": "09300652516913",
+    "productName": "sanitarium so good soy milk vanilla bliss uht",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "564472",
+    "gtin": "09341650000578",
+    "productName": "vitasoy protein plus soy uht milk ",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "57198",
+    "gtin": "09311627010183",
+    "productName": "ayam coconut milk premium",
+    "productBrand": "ayam",
+    "productSize": "270mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "575849",
+    "gtin": "09415652000550",
+    "productName": "puhoi valley flavoured milk arabica espresso",
+    "productBrand": "puhoi valley",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "58926",
+    "gtin": null,
+    "productName": "tcc coconut milk light",
+    "productBrand": "tcc",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "596964",
+    "gtin": "09400597021999",
+    "productName": "woolworths milk standard uht",
+    "productBrand": "woolworths",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "596966",
+    "gtin": "09400597022002",
+    "productName": "woolworths milk lite uht",
+    "productBrand": "woolworths",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "596967",
+    "gtin": "09400597022019",
+    "productName": "woolworths milk trim uht",
+    "productBrand": "woolworths",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6000005",
+    "gtin": "09421906089257",
+    "productName": "otis oat milk high fibre \u0026 low fat",
+    "productBrand": "otis",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6000571",
+    "gtin": "09421905756211",
+    "productName": "all good coconut milk barista",
+    "productBrand": "all good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6005418",
+    "gtin": "09421030001927",
+    "productName": "lewis road creamery flavoured milk flat white caramel espresso",
+    "productBrand": "lewis road creamery",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6011876",
+    "gtin": "09421030001989",
+    "productName": "lewis road creamery flavoured milk flat white caramel espresso",
+    "productBrand": "lewis road creamery",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6012788",
+    "gtin": "09421903297457",
+    "productName": "prebio tick prebiotic drink mixed berry",
+    "productBrand": "prebio tick",
+    "productSize": "6x80mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6013150",
+    "gtin": "08886472107902",
+    "productName": "s26 gold stage 3 toddler milk drink from 1 year",
+    "productBrand": "s26 gold stage 3",
+    "productSize": "850g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6013160",
+    "gtin": "08886472107926",
+    "productName": "s26 original stage 3 toddler milk drink from 1 year",
+    "productBrand": "s26 original stage 3",
+    "productSize": "850g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6020133",
+    "gtin": "09415652001274",
+    "productName": "puhoi valley milk \u0026 cream blend half \u0026 half",
+    "productBrand": "puhoi valley",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6023082",
+    "gtin": "09400597068963",
+    "productName": "woolworths milk calcium enriched trim",
+    "productBrand": "woolworths",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6023246",
+    "gtin": "09400597066433",
+    "productName": "woolworths milk full cream 4% milk fat",
+    "productBrand": "woolworths",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6029057",
+    "gtin": "09415262264212",
+    "productName": "anchor protein\u002B flavoured milk iced coffee shake",
+    "productBrand": "anchor protein\u002B",
+    "productSize": "375mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6029198",
+    "gtin": "09415262506404",
+    "productName": "anchor protein\u002B flavoured milk chocolate shake",
+    "productBrand": "anchor protein\u002B",
+    "productSize": "375mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6029670",
+    "gtin": "09415262190979",
+    "productName": "anchor protein\u002B flavoured milk vanilla shake",
+    "productBrand": "anchor protein\u002B",
+    "productSize": "375mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6030293",
+    "gtin": "03664346350549",
+    "productName": "terry\u0027s milk chocolate orange",
+    "productBrand": "terry\u0027s",
+    "productSize": "145g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6034218",
+    "gtin": "09415652001328",
+    "productName": "puhoi valley flavoured milk honey comb",
+    "productBrand": "puhoi valley",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6035061",
+    "gtin": "09415652001311",
+    "productName": "puhoi valley flavoured milk honey comb",
+    "productBrand": "puhoi valley",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6037768",
+    "gtin": "09421905239066",
+    "productName": "fernglen farm sheep milk a2",
+    "productBrand": "fernglen farm",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6038845",
+    "gtin": "00000094153835",
+    "productName": "anchor lactose free milk blue",
+    "productBrand": "anchor",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "604178",
+    "gtin": "09311336030205",
+    "productName": "nippys flavoured milk espresso",
+    "productBrand": "nippys",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6043669",
+    "gtin": "09415262334526",
+    "productName": "anchor lactose free milk uht blue",
+    "productBrand": "anchor",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6052065",
+    "gtin": "09341650001056",
+    "productName": "vitasoy oat bottle milk choc brownie",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6052122",
+    "gtin": "09324401000829",
+    "productName": "shake 2 go protein milk chocolate",
+    "productBrand": "shake 2 go",
+    "productSize": "350mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6052296",
+    "gtin": "09341650001070",
+    "productName": "vitasoy oat bottle milk iced latte",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6054582",
+    "gtin": "09341650001063",
+    "productName": "vitasoy oat bottle milk salted caramel",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6062467",
+    "gtin": "09421906089226",
+    "productName": "otis oat milk the organic one",
+    "productBrand": "otis",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6062950",
+    "gtin": "09421905756198",
+    "productName": "all good barista almond milk ",
+    "productBrand": "all good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6063708",
+    "gtin": "09421030002047",
+    "productName": "lewis road creamery flavoured milk lime",
+    "productBrand": "lewis road creamery",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6063709",
+    "gtin": "09421030002061",
+    "productName": "lewis road creamery flavoured milk lime",
+    "productBrand": "lewis road creamery",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6069269",
+    "gtin": "09421030002108",
+    "productName": "lewis road creamery flavoured milk boysenberry cheesecake",
+    "productBrand": "lewis road creamery",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6069542",
+    "gtin": "09421030002122",
+    "productName": "lewis road creamery milk boysenberry cheesecake",
+    "productBrand": "lewis road creamery",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6069995",
+    "gtin": "09309001859220",
+    "productName": "peak chocolate milk chocolate bite calm \u002B magnesium",
+    "productBrand": "peak chocolate",
+    "productSize": "15g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6070958",
+    "gtin": "09309001859206",
+    "productName": "peak chocolate milk chocolate bite energy \u002B caffeine",
+    "productBrand": "peak chocolate",
+    "productSize": "15g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6074139",
+    "gtin": "09349277003996",
+    "productName": "bickfords iced coffee protein",
+    "productBrand": "bickfords",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6078105",
+    "gtin": "09419023251725",
+    "productName": "eclipse milk powder skim",
+    "productBrand": "eclipse",
+    "productSize": "1kg",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6078125",
+    "gtin": "09419023251794",
+    "productName": "eclipse milk powder calcium enriched",
+    "productBrand": "eclipse",
+    "productSize": "1kg",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6078659",
+    "gtin": "09415262082878",
+    "productName": "anchor protein\u002B flavoured milk banana",
+    "productBrand": "anchor",
+    "productSize": "375mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6079153",
+    "gtin": "09421908118023",
+    "productName": "trident coconut milk light",
+    "productBrand": "trident",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6079567",
+    "gtin": "09415262009639",
+    "productName": "anchor protein\u002B flavoured milk strawberry",
+    "productBrand": "anchor",
+    "productSize": "375mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6083026",
+    "gtin": "09331880058920",
+    "productName": "mcobeauty cadbury dairy milk lipgloss (limited edition)",
+    "productBrand": "mcobeauty",
+    "productSize": "15g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "6084260",
+    "gtin": "00000094153842",
+    "productName": "anchor milk protein plus",
+    "productBrand": "anchor",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "61659",
+    "gtin": "09400597029353",
+    "productName": "macro milk standard organic full cream",
+    "productBrand": "macro",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "61661",
+    "gtin": "09400597029377",
+    "productName": "woolworths milk calcium enriched",
+    "productBrand": "woolworths",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "61692",
+    "gtin": "09400597029384",
+    "productName": "woolworths milk full cream",
+    "productBrand": "woolworths",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "630392",
+    "gtin": "09415724200802",
+    "productName": "fresha valley milk full cream",
+    "productBrand": "fresha valley",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "65575",
+    "gtin": "09415767068018",
+    "productName": "boss iced coffee latte",
+    "productBrand": "boss",
+    "productSize": "237mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "660390",
+    "gtin": "09341650000448",
+    "productName": "vitasoy almond milky uht milk",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "66122",
+    "gtin": "09415767068001",
+    "productName": "boss iced coffee long black",
+    "productBrand": "boss",
+    "productSize": "237mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "664598",
+    "gtin": "09415522005586",
+    "productName": "meadow fresh quick brekkie flavoured milk protein \u002B fibre chocolate",
+    "productBrand": "meadow fresh quick brekkie",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "666426",
+    "gtin": "09415522005609",
+    "productName": "meadow fresh quick brekkie flavoured milk protein \u002B fibre strawberry",
+    "productBrand": "meadow fresh quick brekkie",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "676848",
+    "gtin": "09421006226187",
+    "productName": "chantal organics coconut milk ",
+    "productBrand": "chantal organics",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "684034",
+    "gtin": "09339687043101",
+    "productName": "macro organic coconut milk ",
+    "productBrand": "macro organic",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "694751",
+    "gtin": "09300633292393",
+    "productName": "essentials coconut milk ",
+    "productBrand": "essentials",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "698693",
+    "gtin": "09415262886650",
+    "productName": "primo flavoured milk chocolate",
+    "productBrand": "primo",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "698706",
+    "gtin": "09415262652286",
+    "productName": "primo flavoured milk strawberry",
+    "productBrand": "primo",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "698707",
+    "gtin": "09415262769465",
+    "productName": "primo flavoured milk banana",
+    "productBrand": "primo",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "701667",
+    "gtin": "09300633226961",
+    "productName": "macro organic rice milk ",
+    "productBrand": "macro organic",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "701668",
+    "gtin": "09300633226978",
+    "productName": "macro organic soy milk light",
+    "productBrand": "macro organic",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "701783",
+    "gtin": "09414090291957",
+    "productName": "meadow fresh milk original uht",
+    "productBrand": "meadow fresh",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "701971",
+    "gtin": "09415522876735",
+    "productName": "meadow fresh milk standard original",
+    "productBrand": "meadow fresh",
+    "productSize": "3L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "705692",
+    "gtin": "00000094154672",
+    "productName": "anchor milk standard blue",
+    "productBrand": "anchor",
+    "productSize": "3L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "708238",
+    "gtin": "00000094148404",
+    "productName": "anchor zero-lacto milk standard blue",
+    "productBrand": "anchor zero-lacto",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "709016",
+    "gtin": "00000094154665",
+    "productName": "anchor milk lite 98.5% fat free",
+    "productBrand": "anchor",
+    "productSize": "3L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "710014",
+    "gtin": "09300652803020",
+    "productName": "sanitarium so good almond milk original",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "721421",
+    "gtin": "09312231224072",
+    "productName": "living planet goats milk ",
+    "productBrand": "living planet",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "72879",
+    "gtin": "09415262522817",
+    "productName": "primo flavoured milk smooth strawberry",
+    "productBrand": "primo",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "730941",
+    "gtin": "09300633331757",
+    "productName": "macro organic almond milk ",
+    "productBrand": "macro organic",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "744490",
+    "gtin": "09300652803495",
+    "productName": "sanitarium so good almond milk unsweetened",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "74474",
+    "gtin": "09415262003842",
+    "productName": "primo flavoured milk banana blast",
+    "productBrand": "primo",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "74511",
+    "gtin": "09415262645134",
+    "productName": "primo flavoured milk chocolate supremo",
+    "productBrand": "primo",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "757739",
+    "gtin": "09421030000845",
+    "productName": "lewis road creamery milk half \u0026 half",
+    "productBrand": "lewis road creamery",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "758604",
+    "gtin": "09341650000912",
+    "productName": "vitasoy almond unsweetened bottle milk ",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "76023",
+    "gtin": "09415652000871",
+    "productName": "puhoi valley milk standard homogenised",
+    "productBrand": "puhoi valley",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "76155",
+    "gtin": "09415652000888",
+    "productName": "puhoi valley milk standard non homogenised",
+    "productBrand": "puhoi valley",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "768241",
+    "gtin": "05411188511328",
+    "productName": "alpro soya cream single soy",
+    "productBrand": "alpro soya",
+    "productSize": "250mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "781141",
+    "gtin": "09300652804607",
+    "productName": "sanitarium so good almond milk vanilla",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "782284",
+    "gtin": "09421903330062",
+    "productName": "lewis road creamery milk organic homogenised",
+    "productBrand": "lewis road creamery",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "782285",
+    "gtin": "09421903330079",
+    "productName": "lewis road creamery milk organic lite",
+    "productBrand": "lewis road creamery",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "784943",
+    "gtin": "09400539015932",
+    "productName": "vitapet pet milk ",
+    "productBrand": "vitapet",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "784954",
+    "gtin": "09400539015925",
+    "productName": "vitapet pet milk ",
+    "productBrand": "vitapet",
+    "productSize": "380mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "789357",
+    "gtin": "09300633765705",
+    "productName": "woolworths milk powder full cream",
+    "productBrand": "woolworths",
+    "productSize": "1kg",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "789358",
+    "gtin": "09300633765712",
+    "productName": "woolworths milk skim powder",
+    "productBrand": "woolworths",
+    "productSize": "1kg",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "792941",
+    "gtin": "09415522000246",
+    "productName": "meadow fresh calci strong flavoured milk chocolate",
+    "productBrand": "meadow fresh calci strong",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "792943",
+    "gtin": "09415522000260",
+    "productName": "meadow fresh calci strong flavoured milk strawberry",
+    "productBrand": "meadow fresh calci strong",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "793384",
+    "gtin": "09300652804973",
+    "productName": "sanitarium so good almond \u0026 coconut milk unsweetened",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "79407",
+    "gtin": "09300652815573",
+    "productName": "sanitarium so good oat milk high protein",
+    "productBrand": "sanitarium so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "794932",
+    "gtin": "09341650000714",
+    "productName": "vitasoy coconut unsweetened uht milk ",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "797060",
+    "gtin": "09369999803025",
+    "productName": "inside out almond milk unsweetened",
+    "productBrand": "inside out",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "799811",
+    "gtin": "09300633785529",
+    "productName": "free from lactose milk full cream",
+    "productBrand": "free from lactose",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "799813",
+    "gtin": "09300633785536",
+    "productName": "free from lactose milk lite uht",
+    "productBrand": "free from lactose",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "800108",
+    "gtin": "09421903330321",
+    "productName": "lewis road creamery milk organic non-homogenised",
+    "productBrand": "lewis road creamery",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "800116",
+    "gtin": "09421903330154",
+    "productName": "lewis road creamery milk organic homogenised",
+    "productBrand": "lewis road creamery",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "800124",
+    "gtin": "09421903330178",
+    "productName": "lewis road creamery milk organic light",
+    "productBrand": "lewis road creamery",
+    "productSize": "1.5L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "800125",
+    "gtin": "00000094008241",
+    "productName": "lewis road creamery flavoured milk chocolate",
+    "productBrand": "lewis road creamery",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "801047",
+    "gtin": "09421903137081",
+    "productName": "fresco nutrition goats milk family drink",
+    "productBrand": "fresco nutrition",
+    "productSize": "450g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "802373",
+    "gtin": "00000094144406",
+    "productName": "anchor protein\u002B milk lite",
+    "productBrand": "anchor protein\u002B",
+    "productSize": "2L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "803901",
+    "gtin": "06920584471017",
+    "productName": "want want hot kid milk drink ",
+    "productBrand": "want want hot kid",
+    "productSize": "245mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "821283",
+    "gtin": "09300639609324",
+    "productName": "liddells milk lactose free chocolate",
+    "productBrand": "liddells",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "823129",
+    "gtin": "09414090000009",
+    "productName": "tararua protein hit flavoured milk chocolate",
+    "productBrand": "tararua protein hit",
+    "productSize": "600mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "829004",
+    "gtin": "09300617428190",
+    "productName": "cadbury baking milk chocolate chips ",
+    "productBrand": "cadbury baking",
+    "productSize": "200g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "829175",
+    "gtin": "09300617042617",
+    "productName": "cadbury dairy milk chocolate share pack caramello koala",
+    "productBrand": "cadbury dairy milk",
+    "productSize": "180g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "829594",
+    "gtin": "08997212610191",
+    "productName": "kara coconut milk classic",
+    "productBrand": "kara",
+    "productSize": "400mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "83273",
+    "gtin": "09300652809770",
+    "productName": "so good oat milk barista edition uht",
+    "productBrand": "so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "83836",
+    "gtin": "09300652808834",
+    "productName": "so good almond milk barista edition uht",
+    "productBrand": "so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "83995",
+    "gtin": "09300652808827",
+    "productName": "so good soy milk barista",
+    "productBrand": "so good",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "84763",
+    "gtin": "09339687161942",
+    "productName": "woolworths condensed milk sweetened",
+    "productBrand": "woolworths",
+    "productSize": "397g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "847775",
+    "gtin": "09300652806069",
+    "productName": "sanitarium up \u0026 go flavoured milk protein energize vanilla",
+    "productBrand": "sanitarium up \u0026 go",
+    "productSize": "500mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "853540",
+    "gtin": "08886303210238",
+    "productName": "kara coconut milk classic",
+    "productBrand": "kara",
+    "productSize": "200mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "893373",
+    "gtin": "09300639618661",
+    "productName": "liddells milk lactose free full cream",
+    "productBrand": "liddells",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "893477",
+    "gtin": "09300639618678",
+    "productName": "liddells milk lactose free low fat",
+    "productBrand": "liddells",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "901450",
+    "gtin": "09400597009744",
+    "productName": "macro organic almond milk unsweetened",
+    "productBrand": "macro organic",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "908414",
+    "gtin": "09348470001389",
+    "productName": "inside out oat milk barista",
+    "productBrand": "inside out",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "913379",
+    "gtin": "09421907450148",
+    "productName": "haven a2 stage 3 toddler milk drink from 12\u002B months",
+    "productBrand": "haven a2 stage 3",
+    "productSize": "800g",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "926885",
+    "gtin": "09341650000899",
+    "productName": "vitasoy almond unsweetened uht milk ",
+    "productBrand": "vitasoy",
+    "productSize": "1L",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "942502",
+    "gtin": "09421903483058",
+    "productName": "lewis road creamery flavoured milk chocolate",
+    "productBrand": "lewis road creamery",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "942533",
+    "gtin": "00000094009392",
+    "productName": "lewis road creamery flavoured milk coffee",
+    "productBrand": "lewis road creamery",
+    "productSize": "300mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "958008",
+    "gtin": "09415652000406",
+    "productName": "puhoi valley milk organic homogenised",
+    "productBrand": "puhoi valley",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "958080",
+    "gtin": "09415652000383",
+    "productName": "puhoi valley milk organic non homogenised",
+    "productBrand": "puhoi valley",
+    "productSize": "750mL",
+    "needConfirm": false
+  },
+  {
+    "storeBrand": "Woolworths",
+    "externalProductId": "958240",
+    "gtin": "09415652000390",
+    "productName": "puhoi valley milk organic homogenised pure milk",
+    "productBrand": "puhoi valley",
+    "productSize": "1.5L",
+    "needConfirm": false
+  }
+]

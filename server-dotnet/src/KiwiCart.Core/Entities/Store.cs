@@ -8,4 +8,11 @@ public class Store
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     public string Address { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The retailer's own store identifier (e.g. Pak'nSave's storeId UUID),
+    /// used as the storeId when querying that store's prices. Null for seed
+    /// rows that predate store fetching.
+    /// </summary>
+    public string? ExternalStoreId { get; set; }
 }

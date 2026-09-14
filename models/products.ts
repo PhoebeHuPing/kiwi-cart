@@ -26,6 +26,7 @@ export interface Supermarket {
  */
 export interface PriceComparisonData {
   product_name: string
+  display_product_name?: string // Normalized name with brand prepended if needed
   image_url: string
   supermarket_name: string
   logo_url: string
@@ -33,7 +34,10 @@ export interface PriceComparisonData {
   lat: number
   lng: number
   price: number
-  unit_price?: string // Calculated value (e.g., "$2.50/kg")
+  product_id?: string // External product ID for Foodstuffs merging
+  gtin?: string // Normalized GTIN for cross-platform grouping (null if unknown)
+  volume?: string // Volume/size (e.g., "250ml", "1L")
+  unit_price?: string // Calculated value (e.g., "$2.50/kg" or "$4.76/L")
 }
 
 /**

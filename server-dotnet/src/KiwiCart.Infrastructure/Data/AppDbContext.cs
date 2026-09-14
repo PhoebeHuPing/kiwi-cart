@@ -13,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Bucket> Buckets => Set<Bucket>();
     public DbSet<BucketItem> BucketItems => Set<BucketItem>();
     public DbSet<Feedback> Feedback => Set<Feedback>();
+    public DbSet<ProductGtin> ProductGtins => Set<ProductGtin>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,6 +25,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.Brand).HasColumnName("brand").HasMaxLength(200);
             e.Property(p => p.Category).HasColumnName("category").HasMaxLength(200);
             e.Property(p => p.ImageUrl).HasColumnName("image_url").HasMaxLength(1000);
+            e.Property(p => p.ExternalProductId).HasColumnName("external_product_id").HasMaxLength(100);
         });
 
         modelBuilder.Entity<Store>(e =>
@@ -35,6 +37,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.Latitude).HasColumnName("latitude");
             e.Property(p => p.Longitude).HasColumnName("longitude");
             e.Property(p => p.Address).HasColumnName("address").HasMaxLength(500);
+            e.Property(p => p.ExternalStoreId).HasColumnName("external_store_id").HasMaxLength(100);
+            // A retailer's store id is unique within that brand.
+            e.HasIndex(p => new { p.Brand, p.ExternalStoreId }).IsUnique();
         });
 
         modelBuilder.Entity<Price>(e =>
@@ -45,6 +50,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.StoreId).HasColumnName("store_id");
             e.Property(p => p.Amount).HasColumnName("amount").HasPrecision(10, 2);
             e.Property(p => p.RetrievedAt).HasColumnName("retrieved_at");
+            e.Property(p => p.Volume).HasColumnName("volume").HasMaxLength(100);
+            e.Property(p => p.UnitPrice).HasColumnName("unit_price").HasMaxLength(50);
             e.HasIndex(p => new { p.ProductId, p.StoreId }).IsUnique();
         });
 
@@ -98,6 +105,26 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.Message).HasColumnName("message").IsRequired();
             e.Property(p => p.Category).HasColumnName("category").HasMaxLength(50);
             e.Property(p => p.CreatedAt).HasColumnName("created_at");
+        });
+
+        modelBuilder.Entity<ProductGtin>(e =>
+        {
+            e.ToTable("product_gtins");
+            e.Property(p => p.Id).HasColumnName("id");
+            e.Property(p => p.StoreBrand).HasColumnName("store_brand").HasMaxLength(100).IsRequired();
+            e.Property(p => p.ExternalProductId).HasColumnName("external_product_id").HasMaxLength(100).IsRequired();
+            e.Property(p => p.Gtin).HasColumnName("gtin").HasMaxLength(14);
+            e.Property(p => p.ProductName).HasColumnName("product_name").HasMaxLength(500);
+            e.Property(p => p.ProductBrand).HasColumnName("product_brand").HasMaxLength(200);
+            e.Property(p => p.ProductSize).HasColumnName("product_size").HasMaxLength(100);
+            e.Property(p => p.NeedConfirm).HasColumnName("need_confirm").HasDefaultValue(false);
+            e.Property(p => p.GtinLookupAttempted).HasColumnName("gtin_lookup_attempted").HasDefaultValue(false);
+            e.Property(p => p.CreatedAt).HasColumnName("created_at");
+            e.Property(p => p.UpdatedAt).HasColumnName("updated_at");
+            // One row per (store, product); the platform id is unique within a store.
+            e.HasIndex(p => new { p.StoreBrand, p.ExternalProductId }).IsUnique();
+            // Cross-platform matching is driven by GTIN lookups.
+            e.HasIndex(p => p.Gtin);
         });
 
         // Auckland Supermarket Seed Data

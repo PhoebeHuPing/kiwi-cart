@@ -25,7 +25,7 @@ public class MealPlanServiceTests
             .ReturnsAsync(output);
 
     private void SetupPrice(string ingredient, params decimal[] prices) =>
-        _priceComparison.Setup(p => p.CompareAsync(ingredient, It.IsAny<CancellationToken>()))
+        _priceComparison.Setup(p => p.CompareAsync(ingredient, It.IsAny<CancellationToken>(), It.IsAny<double?>(), It.IsAny<double?>()))
             .ReturnsAsync(prices
                 .Select(pr => new PriceResult { ProductName = ingredient, Price = pr })
                 .OrderBy(r => r.Price)
@@ -102,7 +102,7 @@ public class MealPlanServiceTests
         Assert.Empty(result.Items);
         Assert.Equal(0m, result.EstimatedTotal);
         _priceComparison.Verify(
-            p => p.CompareAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            p => p.CompareAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<double?>(), It.IsAny<double?>()),
             Times.Never);
     }
 
@@ -113,7 +113,7 @@ public class MealPlanServiceTests
         var lines = string.Join("\n", Enumerable.Range(1, 20).Select(i => $"item{i}"));
         SetupGemini(lines);
         _priceComparison
-            .Setup(p => p.CompareAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Setup(p => p.CompareAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<double?>(), It.IsAny<double?>()))
             .ReturnsAsync(new List<PriceResult>());
 
         var result = await _sut.PlanAsync("big list");

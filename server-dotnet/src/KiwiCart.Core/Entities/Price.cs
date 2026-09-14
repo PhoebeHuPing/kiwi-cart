@@ -7,4 +7,6 @@ public class Price
     public int StoreId { get; set; }
     public decimal Amount { get; set; }
     public DateTime RetrievedAt { get; set; }
+    public string? Volume { get; set; }
+    public string? UnitPrice { get; set; }
 }

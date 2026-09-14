@@ -31,7 +31,7 @@ public class SuggestionServiceTests
 
     // Price results for a product, one per store name at the given price.
     private void SetupPrice(string product, params (string store, decimal price)[] prices) =>
-        _priceComparison.Setup(p => p.CompareAsync(product, It.IsAny<CancellationToken>()))
+        _priceComparison.Setup(p => p.CompareAsync(product, It.IsAny<CancellationToken>(), It.IsAny<double?>(), It.IsAny<double?>()))
             .ReturnsAsync(prices
                 .Select(pr => new PriceResult { ProductName = product, StoreName = pr.store, Price = pr.price })
                 .OrderBy(r => r.Price)
@@ -136,7 +136,7 @@ public class SuggestionServiceTests
             Enumerable.Range(1, 10).Select(i => $"{{\"product\":\"item{i}\",\"reason\":\"r\"}}"));
         SetupGemini("[" + proposals + "]");
         _priceComparison
-            .Setup(p => p.CompareAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Setup(p => p.CompareAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<double?>(), It.IsAny<double?>()))
             .ReturnsAsync(new List<PriceResult>());
 
         var result = await _sut.GetSuggestionsAsync("user1");
@@ -154,7 +154,7 @@ public class SuggestionServiceTests
 
         Assert.Empty(result.Items);
         _priceComparison.Verify(
-            p => p.CompareAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()),
+            p => p.CompareAsync(It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<double?>(), It.IsAny<double?>()),
             Times.Never);
     }
 

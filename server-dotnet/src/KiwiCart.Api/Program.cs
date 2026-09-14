@@ -22,6 +22,50 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {RequestId} {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
 
+// One-off admin command: export the local product_gtins table to the seed JSON.
+// Usage: dotnet run -- export-gtins [optional output path]
+if (args.Length > 0 && args[0] == "export-gtins")
+{
+    var cfg = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: true)
+        .AddJsonFile("appsettings.Development.json", optional: true)
+        .AddEnvironmentVariables()
+        .Build();
+    var conn = cfg.GetConnectionString("DefaultConnection")
+        ?? throw new InvalidOperationException("DefaultConnection not configured");
+
+    // Default output: the Infrastructure Seed folder (embedded resource source).
+    var output = args.Length > 1
+        ? args[1]
+        : Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,
+            "../../../../KiwiCart.Infrastructure/Seed/gtin-seed.json"));
+
+    var count = await KiwiCart.Infrastructure.Seed.GtinSeed.ExportAsync(conn, output);
+    Console.WriteLine($"Exported {count} product_gtins rows to {output}");
+    return;
+}
+
+// One-off admin command: import the Woolworths store seed JSON (fetched from
+// cdx.nz via the browser, since that host is unreachable server-side) into the
+// stores table. Idempotent via UpsertStoresAsync. Usage: dotnet run -- import-ww-stores
+if (args.Length > 0 && args[0] == "import-ww-stores")
+{
+    var cfg = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json", optional: true)
+        .AddJsonFile("appsettings.Development.json", optional: true)
+        .AddEnvironmentVariables()
+        .Build();
+
+    var seedPath = args.Length > 1
+        ? args[1]
+        : Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,
+            "../../../../KiwiCart.Infrastructure/Seed/ww-stores-seed.json"));
+
+    var result = await KiwiCart.Infrastructure.Seed.WoolworthsStoreSeed.ImportAsync(cfg, seedPath);
+    Console.WriteLine($"Imported Woolworths stores: inserted {result.Inserted}, updated {result.Updated}");
+    return;
+}
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 
@@ -206,8 +250,16 @@ builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<NewWor
 builder.Services.AddSingleton<StoreApiClient>(sp => sp.GetRequiredService<WoolworthsClient>());
 builder.Services.AddSingleton<IStoreAggregator, StoreAggregator>();
 
+// Foodstuffs clients also resolve GTINs via their detail endpoints (for admin backfill).
+builder.Services.AddSingleton<IGtinLookupClient>(sp => sp.GetRequiredService<PakNSaveClient>());
+builder.Services.AddSingleton<IGtinLookupClient>(sp => sp.GetRequiredService<NewWorldClient>());
+
 // Price comparison services (Scoped - per-request)
 builder.Services.AddScoped<IPriceCacheRepository, PriceCacheRepository>();
+builder.Services.AddScoped<IProductGtinRepository, ProductGtinRepository>();
+builder.Services.AddScoped<IGtinBackfillService, GtinBackfillService>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<IStoreSyncService, StoreSyncService>();
 builder.Services.AddScoped<IPriceCalculator, PriceCalculator>();
 builder.Services.AddScoped<IPriceComparisonService, PriceComparisonService>();
 builder.Services.AddScoped<IBucketService, BucketService>();

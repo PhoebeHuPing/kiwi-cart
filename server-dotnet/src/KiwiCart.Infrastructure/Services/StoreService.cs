@@ -7,6 +7,12 @@ namespace KiwiCart.Infrastructure.Services;
 
 public class StoreService : IStoreService
 {
+    /// <summary>
+    /// Radius (km) within which a store is considered "nearby". Used both for
+    /// per-brand nearest-store selection (price search) and the nearby list.
+    /// </summary>
+    public const double NearbyRadiusKm = 5;
+
     private readonly AppDbContext _db;
 
     public StoreService(AppDbContext db) => _db = db;
@@ -14,8 +20,28 @@ public class StoreService : IStoreService
     public async Task<IReadOnlyList<Store>> GetAllAsync(CancellationToken ct = default)
         => await _db.Stores.AsNoTracking().ToListAsync(ct);
 
+    public async Task<Store?> GetNearestStoreWithExternalIdAsync(
+        string brand, double lat, double lng, double radiusKm = NearbyRadiusKm, CancellationToken ct = default)
+    {
+        if (lat < -90 || lat > 90 || lng < -180 || lng > 180)
+            return null;
+
+        var stores = await _db.Stores.AsNoTracking()
+            .Where(s => s.Brand == brand && s.ExternalStoreId != null)
+            .ToListAsync(ct);
+
+        // Only return the nearest store if it falls within the given radius;
+        // otherwise the brand has no store close enough.
+        return stores
+            .Select(s => new { Store = s, Distance = Haversine(lat, lng, s.Latitude, s.Longitude) })
+            .Where(x => x.Distance <= radiusKm)
+            .OrderBy(x => x.Distance)
+            .Select(x => x.Store)
+            .FirstOrDefault();
+    }
+
     public async Task<IReadOnlyList<StoreWithDistance>> GetNearbyAsync(
-        double lat, double lng, double radiusKm = 5, CancellationToken ct = default)
+        double lat, double lng, double radiusKm = NearbyRadiusKm, CancellationToken ct = default)
     {
         if (lat < -90 || lat > 90 || lng < -180 || lng > 180)
             return [];

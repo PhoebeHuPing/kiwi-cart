@@ -19,13 +19,13 @@ public class BucketServiceTests
     [Fact]
     public async Task CompareAsync_CalculatesTotalPerStore()
     {
-        _aggregator.Setup(a => a.SearchAllStoresAsync("Milk", It.IsAny<CancellationToken>()))
+        _aggregator.Setup(a => a.SearchAllStoresAsync("Milk", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(new List<PriceResult>
             {
                 new() { ProductName = "Milk", StoreName = "PakNSave", Price = 3.50m },
                 new() { ProductName = "Milk", StoreName = "NewWorld", Price = 4.00m }
             });
-        _aggregator.Setup(a => a.SearchAllStoresAsync("Bread", It.IsAny<CancellationToken>()))
+        _aggregator.Setup(a => a.SearchAllStoresAsync("Bread", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(new List<PriceResult>
             {
                 new() { ProductName = "Bread", StoreName = "PakNSave", Price = 2.00m },
@@ -48,12 +48,12 @@ public class BucketServiceTests
     [Fact]
     public async Task CompareAsync_TracksMissingItems()
     {
-        _aggregator.Setup(a => a.SearchAllStoresAsync("Milk", It.IsAny<CancellationToken>()))
+        _aggregator.Setup(a => a.SearchAllStoresAsync("Milk", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(new List<PriceResult>
             {
                 new() { ProductName = "Milk", StoreName = "PakNSave", Price = 3.50m }
             });
-        _aggregator.Setup(a => a.SearchAllStoresAsync("Exotic Item", It.IsAny<CancellationToken>()))
+        _aggregator.Setup(a => a.SearchAllStoresAsync("Exotic Item", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(new List<PriceResult>
             {
                 new() { ProductName = "Exotic Item", StoreName = "NewWorld", Price = 10.00m }
@@ -75,13 +75,13 @@ public class BucketServiceTests
     [Fact]
     public async Task CompareAsync_SortsByItemsFoundThenPrice()
     {
-        _aggregator.Setup(a => a.SearchAllStoresAsync("Milk", It.IsAny<CancellationToken>()))
+        _aggregator.Setup(a => a.SearchAllStoresAsync("Milk", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(new List<PriceResult>
             {
                 new() { ProductName = "Milk", StoreName = "Full", Price = 5.00m },
                 new() { ProductName = "Milk", StoreName = "Partial", Price = 3.00m }
             });
-        _aggregator.Setup(a => a.SearchAllStoresAsync("Bread", It.IsAny<CancellationToken>()))
+        _aggregator.Setup(a => a.SearchAllStoresAsync("Bread", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(new List<PriceResult>
             {
                 new() { ProductName = "Bread", StoreName = "Full", Price = 2.00m }

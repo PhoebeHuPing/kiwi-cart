@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   useQuery,
   useQueries,
@@ -18,12 +18,31 @@ import PriceDisplay from './ui/PriceDisplay'
 import AiAssistant from './AiAssistant'
 import { PriceComparisonData } from '../../models/products'
 import { useBasket } from '../contexts/BasketContext'
+import { DEFAULT_LOCATION } from '../constants/location'
 
 interface GroupedProduct {
   product_name: string
   image_url: string
+  product_id?: string
+  gtin?: string
   options: PriceComparisonData[]
 }
+
+/**
+ * Normalize a product name for display: capitalize the first letter of each
+ * word so all-lowercase source names (e.g. "natures fresh toast bread white")
+ * render consistently ("Natures Fresh Toast Bread White"). Words already
+ * containing uppercase (brand casing like "UHT") are left untouched.
+ */
+function toTitleCase(input: string): string {
+  return input.replace(/\S+/g, (word) =>
+    /[A-Z]/.test(word) ? word : word.charAt(0).toUpperCase() + word.slice(1),
+  )
+}
+
+// Number of product cards shown per "page"; the Load more button reveals
+// another batch of this size.
+const PRODUCTS_PER_PAGE = 30
 
 function ProductComparison() {
   const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
@@ -33,9 +52,31 @@ function ProductComparison() {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
   const [showDropdown, setShowDropdown] = useState(false)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  // How many product cards are currently shown; grows via the "Load more"
+  // button so a broad search does not render hundreds of cards at once.
+  const [visibleCount, setVisibleCount] = useState(PRODUCTS_PER_PAGE)
   const { basket, addToBasket, isInBasket, removeFromBasket, setIsDrawerOpen } =
     useBasket()
   const featuredProducts = ['Milk', 'Bread', 'Eggs', 'Butter']
+
+  // Resolve the user's location once on mount: use geolocation when allowed,
+  // otherwise fall back to Auckland Central. Price queries wait for this so the
+  // backend can pick the nearest priceable store per brand. `null` = resolving.
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null,
+  )
+  useEffect(() => {
+    if (!('geolocation' in navigator)) {
+      setLocation(DEFAULT_LOCATION)
+      return
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) =>
+        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => setLocation(DEFAULT_LOCATION),
+      { enableHighAccuracy: true },
+    )
+  }, [])
 
   const {
     data: products,
@@ -43,22 +84,58 @@ function ProductComparison() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['compare', debouncedSearchTerm],
-    queryFn: () => getComparePrices(debouncedSearchTerm),
-    enabled: Boolean(debouncedSearchTerm),
+    queryKey: ['compare', debouncedSearchTerm, location],
+    queryFn: () => getComparePrices(debouncedSearchTerm, location ?? undefined),
+    enabled: Boolean(debouncedSearchTerm) && location !== null,
   })
 
   const featuredQueries = useQueries({
     queries: featuredProducts.map((productName) => ({
-      queryKey: ['featured', productName],
-      queryFn: () => getComparePrices(productName),
+      queryKey: ['featured', productName, location],
+      queryFn: () => getComparePrices(productName, location ?? undefined),
       staleTime: 5 * 60 * 1000,
+      enabled: location !== null,
     })),
   })
 
   const featuredResults = featuredQueries.flatMap((query) => query.data ?? [])
   const displayedProducts = debouncedSearchTerm ? products : featuredResults
-  const isFeaturedLoading = featuredQueries.some((query) => query.isLoading)
+  // Until the user's location is resolved we deliberately fire no price queries
+  // (see `enabled: location !== null` above), so treat that window as loading
+  // rather than showing empty/default results.
+  const isFeaturedLoading =
+    location === null || featuredQueries.some((query) => query.isLoading)
+
+  // Unique stores appearing in the current results (featured on first load, or
+  // search results), for the map. Deduped by supermarket name; requires valid
+  // coordinates. The map fits its viewport to these stores.
+  //
+  // Only derived once the user's location is resolved. Until then the featured
+  // and search queries are disabled, so the backend's default (Auckland
+  // Central) stores from the no-location code path never reach the map.
+  const resultStores = (() => {
+    if (!location) return []
+    const map = new Map<
+      string,
+      { name: string; address: string; latitude: number; longitude: number }
+    >()
+    for (const p of displayedProducts ?? []) {
+      if (
+        p.supermarket_name &&
+        typeof p.lat === 'number' &&
+        typeof p.lng === 'number' &&
+        !map.has(p.supermarket_name)
+      ) {
+        map.set(p.supermarket_name, {
+          name: p.supermarket_name,
+          address: p.address ?? '',
+          latitude: p.lat,
+          longitude: p.lng,
+        })
+      }
+    }
+    return Array.from(map.values())
+  })()
 
   // Fetch favorites only if authenticated
   const { data: favorites = [] } = useQuery({
@@ -137,13 +214,33 @@ function ProductComparison() {
     favoriteMutation.mutate(productName)
   }
 
-  // Group the flat array of products by their name and ensure one lowest price per supermarket.
-  // This prevents multiple results for the same product at different locations of the same brand.
+  // Group the flat array of products into one card per real-world product.
+  // Priority 1: GTIN — the cross-platform barcode, merges the same product
+  //             across Woolworths + Foodstuffs.
+  // Priority 2: product_id — Foodstuffs exact match (Pak'nSave + New World).
+  // Priority 3: product name — fallback for rows without ids/GTINs.
   const groupedProducts = displayedProducts?.reduce(
     (acc: GroupedProduct[], current) => {
-      const existingProduct = acc.find(
-        (p) => p.product_name === current.product_name,
-      )
+      let existingProduct: GroupedProduct | undefined
+
+      // Priority 1: match by GTIN (if both have it)
+      if (current.gtin) {
+        existingProduct = acc.find((p) => p.gtin && p.gtin === current.gtin)
+      }
+
+      // Priority 2: match by product_id (if both have it)
+      if (!existingProduct && current.product_id) {
+        existingProduct = acc.find(
+          (p) => p.product_id && p.product_id === current.product_id,
+        )
+      }
+
+      // Priority 3: fall back to name-based matching
+      if (!existingProduct) {
+        existingProduct = acc.find(
+          (p) => p.product_name === current.product_name,
+        )
+      }
 
       if (existingProduct) {
         const existingOptionIndex = existingProduct.options.findIndex(
@@ -166,6 +263,8 @@ function ProductComparison() {
         acc.push({
           product_name: current.product_name,
           image_url: current.image_url,
+          product_id: current.product_id,
+          gtin: current.gtin,
           options: [current],
         })
       }
@@ -173,6 +272,27 @@ function ProductComparison() {
     },
     [],
   )
+
+  // Order cards so cross-store comparable products (available at more than one
+  // supermarket) come first — that is the core price-comparison value — while
+  // preserving the existing order within each group.
+  const sortedProducts = groupedProducts
+    ? [...groupedProducts].sort((a, b) => {
+        const aStores = new Set(a.options.map((o) => o.supermarket_name)).size
+        const bStores = new Set(b.options.map((o) => o.supermarket_name)).size
+        return bStores - aStores
+      })
+    : undefined
+
+  // Cards actually rendered, capped by the Load more button.
+  const visibleProducts = sortedProducts?.slice(0, visibleCount)
+  const hasMore = sortedProducts ? visibleCount < sortedProducts.length : false
+
+  // Reset paging whenever the search term changes so a new search starts at
+  // the first page.
+  useEffect(() => {
+    setVisibleCount(PRODUCTS_PER_PAGE)
+  }, [debouncedSearchTerm])
 
   const trendingCategories = [
     { name: 'Milk', icon: '🥛' },
@@ -186,8 +306,8 @@ function ProductComparison() {
     <div className="min-h-screen bg-background pb-12">
       <div className="py-8">
         {/* Search and Navigation Header (Sticky) */}
-        <div className="sticky top-0 z-40 -mx-4 px-4 py-4 mb-12 bg-background/95 backdrop-blur-md border-b border-transparent transition-all data-[stuck]:border-gray-100">
-          <div className="flex flex-col gap-6">
+        <div className="sticky top-0 z-40 -mx-4 px-4 py-3 mb-12 bg-background/95 backdrop-blur-md border-b border-transparent transition-all data-[stuck]:border-gray-100">
+          <div className="flex flex-col gap-4">
             <div className="flex items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 focus-within:ring-4 focus-within:ring-kiwi/10 transition-all relative">
               <span className="text-3xl ml-2" aria-hidden="true">
                 🔍
@@ -245,7 +365,7 @@ function ProductComparison() {
                             </div>
                             <div>
                               <h4 className="font-bold text-sm text-kiwi-dark line-clamp-1">
-                                {item.product_name}
+                                {toTitleCase(item.display_product_name || item.product_name)}
                               </h4>
                               <div className="flex items-center gap-1.5 mt-0.5">
                                 <img
@@ -298,9 +418,9 @@ function ProductComparison() {
                 <button
                   key={cat.name}
                   onClick={() => setSearchTerm(cat.name)}
-                  className="px-4 py-2 md:px-6 md:py-3 bg-white rounded-xl md:rounded-2xl text-sm md:text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105 whitespace-nowrap flex-shrink-0"
+                  className="px-3 py-1.5 md:px-4 md:py-2 bg-white rounded-xl text-sm md:text-base font-bold text-gray-600 border border-gray-100 hover:border-kiwi hover:text-kiwi transition-all shadow-sm flex items-center gap-2 hover:scale-105 whitespace-nowrap flex-shrink-0"
                 >
-                  <span className="text-lg md:text-xl">{cat.icon}</span>
+                  <span className="text-base md:text-lg">{cat.icon}</span>
                   {cat.name}
                 </button>
               ))}
@@ -356,7 +476,7 @@ function ProductComparison() {
                   </div>
                 )}
 
-              {groupedProducts?.map(
+              {visibleProducts?.map(
                 (group: GroupedProduct, groupIdx: number) => {
                   const isExpanded = expandedIndex === groupIdx
                   const bestOption = group.options[0]
@@ -399,22 +519,31 @@ function ProductComparison() {
                       {/* Content Area */}
                       <div className="p-4 sm:p-6 flex flex-col flex-1">
                         <div className="flex-1">
-                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2">
-                            {group.product_name}
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2 min-h-[3.5rem] sm:min-h-[4rem]">
+                            {toTitleCase(group.options[0]?.display_product_name || group.product_name)}
                           </h3>
-                          <div className="flex items-center gap-4 sm:gap-6 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
-                            <div className="w-14 h-14 sm:w-20 sm:h-20 bg-white rounded-xl p-2 sm:p-2.5 shadow-sm flex-shrink-0 flex items-center justify-center">
+                          {/* Volume Display */}
+                          {bestOption.volume && (
+                            <div className="mb-4 text-sm font-semibold text-gray-600">
+                              <span className="text-gray-700">{bestOption.volume}</span>
+                            </div>
+                          )}
+                          <div className="flex items-center gap-3 sm:gap-4 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
+                            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-xl p-2 shadow-sm flex-shrink-0 flex items-center justify-center">
                               <img
                                 src={bestOption.logo_url}
                                 alt=""
-                                className="w-full h-full object-contain"
+                                className="max-w-full max-h-full object-contain"
                               />
                             </div>
-                            <div className="flex flex-col">
-                              <span className="text-xs sm:text-sm font-black text-kiwi-dark uppercase tracking-widest leading-none mb-2">
+                            <div className="flex flex-col min-w-0">
+                              <span className="text-xs font-black text-kiwi-dark uppercase tracking-widest leading-none mb-1.5">
                                 Best Price At
                               </span>
-                              <span className="text-lg sm:text-xl font-black text-kiwi-dark leading-tight">
+                              <span
+                                className="text-base sm:text-lg font-black text-kiwi-dark leading-tight line-clamp-2 break-words cursor-help"
+                                title={bestOption.supermarket_name}
+                              >
                                 {bestOption.supermarket_name}
                               </span>
                             </div>
@@ -568,6 +697,22 @@ function ProductComparison() {
                 </div>
               )}
             </div>
+
+            {/* Load more: reveals the next batch of product cards. */}
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={() =>
+                    setVisibleCount((c) => c + PRODUCTS_PER_PAGE)
+                  }
+                  className="px-8 py-3 bg-white rounded-2xl text-base font-bold text-kiwi-dark border border-gray-200 shadow-sm hover:border-kiwi hover:text-kiwi hover:scale-105 transition-all"
+                >
+                  Load more (
+                  {(sortedProducts?.length ?? 0) - (visibleProducts?.length ?? 0)}{' '}
+                  more)
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Sticky Sidebar - Pinned to the viewport so Nearby Stores and
@@ -575,17 +720,17 @@ function ProductComparison() {
               The column itself is the sticky element; its containing block is
               the tall flex row above, so it stays pinned while that row is in
               view instead of scrolling away with a short inner wrapper. */}
-          <div className="lg:w-80 space-y-6 flex-shrink-0 w-full lg:sticky lg:top-28 lg:self-start">
+          <div className="lg:w-80 space-y-6 flex-shrink-0 w-full lg:sticky lg:top-40 lg:self-start lg:max-h-[calc(100vh-11rem)] lg:overflow-y-auto lg:pr-1 scrollbar-hide">
             {/* Nearby Stores map */}
-            <div className="bg-white rounded-3xl p-5 sm:p-8 shadow-sm border border-gray-100">
-              <h3 className="text-lg sm:text-xl font-black text-kiwi-dark mb-6 flex items-center gap-2">
+            <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-gray-100">
+              <h3 className="text-lg sm:text-xl font-black text-kiwi-dark mb-4 flex items-center gap-2">
                 <span className="text-2xl" aria-hidden="true">
                   🗺️
                 </span>{' '}
                 Nearby Stores
               </h3>
-              <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-100">
-                <StoreMap />
+              <div className="h-56 bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-100">
+                <StoreMap resultStores={resultStores} userLocation={location} />
               </div>
             </div>
 
