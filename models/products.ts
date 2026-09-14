@@ -35,6 +35,7 @@ export interface PriceComparisonData {
   lng: number
   price: number
   product_id?: string // External product ID for Foodstuffs merging
+  gtin?: string // Normalized GTIN for cross-platform grouping (null if unknown)
   volume?: string // Volume/size (e.g., "250ml", "1L")
   unit_price?: string // Calculated value (e.g., "$2.50/kg" or "$4.76/L")
 }

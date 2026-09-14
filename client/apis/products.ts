@@ -18,14 +18,20 @@ export async function getProducts(): Promise<Product[]> {
 
 /**
  * Core price comparison search. Queries the backend to fetch real-time
- * and cached prices across different supermarket brands.
+ * and cached prices across different supermarket brands. When a location is
+ * supplied, the backend selects the nearest priceable store per dynamic-store
+ * brand (Pak'nSave) within its nearby radius.
  */
 export async function getComparePrices(
   searchTerm: string,
+  location?: { lat: number; lng: number },
 ): Promise<PriceComparisonData[]> {
-  const response = await request
-    .get(`${rootURL}/compare`)
-    .query({ q: searchTerm })
+  const query: Record<string, string | number> = { q: searchTerm }
+  if (location) {
+    query.lat = location.lat
+    query.lng = location.lng
+  }
+  const response = await request.get(`${rootURL}/compare`).query(query)
   return response.body
 }
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   useQuery,
   useQueries,
@@ -18,11 +18,13 @@ import PriceDisplay from './ui/PriceDisplay'
 import AiAssistant from './AiAssistant'
 import { PriceComparisonData } from '../../models/products'
 import { useBasket } from '../contexts/BasketContext'
+import { DEFAULT_LOCATION } from '../constants/location'
 
 interface GroupedProduct {
   product_name: string
   image_url: string
   product_id?: string
+  gtin?: string
   options: PriceComparisonData[]
 }
 
@@ -38,6 +40,10 @@ function toTitleCase(input: string): string {
   )
 }
 
+// Number of product cards shown per "page"; the Load more button reveals
+// another batch of this size.
+const PRODUCTS_PER_PAGE = 30
+
 function ProductComparison() {
   const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
     useAuth0()
@@ -46,9 +52,31 @@ function ProductComparison() {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
   const [showDropdown, setShowDropdown] = useState(false)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  // How many product cards are currently shown; grows via the "Load more"
+  // button so a broad search does not render hundreds of cards at once.
+  const [visibleCount, setVisibleCount] = useState(PRODUCTS_PER_PAGE)
   const { basket, addToBasket, isInBasket, removeFromBasket, setIsDrawerOpen } =
     useBasket()
   const featuredProducts = ['Milk', 'Bread', 'Eggs', 'Butter']
+
+  // Resolve the user's location once on mount: use geolocation when allowed,
+  // otherwise fall back to Auckland Central. Price queries wait for this so the
+  // backend can pick the nearest priceable store per brand. `null` = resolving.
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null,
+  )
+  useEffect(() => {
+    if (!('geolocation' in navigator)) {
+      setLocation(DEFAULT_LOCATION)
+      return
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) =>
+        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => setLocation(DEFAULT_LOCATION),
+      { enableHighAccuracy: true },
+    )
+  }, [])
 
   const {
     data: products,
@@ -56,22 +84,58 @@ function ProductComparison() {
     isError,
     error,
   } = useQuery({
-    queryKey: ['compare', debouncedSearchTerm],
-    queryFn: () => getComparePrices(debouncedSearchTerm),
-    enabled: Boolean(debouncedSearchTerm),
+    queryKey: ['compare', debouncedSearchTerm, location],
+    queryFn: () => getComparePrices(debouncedSearchTerm, location ?? undefined),
+    enabled: Boolean(debouncedSearchTerm) && location !== null,
   })
 
   const featuredQueries = useQueries({
     queries: featuredProducts.map((productName) => ({
-      queryKey: ['featured', productName],
-      queryFn: () => getComparePrices(productName),
+      queryKey: ['featured', productName, location],
+      queryFn: () => getComparePrices(productName, location ?? undefined),
       staleTime: 5 * 60 * 1000,
+      enabled: location !== null,
     })),
   })
 
   const featuredResults = featuredQueries.flatMap((query) => query.data ?? [])
   const displayedProducts = debouncedSearchTerm ? products : featuredResults
-  const isFeaturedLoading = featuredQueries.some((query) => query.isLoading)
+  // Until the user's location is resolved we deliberately fire no price queries
+  // (see `enabled: location !== null` above), so treat that window as loading
+  // rather than showing empty/default results.
+  const isFeaturedLoading =
+    location === null || featuredQueries.some((query) => query.isLoading)
+
+  // Unique stores appearing in the current results (featured on first load, or
+  // search results), for the map. Deduped by supermarket name; requires valid
+  // coordinates. The map fits its viewport to these stores.
+  //
+  // Only derived once the user's location is resolved. Until then the featured
+  // and search queries are disabled, so the backend's default (Auckland
+  // Central) stores from the no-location code path never reach the map.
+  const resultStores = (() => {
+    if (!location) return []
+    const map = new Map<
+      string,
+      { name: string; address: string; latitude: number; longitude: number }
+    >()
+    for (const p of displayedProducts ?? []) {
+      if (
+        p.supermarket_name &&
+        typeof p.lat === 'number' &&
+        typeof p.lng === 'number' &&
+        !map.has(p.supermarket_name)
+      ) {
+        map.set(p.supermarket_name, {
+          name: p.supermarket_name,
+          address: p.address ?? '',
+          latitude: p.lat,
+          longitude: p.lng,
+        })
+      }
+    }
+    return Array.from(map.values())
+  })()
 
   // Fetch favorites only if authenticated
   const { data: favorites = [] } = useQuery({
@@ -150,22 +214,28 @@ function ProductComparison() {
     favoriteMutation.mutate(productName)
   }
 
-  // Group the flat array of products by their name and ensure one lowest price per supermarket.
-  // Priority 1: If both items have product_id and match → merge (Foodstuffs exact match)
-  // Priority 2: Fall back to name-based matching
-  // This prevents multiple results for the same product at different locations of the same brand.
+  // Group the flat array of products into one card per real-world product.
+  // Priority 1: GTIN — the cross-platform barcode, merges the same product
+  //             across Woolworths + Foodstuffs.
+  // Priority 2: product_id — Foodstuffs exact match (Pak'nSave + New World).
+  // Priority 3: product name — fallback for rows without ids/GTINs.
   const groupedProducts = displayedProducts?.reduce(
     (acc: GroupedProduct[], current) => {
       let existingProduct: GroupedProduct | undefined
 
-      // Priority 1: Try to find by product_id (if both have it)
-      if (current.product_id) {
+      // Priority 1: match by GTIN (if both have it)
+      if (current.gtin) {
+        existingProduct = acc.find((p) => p.gtin && p.gtin === current.gtin)
+      }
+
+      // Priority 2: match by product_id (if both have it)
+      if (!existingProduct && current.product_id) {
         existingProduct = acc.find(
           (p) => p.product_id && p.product_id === current.product_id,
         )
       }
 
-      // Priority 2: Fall back to name-based matching
+      // Priority 3: fall back to name-based matching
       if (!existingProduct) {
         existingProduct = acc.find(
           (p) => p.product_name === current.product_name,
@@ -194,6 +264,7 @@ function ProductComparison() {
           product_name: current.product_name,
           image_url: current.image_url,
           product_id: current.product_id,
+          gtin: current.gtin,
           options: [current],
         })
       }
@@ -201,6 +272,27 @@ function ProductComparison() {
     },
     [],
   )
+
+  // Order cards so cross-store comparable products (available at more than one
+  // supermarket) come first — that is the core price-comparison value — while
+  // preserving the existing order within each group.
+  const sortedProducts = groupedProducts
+    ? [...groupedProducts].sort((a, b) => {
+        const aStores = new Set(a.options.map((o) => o.supermarket_name)).size
+        const bStores = new Set(b.options.map((o) => o.supermarket_name)).size
+        return bStores - aStores
+      })
+    : undefined
+
+  // Cards actually rendered, capped by the Load more button.
+  const visibleProducts = sortedProducts?.slice(0, visibleCount)
+  const hasMore = sortedProducts ? visibleCount < sortedProducts.length : false
+
+  // Reset paging whenever the search term changes so a new search starts at
+  // the first page.
+  useEffect(() => {
+    setVisibleCount(PRODUCTS_PER_PAGE)
+  }, [debouncedSearchTerm])
 
   const trendingCategories = [
     { name: 'Milk', icon: '🥛' },
@@ -384,7 +476,7 @@ function ProductComparison() {
                   </div>
                 )}
 
-              {groupedProducts?.map(
+              {visibleProducts?.map(
                 (group: GroupedProduct, groupIdx: number) => {
                   const isExpanded = expandedIndex === groupIdx
                   const bestOption = group.options[0]
@@ -605,6 +697,22 @@ function ProductComparison() {
                 </div>
               )}
             </div>
+
+            {/* Load more: reveals the next batch of product cards. */}
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={() =>
+                    setVisibleCount((c) => c + PRODUCTS_PER_PAGE)
+                  }
+                  className="px-8 py-3 bg-white rounded-2xl text-base font-bold text-kiwi-dark border border-gray-200 shadow-sm hover:border-kiwi hover:text-kiwi hover:scale-105 transition-all"
+                >
+                  Load more (
+                  {(sortedProducts?.length ?? 0) - (visibleProducts?.length ?? 0)}{' '}
+                  more)
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Sticky Sidebar - Pinned to the viewport so Nearby Stores and
@@ -622,7 +730,7 @@ function ProductComparison() {
                 Nearby Stores
               </h3>
               <div className="h-56 bg-gray-100 rounded-2xl overflow-hidden relative border border-gray-100">
-                <StoreMap />
+                <StoreMap resultStores={resultStores} userLocation={location} />
               </div>
             </div>
 

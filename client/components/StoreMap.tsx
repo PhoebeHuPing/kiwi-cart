@@ -1,12 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
-import { getSupermarkets, getNearbySupermarkets } from '../apis/products'
+import { DEFAULT_LOCATION } from '../constants/location'
 
-interface Supermarket {
-  id: number
+/** A store derived from the current price-comparison results. */
+export interface ResultStore {
   name: string
   address: string
   latitude: number
   longitude: number
+}
+
+interface StoreMapProps {
+  /**
+   * Stores from the current price-comparison results. The map shows exactly
+   * these stores and zooms to fit them.
+   */
+  resultStores?: ResultStore[]
+  /**
+   * The user's resolved location (real or default). Supplied by the parent so
+   * the map and price search share a single location source — the map does not
+   * run its own geolocation. `null` while the parent is still resolving.
+   */
+  userLocation?: { lat: number; lng: number } | null
 }
 
 declare global {
@@ -16,68 +30,27 @@ declare global {
 }
 
 /**
- * StoreMap Component: Renders a Google Map with user location and supermarket markers.
- * Features:
- * - Browser Geolocation to find the user.
- * - 5km Radius filtering: Fetches only nearby stores when location is available.
- * - Custom brand markers for major NZ supermarkets.
+ * StoreMap Component: Renders a Google Map with the user's location and the
+ * stores from the current price comparison.
+ *
+ * This is a controlled component: it does NOT perform its own geolocation or
+ * store fetching. The parent (ProductComparison) resolves the user's location
+ * once and passes both `userLocation` and the derived `resultStores`, so the
+ * map and the price search always agree on a single location.
  */
-export default function StoreMap() {
+export default function StoreMap({ resultStores, userLocation }: StoreMapProps = {}) {
   const mapRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
-  const [supermarkets, setSupermarkets] = useState<Supermarket[]>([])
   const [mapInstance, setMapInstance] = useState<any>(null)
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [mapError, setMapError] = useState('')
   const userMarkerRef = useRef<any>(null)
+  // Track store markers so we can clear them before redrawing.
+  const storeMarkersRef = useRef<any[]>([])
 
-  // 1. Get User's current location via Browser Geolocation API
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords
-          console.log('Location found:', latitude, longitude)
-          setUserLocation({ lat: latitude, lng: longitude })
-        },
-        (error) => {
-          console.error('Geolocation error:', error.message)
-          // If geolocation fails, we still load all supermarkets as fallback
-          fetchSupermarkets()
-        },
-        { enableHighAccuracy: true }
-      )
-    } else {
-      fetchSupermarkets()
-    }
-  }, [])
+  const hasResultStores = !!resultStores && resultStores.length > 0
 
-  // 2. Fetch supermarket data (Nearby or All)
-  const fetchSupermarkets = async (lat?: number, lng?: number) => {
-    try {
-      let data
-      if (lat !== undefined && lng !== undefined) {
-        console.log(`Fetching stores within 5km of ${lat}, ${lng}`)
-        data = await getNearbySupermarkets(lat, lng, 5)
-      } else {
-        console.log('Fetching all stores (fallback)')
-        data = await getSupermarkets()
-      }
-      setSupermarkets(data)
-    } catch (err) {
-      console.error('Failed to fetch supermarkets:', err)
-    }
-  }
-
-  // Trigger fetch when userLocation is found
-  useEffect(() => {
-    if (userLocation) {
-      fetchSupermarkets(userLocation.lat, userLocation.lng)
-    }
-  }, [userLocation])
-
-  // 3. Dynamic script loading for Google Maps API using Environment Variable
+  // 1. Dynamic script loading for Google Maps API using Environment Variable
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
     if (!apiKey) {
@@ -99,11 +72,11 @@ export default function StoreMap() {
     document.head.appendChild(script)
   }, [])
 
-  // 4. Initialize Google Map Instance & Places Autocomplete
+  // 2. Initialize Google Map Instance & Places Autocomplete
   useEffect(() => {
     if (isLoaded && mapRef.current && !mapInstance) {
       const map = new window.google.maps.Map(mapRef.current, {
-        center: { lat: -36.8485, lng: 174.7633 }, // Default to Auckland CBD
+        center: DEFAULT_LOCATION, // Auckland CBD until the user location resolves
         zoom: 12,
         mapTypeControl: false,
         fullscreenControl: false,
@@ -121,13 +94,10 @@ export default function StoreMap() {
         const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current)
         autocomplete.bindTo('bounds', map)
 
-        // Handle place selection from the autocomplete search box
+        // Recenter the map when the user picks a place from autocomplete.
         autocomplete.addListener('place_changed', () => {
           const place = autocomplete.getPlace()
           if (!place.geometry || !place.geometry.location) return
-          
-          const newLat = place.geometry.location.lat()
-          const newLng = place.geometry.location.lng()
 
           if (place.geometry.viewport) {
             map.fitBounds(place.geometry.viewport)
@@ -135,76 +105,93 @@ export default function StoreMap() {
             map.setCenter(place.geometry.location)
             map.setZoom(15)
           }
-
-          // When user searches for a new area, refetch stores for that area
-          fetchSupermarkets(newLat, newLng)
         })
       }
     }
   }, [isLoaded, mapInstance])
 
-  // 5. Update user marker position and center map when location changes
+  // 3. Update the user marker when the supplied location changes. When no
+  // result stores are driving the viewport, also center on the user.
   useEffect(() => {
-    if (mapInstance && userLocation && window.google) {
-      const pos = new window.google.maps.LatLng(userLocation.lat, userLocation.lng)
+    if (!mapInstance || !userLocation || !window.google) return
+
+    const pos = new window.google.maps.LatLng(userLocation.lat, userLocation.lng)
+
+    if (!hasResultStores) {
       mapInstance.setCenter(pos)
       mapInstance.setZoom(14)
-
-      if (userMarkerRef.current) {
-        userMarkerRef.current.setPosition(pos)
-      } else {
-        // Create a custom blue circle marker for the user
-        userMarkerRef.current = new window.google.maps.Marker({
-          position: pos,
-          map: mapInstance,
-          title: 'Your Location',
-          icon: {
-            path: window.google.maps.SymbolPath.CIRCLE,
-            fillColor: '#4285F4',
-            fillOpacity: 1,
-            strokeColor: 'white',
-            strokeWeight: 2,
-            scale: 8,
-          },
-          zIndex: 1000
-        })
-      }
     }
-  }, [mapInstance, userLocation])
 
-  // 6. Render individual supermarket markers with brand logos
-  useEffect(() => {
-    if (mapInstance && supermarkets.length > 0) {
-      supermarkets.forEach((store) => {
-        const marker = new window.google.maps.Marker({
-          position: { lat: store.latitude, lng: store.longitude },
-          map: mapInstance,
-          title: store.name,
-          icon: {
-            // Select logo based on supermarket name
-            url: store.name.toLowerCase().includes('pak') 
-              ? '/images/pak-n-save.webp' 
-              : store.name.toLowerCase().includes('new') 
-                ? '/images/new-world.webp' 
-                : '/images/woolworths.webp',
-            scaledSize: new window.google.maps.Size(30, 30),
-          }
-        })
-
-        // Information window displayed upon clicking a store marker
-        const infoWindow = new window.google.maps.InfoWindow({
-          content: `<div style="color: #1a2e35; padding: 5px;">
-                      <h4 style="margin: 0; font-weight: bold;">${store.name}</h4>
-                      <p style="margin: 5px 0 0; font-size: 12px;">${store.address}</p>
-                    </div>`,
-        })
-
-        marker.addListener('click', () => {
-          infoWindow.open(mapInstance, marker)
-        })
+    if (userMarkerRef.current) {
+      userMarkerRef.current.setPosition(pos)
+    } else {
+      userMarkerRef.current = new window.google.maps.Marker({
+        position: pos,
+        map: mapInstance,
+        title: 'Your Location',
+        icon: {
+          path: window.google.maps.SymbolPath.CIRCLE,
+          fillColor: '#4285F4',
+          fillOpacity: 1,
+          strokeColor: 'white',
+          strokeWeight: 2,
+          scale: 8,
+        },
+        zIndex: 1000,
       })
     }
-  }, [mapInstance, supermarkets])
+  }, [mapInstance, userLocation, hasResultStores])
+
+  // 4. Render the result-store markers and fit the viewport to them
+  // (plus the user location, if known).
+  useEffect(() => {
+    if (!mapInstance || !window.google) return
+
+    // Clear any previously drawn store markers.
+    storeMarkersRef.current.forEach((m) => m.setMap(null))
+    storeMarkersRef.current = []
+
+    if (!hasResultStores) return
+
+    const bounds = new window.google.maps.LatLngBounds()
+
+    resultStores!.forEach((store) => {
+      const position = { lat: store.latitude, lng: store.longitude }
+      const marker = new window.google.maps.Marker({
+        position,
+        map: mapInstance,
+        title: store.name,
+        icon: {
+          url: store.name.toLowerCase().includes('pak')
+            ? '/images/pak-n-save.webp'
+            : store.name.toLowerCase().includes('new')
+              ? '/images/new-world.webp'
+              : '/images/woolworths.webp',
+          scaledSize: new window.google.maps.Size(30, 30),
+        },
+      })
+
+      const infoWindow = new window.google.maps.InfoWindow({
+        content: `<div style="color: #1a2e35; padding: 5px;">
+                    <h4 style="margin: 0; font-weight: bold;">${store.name}</h4>
+                    <p style="margin: 5px 0 0; font-size: 12px;">${store.address}</p>
+                  </div>`,
+      })
+      marker.addListener('click', () => infoWindow.open(mapInstance, marker))
+
+      storeMarkersRef.current.push(marker)
+      bounds.extend(position)
+    })
+
+    if (userLocation) {
+      bounds.extend(new window.google.maps.LatLng(userLocation.lat, userLocation.lng))
+    }
+    mapInstance.fitBounds(bounds)
+    // Guard against over-zoom when all stores are very close together.
+    window.google.maps.event.addListenerOnce(mapInstance, 'idle', () => {
+      if (mapInstance.getZoom() > 15) mapInstance.setZoom(15)
+    })
+  }, [mapInstance, resultStores, hasResultStores, userLocation])
 
   return (
     <div className="w-full h-full relative flex flex-col overflow-hidden">
