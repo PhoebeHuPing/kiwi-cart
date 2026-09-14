@@ -16,10 +16,10 @@ describe('buildApiUrl', () => {
   })
 
   it('uses the configured API base URL when provided', () => {
-    vi.stubEnv('VITE_API_BASE_URL', 'https://kiwicart.azurewebsites.net/api')
+    vi.stubEnv('VITE_API_BASE_URL', 'https://kiwi-cart.azurewebsites.net/api')
 
     expect(buildApiUrl('/v1/products')).toBe(
-      'https://kiwicart.azurewebsites.net/api/v1/products',
+      'https://kiwi-cart.azurewebsites.net/api/v1/products',
     )
   })
 
