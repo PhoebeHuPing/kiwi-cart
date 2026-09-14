@@ -45,6 +45,9 @@ public class PriceResult
     [JsonIgnore]
     public string? Brand { get; set; } // Product brand (e.g., "Anchor", "Fonterra")
 
+    [JsonPropertyName("gtin")]
+    public string? Gtin { get; set; } // Normalized GTIN for cross-platform grouping (null if unknown)
+
     [JsonIgnore]
     public DateTime RetrievedAt { get; set; }
 }

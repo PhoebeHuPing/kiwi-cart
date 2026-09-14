@@ -46,7 +46,7 @@ public class NormalizeProductNameTests
         public override string StoreBrand => "Test";
 
         protected override Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
-            string term, string token, CancellationToken ct)
+            string term, string token, CancellationToken ct, string? storeId = null)
             => Task.FromResult<IReadOnlyList<PriceResult>?>(new List<PriceResult>());
 
         // NormalizeProductName is a protected static helper on the base class.
