@@ -9,6 +9,7 @@ public class FoodstuffsConfig {
     private String domain;
     private String apiDomain;
     private String storeId;
+    private String storeIdOverride;
     private String supermarketName;
     private String logoUrl;
     private String defaultAddress;

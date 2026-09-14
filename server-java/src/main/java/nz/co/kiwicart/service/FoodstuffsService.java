@@ -100,9 +100,11 @@ public class FoodstuffsService {
     private List<PriceResult> doSearch(String searchTerm, String token, FoodstuffsConfig config) {
         var client = webClientBuilder.build();
 
+        String storeIdToUse = config.getStoreIdOverride() != null ? config.getStoreIdOverride() : config.getStoreId();
+
         Map<String, Object> body = Map.of(
                 "algoliaQuery", Map.of("query", searchTerm),
-                "storeId", config.getStoreId(),
+                "storeId", storeIdToUse,
                 "hitsPerPage", 50,
                 "page", 0,
                 "sortOrder", "NI_POPULARITY_ASC"

@@ -1,15 +1,19 @@
 package nz.co.kiwicart.service;
 
+import nz.co.kiwicart.entity.Store;
 import nz.co.kiwicart.model.BasketCompareRequest;
 import nz.co.kiwicart.model.BasketComparisonResult;
 import nz.co.kiwicart.model.FoodstuffsConfig;
 import nz.co.kiwicart.model.PriceResult;
+import nz.co.kiwicart.repository.StoreRepository;
+import nz.co.kiwicart.util.GeoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,11 +23,13 @@ import java.util.concurrent.CompletableFuture;
 public class PriceComparisonService {
 
     private static final Logger log = LoggerFactory.getLogger(PriceComparisonService.class);
+    private static final double MAX_DISTANCE_KM = 5.0;
 
     private final FoodstuffsService foodstuffsService;
     private final WoolworthsService woolworthsService;
     private final PriceCacheService priceCacheService;
     private final UnitPriceCalculator unitPriceCalculator;
+    private final StoreRepository storeRepository;
 
     private static final FoodstuffsConfig PAKNSAVE_CONFIG = FoodstuffsConfig.builder()
             .domain("paknsave.co.nz")
@@ -50,15 +56,21 @@ public class PriceComparisonService {
     public PriceComparisonService(FoodstuffsService foodstuffsService,
                                   WoolworthsService woolworthsService,
                                   PriceCacheService priceCacheService,
-                                  UnitPriceCalculator unitPriceCalculator) {
+                                  UnitPriceCalculator unitPriceCalculator,
+                                  StoreRepository storeRepository) {
         this.foodstuffsService = foodstuffsService;
         this.woolworthsService = woolworthsService;
         this.priceCacheService = priceCacheService;
         this.unitPriceCalculator = unitPriceCalculator;
+        this.storeRepository = storeRepository;
     }
 
     public List<PriceResult> compare(String query) {
-        log.info("Comparing prices for: {}", query);
+        return compare(query, null, null);
+    }
+
+    public List<PriceResult> compare(String query, Double lat, Double lng) {
+        log.info("Comparing prices for: {} (lat={}, lng={})", query, lat, lng);
 
         // 1. Check cache first
         Optional<List<PriceResult>> cached = priceCacheService.getCachedResults(query);
@@ -71,7 +83,7 @@ public class PriceComparisonService {
         }
 
         // 2. Cache miss - fetch from APIs
-        List<PriceResult> results = fetchFromApis(query);
+        List<PriceResult> results = fetchFromApis(query, lat, lng);
 
         // 3. Calculate unit prices
         results.forEach(r -> r.setUnitPrice(
@@ -150,7 +162,7 @@ public class PriceComparisonService {
     public void refreshInBackground(String query) {
         log.debug("Background refresh for '{}'", query);
         try {
-            List<PriceResult> results = fetchFromApis(query);
+            List<PriceResult> results = fetchFromApis(query, null, null);
             results.forEach(r -> r.setUnitPrice(
                     unitPriceCalculator.calculate(r.getProductName(), r.getPrice())));
             if (!results.isEmpty()) {
@@ -161,12 +173,55 @@ public class PriceComparisonService {
         }
     }
 
-    private List<PriceResult> fetchFromApis(String query) {
+    private List<PriceResult> fetchFromApis(String query, Double lat, Double lng) {
+        final FoodstuffsConfig paknsaveConfig;
+        final FoodstuffsConfig newworldConfig;
+
+        if (lat != null && lng != null) {
+            Store nearestPaknsave = findNearestStore("Pak'nSave", lat, lng);
+            if (nearestPaknsave != null && nearestPaknsave.getExternalStoreId() != null) {
+                paknsaveConfig = FoodstuffsConfig.builder()
+                        .domain(PAKNSAVE_CONFIG.getDomain())
+                        .apiDomain(PAKNSAVE_CONFIG.getApiDomain())
+                        .storeId(PAKNSAVE_CONFIG.getStoreId())
+                        .storeIdOverride(nearestPaknsave.getExternalStoreId())
+                        .supermarketName(PAKNSAVE_CONFIG.getSupermarketName())
+                        .logoUrl(PAKNSAVE_CONFIG.getLogoUrl())
+                        .defaultAddress(nearestPaknsave.getAddress())
+                        .defaultLat(nearestPaknsave.getLatitude())
+                        .defaultLng(nearestPaknsave.getLongitude())
+                        .build();
+            } else {
+                paknsaveConfig = PAKNSAVE_CONFIG;
+            }
+
+            Store nearestNewworld = findNearestStore("New World", lat, lng);
+            if (nearestNewworld != null && nearestNewworld.getExternalStoreId() != null) {
+                newworldConfig = FoodstuffsConfig.builder()
+                        .domain(NEWWORLD_CONFIG.getDomain())
+                        .apiDomain(NEWWORLD_CONFIG.getApiDomain())
+                        .storeId(NEWWORLD_CONFIG.getStoreId())
+                        .storeIdOverride(nearestNewworld.getExternalStoreId())
+                        .supermarketName(NEWWORLD_CONFIG.getSupermarketName())
+                        .logoUrl(NEWWORLD_CONFIG.getLogoUrl())
+                        .defaultAddress(nearestNewworld.getAddress())
+                        .defaultLat(nearestNewworld.getLatitude())
+                        .defaultLng(nearestNewworld.getLongitude())
+                        .build();
+            } else {
+                newworldConfig = NEWWORLD_CONFIG;
+            }
+        } else {
+            paknsaveConfig = PAKNSAVE_CONFIG;
+            newworldConfig = NEWWORLD_CONFIG;
+        }
+
+        final String searchQuery = query;
         var paknsaveFuture = CompletableFuture.supplyAsync(() ->
-                foodstuffsService.search(query, PAKNSAVE_CONFIG));
+                foodstuffsService.search(searchQuery, paknsaveConfig));
 
         var newworldFuture = CompletableFuture.supplyAsync(() ->
-                foodstuffsService.search(query, NEWWORLD_CONFIG));
+                foodstuffsService.search(searchQuery, newworldConfig));
 
         var woolworthsFuture = CompletableFuture.supplyAsync(() ->
                 woolworthsService.search(query));
@@ -178,5 +233,14 @@ public class PriceComparisonService {
         results.addAll(newworldFuture.join());
         results.addAll(woolworthsFuture.join());
         return results;
+    }
+
+    private Store findNearestStore(String brand, double lat, double lng) {
+        List<Store> stores = storeRepository.findByBrandWithExternalId(brand);
+        return stores.stream()
+                .filter(s -> s.getLatitude() != null && s.getLongitude() != null)
+                .min(Comparator.comparingDouble(s -> GeoUtils.distanceKm(s, lat, lng)))
+                .filter(s -> GeoUtils.distanceKm(s, lat, lng) <= MAX_DISTANCE_KM)
+                .orElse(null);
     }
 }
