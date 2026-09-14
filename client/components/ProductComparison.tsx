@@ -59,6 +59,14 @@ function extractStoreLocation(supermarketName: string): string {
   return supermarketName
 }
 
+function normalizeVolume(volume: string | undefined): string | undefined {
+  if (!volume) return volume
+
+  return volume
+    .replace(/([0-9.]+)\s*ml/i, '$1ml')
+    .replace(/([0-9.]+)\s*l/i, '$1L')
+}
+
 // Number of product cards shown per "page"; the Load more button reveals
 // another batch of this size.
 const PRODUCTS_PER_PAGE = 30
@@ -545,7 +553,7 @@ function ProductComparison() {
                           {/* Volume Display */}
                           {bestOption.volume && (
                             <div className="mb-4 text-sm font-semibold text-gray-600">
-                              <span className="text-gray-700">{bestOption.volume}</span>
+                              <span className="text-gray-700">{normalizeVolume(bestOption.volume)}</span>
                             </div>
                           )}
                           <div className="flex items-center gap-3 sm:gap-4 mb-4 bg-gray-50/50 p-3 rounded-2xl border border-gray-100/50">
