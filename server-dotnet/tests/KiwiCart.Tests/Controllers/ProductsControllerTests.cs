@@ -42,7 +42,7 @@ public class ProductsControllerTests
     [Fact]
     public async Task Compare_ValidQuery_ReturnsResults()
     {
-        _priceComparison.Setup(p => p.CompareAsync("Milk", It.IsAny<CancellationToken>()))
+        _priceComparison.Setup(p => p.CompareAsync("Milk", It.IsAny<CancellationToken>(), It.IsAny<double?>(), It.IsAny<double?>()))
             .ReturnsAsync(new List<PriceResult> { new() { ProductName = "Milk", Price = 3.50m } });
 
         var result = await _sut.Compare("Milk", CancellationToken.None);

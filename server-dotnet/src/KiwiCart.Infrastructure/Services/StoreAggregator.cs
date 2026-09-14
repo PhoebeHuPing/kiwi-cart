@@ -19,29 +19,37 @@ public class StoreAggregator : IStoreAggregator
     public IReadOnlyCollection<string> KnownStoreBrands =>
         _clients.Select(c => c.StoreBrand).ToList();
 
-    public async Task<IReadOnlyList<PriceResult>> SearchAllStoresAsync(string term, CancellationToken ct = default)
+    public async Task<IReadOnlyList<PriceResult>> SearchAllStoresAsync(
+        string term, CancellationToken ct = default,
+        IReadOnlyDictionary<string, string>? storeIdsByBrand = null)
     {
-        var tasks = _clients.Select(client => SearchStoreAsync(client, term, ct));
+        var tasks = _clients.Select(client => SearchStoreAsync(client, term, ct, storeIdsByBrand));
         var results = await Task.WhenAll(tasks);
         return results.SelectMany(r => r).ToList();
     }
 
     public async Task<IReadOnlyList<PriceResult>> SearchStoresAsync(
-        IReadOnlyCollection<string> storeBrands, string term, CancellationToken ct = default)
+        IReadOnlyCollection<string> storeBrands, string term, CancellationToken ct = default,
+        IReadOnlyDictionary<string, string>? storeIdsByBrand = null)
     {
         var tasks = _clients
             .Where(c => storeBrands.Contains(c.StoreBrand))
-            .Select(client => SearchStoreAsync(client, term, ct));
+            .Select(client => SearchStoreAsync(client, term, ct, storeIdsByBrand));
         var results = await Task.WhenAll(tasks);
         return results.SelectMany(r => r).ToList();
     }
 
     private async Task<IReadOnlyList<PriceResult>> SearchStoreAsync(
-        StoreApiClient client, string term, CancellationToken ct)
+        StoreApiClient client, string term, CancellationToken ct,
+        IReadOnlyDictionary<string, string>? storeIdsByBrand = null)
     {
         try
         {
-            var results = await client.SearchAsync(term, ct);
+            // Use a caller-selected store id for this brand if provided.
+            string? storeId = null;
+            storeIdsByBrand?.TryGetValue(client.StoreBrand, out storeId);
+
+            var results = await client.SearchAsync(term, ct, storeId);
             if (results.Count == 0)
                 _logger.LogWarning("{Store}: returned no results for '{Term}'", client.StoreName, term);
             return results;

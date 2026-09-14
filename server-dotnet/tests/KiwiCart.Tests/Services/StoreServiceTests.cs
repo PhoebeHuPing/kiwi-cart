@@ -34,6 +34,83 @@ public class StoreServiceTests
     }
 
     [Fact]
+    public async Task GetNearestStoreWithExternalId_PicksClosestWithExternalId()
+    {
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase("Nearest_" + Guid.NewGuid()).Options;
+        using var db = new AppDbContext(options);
+        db.Stores.AddRange(
+            // Far, has external id
+            new Store { Id = 10, Name = "PNS Far", Brand = "PakNSave", Latitude = -36.9, Longitude = 174.9, Address = "Far", ExternalStoreId = "far-id" },
+            // Near, but NO external id -> must be skipped
+            new Store { Id = 11, Name = "PNS Near NoId", Brand = "PakNSave", Latitude = -41.30, Longitude = 174.80, Address = "Near", ExternalStoreId = null },
+            // Near, has external id -> should be chosen
+            new Store { Id = 12, Name = "PNS Near", Brand = "PakNSave", Latitude = -41.31, Longitude = 174.79, Address = "Near2", ExternalStoreId = "near-id" });
+        db.SaveChanges();
+        var sut = new StoreService(db);
+
+        var store = await sut.GetNearestStoreWithExternalIdAsync("PakNSave", -41.30, 174.80);
+
+        Assert.NotNull(store);
+        Assert.Equal("near-id", store!.ExternalStoreId); // nearest one WITH an external id
+    }
+
+    [Fact]
+    public async Task GetNearestStoreWithExternalId_ReturnsNull_WhenNoneHaveExternalId()
+    {
+        using var db = CreateDb(); // seed stores have no external ids
+        var sut = new StoreService(db);
+
+        var store = await sut.GetNearestStoreWithExternalIdAsync("PakNSave", -41.30, 174.80);
+
+        Assert.Null(store);
+    }
+
+    [Fact]
+    public async Task GetNearestStoreWithExternalId_ReturnsNull_WhenNearestOutsideRadius()
+    {
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase("OutsideRadius_" + Guid.NewGuid()).Options;
+        using var db = new AppDbContext(options);
+        // Only store is ~15km away (outside the 5km NearbyRadiusKm).
+        db.Stores.Add(new Store
+        {
+            Id = 20, Name = "PNS Far", Brand = "PakNSave",
+            Latitude = -41.30, Longitude = 174.80, Address = "Far",
+            ExternalStoreId = "far-id"
+        });
+        db.SaveChanges();
+        var sut = new StoreService(db);
+
+        // Query point ~15km north of the store.
+        var store = await sut.GetNearestStoreWithExternalIdAsync("PakNSave", -41.165, 174.80);
+
+        Assert.Null(store);
+    }
+
+    [Fact]
+    public async Task GetNearestStoreWithExternalId_ReturnsStore_WhenWithinRadius()
+    {
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseInMemoryDatabase("WithinRadius_" + Guid.NewGuid()).Options;
+        using var db = new AppDbContext(options);
+        db.Stores.Add(new Store
+        {
+            Id = 21, Name = "PNS Close", Brand = "PakNSave",
+            Latitude = -41.30, Longitude = 174.80, Address = "Close",
+            ExternalStoreId = "close-id"
+        });
+        db.SaveChanges();
+        var sut = new StoreService(db);
+
+        // Query point ~1km away, well within 5km.
+        var store = await sut.GetNearestStoreWithExternalIdAsync("PakNSave", -41.291, 174.80);
+
+        Assert.NotNull(store);
+        Assert.Equal("close-id", store!.ExternalStoreId);
+    }
+
+    [Fact]
     public async Task GetNearbyAsync_FiltersWithinRadius()
     {
         using var db = CreateDb();

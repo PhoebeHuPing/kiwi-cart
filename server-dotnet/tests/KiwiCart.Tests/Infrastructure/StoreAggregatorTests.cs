@@ -78,7 +78,7 @@ internal class StubStoreClient : StoreApiClient
     public override string StoreBrand => StoreName;
 
     protected override Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
-        string term, string token, CancellationToken ct)
+            string term, string token, CancellationToken ct, string? storeId = null)
         => Task.FromResult<IReadOnlyList<PriceResult>?>(_results);
 
     private static CachedTokenProvider CreateTokenProvider()
@@ -103,7 +103,7 @@ internal class FailingStoreClient : StoreApiClient
     public override string StoreBrand => StoreName;
 
     protected override Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
-        string term, string token, CancellationToken ct)
+            string term, string token, CancellationToken ct, string? storeId = null)
         => throw new HttpRequestException("Store unreachable");
 
     private static CachedTokenProvider CreateTokenProvider()

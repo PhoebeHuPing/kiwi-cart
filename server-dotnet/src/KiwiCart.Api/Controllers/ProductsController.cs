@@ -40,12 +40,14 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(typeof(IReadOnlyList<PriceResult>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<PriceResult>>> Compare(
         [FromQuery(Name = "q")] string? query,
-        CancellationToken ct)
+        CancellationToken ct,
+        [FromQuery] double? lat = null,
+        [FromQuery] double? lng = null)
     {
         if (string.IsNullOrWhiteSpace(query))
             return Ok(Array.Empty<PriceResult>());
 
-        var results = await _priceComparison.CompareAsync(query.Trim(), ct);
+        var results = await _priceComparison.CompareAsync(query.Trim(), ct, lat, lng);
         return Ok(results);
     }
 

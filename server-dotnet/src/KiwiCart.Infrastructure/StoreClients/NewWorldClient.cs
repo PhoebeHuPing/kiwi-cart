@@ -2,12 +2,13 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using KiwiCart.Core.DTOs;
+using KiwiCart.Core.Interfaces;
 using KiwiCart.Infrastructure.TokenProviders;
 using Microsoft.Extensions.Logging;
 
 namespace KiwiCart.Infrastructure.StoreClients;
 
-public class NewWorldClient : StoreApiClient
+public class NewWorldClient : StoreApiClient, IGtinLookupClient
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private const string StoreId = "dbdfdd2a-55f7-4870-9b51-979286323647";
@@ -25,16 +26,19 @@ public class NewWorldClient : StoreApiClient
     public override string StoreBrand => "NewWorld";
 
     protected override async Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
-        string term, string token, CancellationToken ct)
+        string term, string token, CancellationToken ct, string? storeId = null)
     {
         var client = _httpClientFactory.CreateClient("NewWorld");
+        // Use the caller-provided store (nearest to the user) when available,
+        // otherwise fall back to the default store.
+        var effectiveStoreId = string.IsNullOrEmpty(storeId) ? StoreId : storeId;
         using var request = new HttpRequestMessage(HttpMethod.Post,
             "/v1/edge/search/paginated/products");
         request.Headers.Authorization = new("Bearer", token);
         request.Content = JsonContent.Create(new
         {
             algoliaQuery = new { query = term },
-            storeId = StoreId,
+            storeId = effectiveStoreId,
             hitsPerPage = 50,
             page = 0,
             sortOrder = "NI_POPULARITY_ASC"
@@ -127,6 +131,83 @@ public class NewWorldClient : StoreApiClient
             }
 
             return results;
+        }
+    }
+
+    /// <summary>
+    /// Resolve a product's GTIN via the Foodstuffs detail endpoint (the "sku"
+    /// field). Returns null on any failure.
+    /// </summary>
+    public async Task<string?> FetchGtinByProductIdAsync(string productId, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(productId))
+            return null;
+
+        try
+        {
+            var token = await GetTokenAsync(ct);
+            var client = _httpClientFactory.CreateClient("NewWorld");
+            using var request = new HttpRequestMessage(HttpMethod.Get,
+                $"/v1/edge/store/{StoreId}/product/{Uri.EscapeDataString(productId)}");
+            request.Headers.Authorization = new("Bearer", token);
+
+            using var response = await client.SendAsync(request, ct);
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            using var doc = await JsonDocument.ParseAsync(
+                await response.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
+            return doc.RootElement.TryGetProperty("sku", out var sku) ? sku.GetString() : null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Fetch all New World stores from the store-list endpoint
+    /// (GET /v1/edge/store). Uses the same bearer token as search. Returns an
+    /// empty list on failure. Same Foodstuffs API shape as Pak'nSave.
+    /// </summary>
+    public async Task<IReadOnlyList<StoreInfo>> FetchStoresAsync(CancellationToken ct = default)
+    {
+        try
+        {
+            var token = await GetTokenAsync(ct);
+            var client = _httpClientFactory.CreateClient("NewWorld");
+            using var request = new HttpRequestMessage(HttpMethod.Get, "/v1/edge/store");
+            request.Headers.Authorization = new("Bearer", token);
+
+            using var response = await client.SendAsync(request, ct);
+            response.EnsureSuccessStatusCode();
+
+            using var doc = await JsonDocument.ParseAsync(
+                await response.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
+
+            if (!doc.RootElement.TryGetProperty("stores", out var stores))
+                return [];
+
+            var results = new List<StoreInfo>();
+            foreach (var s in stores.EnumerateArray())
+            {
+                if (!s.TryGetProperty("id", out var idEl)) continue;
+                var id = idEl.GetString();
+                if (string.IsNullOrEmpty(id)) continue;
+
+                var name = s.TryGetProperty("name", out var nEl) ? nEl.GetString() ?? "" : "";
+                var address = s.TryGetProperty("address", out var aEl) ? aEl.GetString() ?? "" : "";
+                var lat = s.TryGetProperty("latitude", out var latEl) && latEl.TryGetDouble(out var latVal) ? latVal : 0;
+                var lng = s.TryGetProperty("longitude", out var lngEl) && lngEl.TryGetDouble(out var lngVal) ? lngVal : 0;
+
+                results.Add(new StoreInfo(id, name, "NewWorld", lat, lng, address));
+            }
+            return results;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "New World: failed to fetch store list");
+            return [];
         }
     }
 }

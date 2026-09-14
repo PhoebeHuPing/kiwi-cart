@@ -12,6 +12,8 @@ public class PriceComparisonServiceTests
     private readonly Mock<IPriceCacheRepository> _cache = new();
     private readonly Mock<IStoreAggregator> _aggregator = new();
     private readonly Mock<IPriceCalculator> _calculator = new();
+    private readonly Mock<IProductGtinRepository> _gtins = new();
+    private readonly Mock<IStoreService> _stores = new();
     private readonly PriceComparisonService _sut;
 
     private static readonly string[] AllBrands = { "PakNSave", "NewWorld", "Woolworths" };
@@ -21,9 +23,13 @@ public class PriceComparisonServiceTests
         _aggregator.SetupGet(a => a.KnownStoreBrands).Returns(AllBrands);
         _calculator.Setup(c => c.CalculateUnitPrice(It.IsAny<string>(), It.IsAny<decimal>()))
             .Returns("");
+        // Default: no GTINs resolved unless a test sets them up.
+        _gtins.Setup(g => g.GetGtinsForAsync(
+                It.IsAny<IReadOnlyCollection<(string, string)>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Dictionary<string, string>());
         _sut = new PriceComparisonService(
-            _cache.Object, _aggregator.Object, _calculator.Object,
-            NullLogger<PriceComparisonService>.Instance);
+            _cache.Object, _aggregator.Object, _calculator.Object, _gtins.Object,
+            _stores.Object, NullLogger<PriceComparisonService>.Instance);
     }
 
     [Fact]
@@ -43,7 +49,36 @@ public class PriceComparisonServiceTests
 
         Assert.Equal(3, results.Count);
         Assert.Equal(3.50m, results[0].Price); // sorted cheapest first
-        _aggregator.Verify(a => a.SearchStoresAsync(It.IsAny<IReadOnlyCollection<string>>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _aggregator.Verify(a => a.SearchStoresAsync(It.IsAny<IReadOnlyCollection<string>>(), It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task CompareAsync_EnrichesResultsWithGtin()
+    {
+        var cached = new List<PriceResult>
+        {
+            new() { ProductName = "Blue Milk", StoreBrand = "PakNSave", StoreName = "Pak'nSave", ProductId = "5000527-EA-000", Price = 3.60m },
+            new() { ProductName = "milk standard blue", StoreBrand = "Woolworths", StoreName = "Woolworths", ProductId = "282819", Price = 3.70m },
+            new() { ProductName = "Blue Milk", StoreBrand = "NewWorld", StoreName = "New World", ProductId = "5000527-EA-000", Price = 3.90m }
+        };
+        _cache.Setup(c => c.GetCachedPricesAsync("milk", It.IsAny<CancellationToken>()))
+            .ReturnsAsync(cached);
+
+        // Both the Foodstuffs and Woolworths ids resolve to the same GTIN.
+        _gtins.Setup(g => g.GetGtinsForAsync(
+                It.IsAny<IReadOnlyCollection<(string, string)>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Dictionary<string, string>
+            {
+                ["PakNSave|5000527-EA-000"] = "00000094152210",
+                ["NewWorld|5000527-EA-000"] = "00000094152210",
+                ["Woolworths|282819"] = "00000094152210",
+            });
+
+        var results = await _sut.CompareAsync("milk");
+
+        Assert.Equal(3, results.Count);
+        // Every row is enriched with the same GTIN so the frontend can merge them.
+        Assert.All(results, r => Assert.Equal("00000094152210", r.Gtin));
     }
 
     [Fact]
@@ -58,7 +93,7 @@ public class PriceComparisonServiceTests
         };
         _aggregator.Setup(a => a.SearchStoresAsync(
                 It.Is<IReadOnlyCollection<string>>(b => b.Count == 3),
-                "Bread", It.IsAny<CancellationToken>()))
+                "Bread", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(fresh);
 
         var results = await _sut.CompareAsync("Bread");
@@ -86,7 +121,7 @@ public class PriceComparisonServiceTests
         _aggregator.Setup(a => a.SearchStoresAsync(
                 It.Is<IReadOnlyCollection<string>>(b =>
                     b.Count == 2 && b.Contains("NewWorld") && b.Contains("Woolworths") && !b.Contains("PakNSave")),
-                "Calci-Yum", It.IsAny<CancellationToken>()))
+                "Calci-Yum", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(missing);
 
         var results = await _sut.CompareAsync("Calci-Yum");
@@ -104,7 +139,7 @@ public class PriceComparisonServiceTests
         _cache.Setup(c => c.GetCachedPricesAsync("Eggs", It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<PriceResult>());
         _aggregator.Setup(a => a.SearchStoresAsync(
-                It.IsAny<IReadOnlyCollection<string>>(), "Eggs", It.IsAny<CancellationToken>()))
+                It.IsAny<IReadOnlyCollection<string>>(), "Eggs", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
             .ReturnsAsync(new List<PriceResult>
             {
                 new() { ProductName = "Eggs", StoreBrand = "C", Price = 9.00m },

@@ -228,6 +228,77 @@ namespace KiwiCart.Infrastructure.Migrations
                     b.ToTable("products", (string)null);
                 });
 
+            modelBuilder.Entity("KiwiCart.Core.Entities.ProductGtin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("ExternalProductId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("external_product_id");
+
+                    b.Property<string>("Gtin")
+                        .HasMaxLength(14)
+                        .HasColumnType("character varying(14)")
+                        .HasColumnName("gtin");
+
+                    b.Property<bool>("GtinLookupAttempted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("gtin_lookup_attempted");
+
+                    b.Property<bool>("NeedConfirm")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("need_confirm");
+
+                    b.Property<string>("ProductBrand")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("product_brand");
+
+                    b.Property<string>("ProductName")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("product_name");
+
+                    b.Property<string>("ProductSize")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("product_size");
+
+                    b.Property<string>("StoreBrand")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("store_brand");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Gtin");
+
+                    b.HasIndex("StoreBrand", "ExternalProductId")
+                        .IsUnique();
+
+                    b.ToTable("product_gtins", (string)null);
+                });
+
             modelBuilder.Entity("KiwiCart.Core.Entities.Store", b =>
                 {
                     b.Property<int>("Id")
@@ -249,6 +320,11 @@ namespace KiwiCart.Infrastructure.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("brand");
 
+                    b.Property<string>("ExternalStoreId")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("external_store_id");
+
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision")
                         .HasColumnName("latitude");
@@ -264,6 +340,9 @@ namespace KiwiCart.Infrastructure.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Brand", "ExternalStoreId")
+                        .IsUnique();
 
                     b.ToTable("stores", (string)null);
 
