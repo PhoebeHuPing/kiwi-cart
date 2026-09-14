@@ -29,6 +29,9 @@ class PriceComparisonServiceTest {
     @Mock
     private PriceCacheService priceCacheService;
 
+    @Mock
+    private nz.co.kiwicart.repository.StoreRepository storeRepository;
+
     private PriceComparisonService priceComparisonService;
 
     private List<PriceResult> paknsaveResults;
@@ -39,7 +42,7 @@ class PriceComparisonServiceTest {
     void setUp() {
         UnitPriceCalculator unitPriceCalculator = new UnitPriceCalculator();
         priceComparisonService = new PriceComparisonService(
-                foodstuffsService, woolworthsService, priceCacheService, unitPriceCalculator);
+                foodstuffsService, woolworthsService, priceCacheService, unitPriceCalculator, storeRepository);
 
         paknsaveResults = List.of(PriceResult.builder()
                 .productName("Anchor Milk 2L")
