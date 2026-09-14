@@ -275,12 +275,13 @@ public class PriceComparisonService : IPriceComparisonService
         }
 
         // Display-only brands: resolve the nearest physical store for the map
-        // only. Prices are national, so no storeId is passed and the brand is
-        // never dropped. If none is within range, keep the default display store.
+        // within the same 5km radius. Prices are national, so no storeId is
+        // passed and the brand is never dropped. If none is within range, keep
+        // the default display store.
         foreach (var brand in DisplayOnlyStoreBrands)
         {
             var store = await _stores.GetNearestStoreWithExternalIdAsync(
-                brand, lat.Value, lng.Value, double.MaxValue, ct);
+                brand, lat.Value, lng.Value, StoreService.NearbyRadiusKm, ct);
             if (store is not null)
             {
                 _selectedStores[brand] = store;
