@@ -6,6 +6,26 @@ import BasketDrawer from './BasketDrawer'
 import { useEffect, useState } from 'react'
 import { buildApiUrl } from '../apis/apiBaseUrl'
 
+function animateScrollTo(targetTop: number, duration: number): () => void {
+  const startTop = window.scrollY
+  const distance = targetTop - startTop
+  const startTime = performance.now()
+  let animationFrame = 0
+
+  const step = (currentTime: number) => {
+    const progress = Math.min((currentTime - startTime) / duration, 1)
+    const easedProgress = 1 - Math.pow(1 - progress, 3)
+    window.scrollTo(0, startTop + distance * easedProgress)
+
+    if (progress < 1) {
+      animationFrame = window.requestAnimationFrame(step)
+    }
+  }
+
+  animationFrame = window.requestAnimationFrame(step)
+  return () => window.cancelAnimationFrame(animationFrame)
+}
+
 function App() {
   const { basket, setIsDrawerOpen } = useBasket()
   const { loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0()
@@ -15,6 +35,31 @@ function App() {
   const searchParams = new URLSearchParams(window.location.search)
   const showVersion = searchParams.get('v') === 'true'
   const [versionInfo, setVersionInfo] = useState<string | null>(null)
+  const isAdminUser =
+    user?.email?.trim().toLowerCase() === 'phoebe.ping.hu@gmail.com'
+
+  useEffect(() => {
+    let cancelAnimation = () => {}
+
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+      const timer = window.setTimeout(() => {
+        const searchElement = document.getElementById('product-search')
+        if (!searchElement) return
+
+        const targetTop =
+          searchElement.getBoundingClientRect().top + window.scrollY - 140
+        cancelAnimation = animateScrollTo(targetTop, 3000)
+      }, 250)
+      return () => {
+        window.clearTimeout(timer)
+        cancelAnimation()
+      }
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    return () => cancelAnimation()
+  }, [location.pathname])
 
   useEffect(() => {
     if (showVersion) {
@@ -64,6 +109,16 @@ function App() {
                 }`}
               >
                 My Kitchen
+              </Link>
+            )}
+            {isAuthenticated && isAdminUser && (
+              <Link
+                to="/admin"
+                className={`text-base font-bold transition-colors no-underline ${
+                  location.pathname === '/admin' ? 'text-kiwi' : 'text-gray-600 hover:text-kiwi'
+                }`}
+              >
+                Admin
               </Link>
             )}
 
@@ -174,33 +229,33 @@ function App() {
         <Outlet />
       </main>
 
-      <footer className="bg-kiwi-dark text-white pt-16 pb-8 px-6 mt-20">
+      <footer className="bg-kiwi-dark text-white pt-20 pb-8 px-6 mt-20">
         <div className="max-w-[1600px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center gap-3 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-12 lg:gap-20 mb-16">
+            <div className="max-w-2xl">
+              <div className="flex items-center gap-3 mb-8">
                 <span className="text-4xl">🥝</span>
-                <span className="text-2xl font-black tracking-tighter text-white">KiwiCart</span>
+                <span className="text-3xl font-black tracking-tighter text-white">KiwiCart</span>
               </div>
-              <p className="text-kiwi-light font-medium max-w-md leading-relaxed">
-                Empowering New Zealanders to combat the cost of living crisis through transparency and community-driven price tracking.
+              <p className="text-lg sm:text-xl text-white/90 font-bold max-w-xl leading-relaxed">
+                Empowering New Zealanders to navigate the cost of living through transparent, community-driven price tracking.
               </p>
             </div>
             
             <div>
-              <h4 className="text-sm font-black uppercase tracking-[0.2em] mb-6">Explore</h4>
-              <ul className="list-none p-0 flex flex-col gap-4">
-                <li><Link to="/" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Home</Link></li>
-                <li><Link to="/kitchen" className="text-white/70 hover:text-white transition-colors no-underline font-bold">My Kitchen</Link></li>
-                <li><Link to="/developer" className="text-white/70 hover:text-white transition-colors no-underline font-bold">About the Dev</Link></li>
+              <h4 className="text-sm font-black uppercase tracking-[0.24em] mb-8">Explore</h4>
+              <ul className="list-none p-0 flex flex-col gap-5">
+                <li><Link to="/" className="text-white/75 hover:text-white transition-colors no-underline font-bold text-lg">Home</Link></li>
+                <li><Link to="/kitchen" className="text-white/75 hover:text-white transition-colors no-underline font-bold text-lg">My Kitchen</Link></li>
+                <li><Link to="/developer" className="text-white/75 hover:text-white transition-colors no-underline font-bold text-lg">About the Dev</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-sm font-black uppercase tracking-[0.2em] mb-6">Community</h4>
-              <ul className="list-none p-0 flex flex-col gap-4">
-                <li><Link to="/feedback" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Report Price Bug</Link></li>
-                <li><a href="https://supermarketnews.co.nz/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors no-underline font-bold">Supermarket News</a></li>
+              <h4 className="text-sm font-black uppercase tracking-[0.24em] mb-8">Community</h4>
+              <ul className="list-none p-0 flex flex-col gap-5">
+                <li><Link to="/feedback" className="text-white/75 hover:text-white transition-colors no-underline font-bold text-lg">Report Price Bug</Link></li>
+                <li><a href="https://supermarketnews.co.nz/" target="_blank" rel="noopener noreferrer" className="text-white/75 hover:text-white transition-colors no-underline font-bold text-lg">Supermarket News</a></li>
               </ul>
             </div>
           </div>

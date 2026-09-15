@@ -2,7 +2,12 @@ import React, { createContext, useContext, useState, ReactNode } from 'react'
 
 export interface BasketItem {
   name: string
+  display_name?: string
+  brand?: string
+  product_name?: string
   image_url: string
+  gtins?: string[]
+  product_ids?: string[]
   quantity: number
 }
 
@@ -43,7 +48,6 @@ export function BasketProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, quantity: 1 }]
     })
-    setIsDrawerOpen(true) // Auto-open drawer when adding item
   }
 
   const removeFromBasket = (name: string) => {

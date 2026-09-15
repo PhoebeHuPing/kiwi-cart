@@ -26,7 +26,6 @@ export interface Supermarket {
  */
 export interface PriceComparisonData {
   product_name: string
-  display_product_name?: string
   image_url: string
   supermarket_name: string
   store_name_override?: string
@@ -37,6 +36,7 @@ export interface PriceComparisonData {
   price: number
   product_id?: string
   gtin?: string
+  brand?: string
   volume?: string
   unit_price?: string
 }
@@ -52,6 +52,9 @@ export interface BasketComparisonResult {
   missing_items: string[]
   details: {
     name: string
+    matched_product_name?: string
+    match_type?: string
+    brand?: string
     price: number
     quantity: number
     subtotal: number

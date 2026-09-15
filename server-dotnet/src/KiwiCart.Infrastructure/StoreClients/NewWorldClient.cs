@@ -12,6 +12,8 @@ public class NewWorldClient : StoreApiClient, IGtinLookupClient
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private const string StoreId = "dbdfdd2a-55f7-4870-9b51-979286323647";
+    private const int PageSize = 50;
+    private const int MaxPages = 2;
 
     public NewWorldClient(
         NewWorldTokenProvider tokenProvider,
@@ -32,40 +34,42 @@ public class NewWorldClient : StoreApiClient, IGtinLookupClient
         // Use the caller-provided store (nearest to the user) when available,
         // otherwise fall back to the default store.
         var effectiveStoreId = string.IsNullOrEmpty(storeId) ? StoreId : storeId;
-        using var request = new HttpRequestMessage(HttpMethod.Post,
-            "/v1/edge/search/paginated/products");
-        request.Headers.Authorization = new("Bearer", token);
-        request.Content = JsonContent.Create(new
+        var results = new List<PriceResult>();
+        for (var page = 0; page < MaxPages; page++)
         {
-            algoliaQuery = new { query = term },
-            storeId = effectiveStoreId,
-            hitsPerPage = 50,
-            page = 0,
-            sortOrder = "NI_POPULARITY_ASC"
-        });
-
-        var response = await client.SendAsync(request, ct);
-
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            response.Dispose();
-            return null;
-        }
-
-        using (response)
-        {
-            response.EnsureSuccessStatusCode();
-
-            using var doc = await JsonDocument.ParseAsync(
-                await response.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
-
-            if (!doc.RootElement.TryGetProperty("products", out var products))
-                return [];
-
-            var results = new List<PriceResult>();
-
-            foreach (var p in products.EnumerateArray())
+            using var request = new HttpRequestMessage(HttpMethod.Post,
+                "/v1/edge/search/paginated/products");
+            request.Headers.Authorization = new("Bearer", token);
+            request.Content = JsonContent.Create(new
             {
+                algoliaQuery = new { query = term },
+                storeId = effectiveStoreId,
+                hitsPerPage = PageSize,
+                page,
+                sortOrder = "NI_POPULARITY_ASC"
+            });
+
+            var response = await client.SendAsync(request, ct);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                response.Dispose();
+                return page == 0 ? null : results;
+            }
+
+            using (response)
+            {
+                response.EnsureSuccessStatusCode();
+
+                using var doc = await JsonDocument.ParseAsync(
+                    await response.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
+
+                if (!doc.RootElement.TryGetProperty("products", out var products))
+                    break;
+
+                var rawInPage = products.GetArrayLength();
+                foreach (var p in products.EnumerateArray())
+                {
                 var name = p.GetProperty("name").GetString() ?? "";
                 var priceInCents = p.TryGetProperty("singlePrice", out var sp)
                     && sp.TryGetProperty("price", out var priceEl)
@@ -128,10 +132,14 @@ public class NewWorldClient : StoreApiClient, IGtinLookupClient
                     UnitPrice = unitPrice,
                     RetrievedAt = DateTime.UtcNow
                 });
-            }
+                }
 
-            return results;
+                if (rawInPage < PageSize)
+                    break;
+            }
         }
+
+        return results;
     }
 
     /// <summary>

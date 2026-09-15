@@ -111,7 +111,7 @@ public class ProductsController : ControllerBase
         return Ok(new { action, name });
     }
 
-    [Authorize(Roles = "admin")]
+    [Authorize(Policy = KiwiCart.Api.Authorization.AdminAuthorization.PolicyName)]
     [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

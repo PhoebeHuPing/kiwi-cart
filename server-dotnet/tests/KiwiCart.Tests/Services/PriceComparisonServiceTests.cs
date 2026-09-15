@@ -33,9 +33,10 @@ public class PriceComparisonServiceTests
     }
 
     [Fact]
-    public async Task CompareAsync_CacheCompleteForAllStores_ReturnsCacheWithoutFetching()
+    public async Task CompareAsync_CacheBelowMinimumFetchesAllStores()
     {
-        // Cache has a row for every known store brand -> considered complete.
+        // A row for every store is not enough; the cache must have at least
+        // 100 results per store before it can bypass live search.
         var cached = new List<PriceResult>
         {
             new() { ProductName = "Milk", StoreBrand = "PakNSave", StoreName = "Pak'nSave", Price = 3.50m },
@@ -49,7 +50,10 @@ public class PriceComparisonServiceTests
 
         Assert.Equal(3, results.Count);
         Assert.Equal(3.50m, results[0].Price); // sorted cheapest first
-        _aggregator.Verify(a => a.SearchStoresAsync(It.IsAny<IReadOnlyCollection<string>>(), It.IsAny<string>(), It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()), Times.Never);
+        _aggregator.Verify(a => a.SearchStoresAsync(
+            It.Is<IReadOnlyCollection<string>>(brands => brands.Count == 3),
+            "Milk", It.IsAny<CancellationToken>(),
+            It.IsAny<IReadOnlyDictionary<string, string>?>()), Times.Once);
     }
 
     [Fact]
@@ -126,26 +130,26 @@ public class PriceComparisonServiceTests
     }
 
     [Fact]
-    public async Task CompareAsync_PartialCache_BackfillsOnlyMissingStores()
+    public async Task CompareAsync_PartialCache_RefreshesAllStores()
     {
-        // Cache has only Pak'nSave; the other two brands must be live-fetched
-        // and merged so the product is not shown as Pak'nSave-exclusive.
+        // A partial cache must trigger a live refresh for every store so
+        // paginated results are not hidden by stale rows.
         _cache.Setup(c => c.GetCachedPricesAsync("Calci-Yum", It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<PriceResult>
             {
                 new() { ProductName = "Calci-Yum", StoreBrand = "PakNSave", StoreName = "Pak'nSave", Price = 1.19m }
             });
 
-        var missing = new List<PriceResult>
+        var fresh = new List<PriceResult>
         {
+            new() { ProductName = "Calci-Yum", StoreBrand = "PakNSave", StoreName = "Pak'nSave", Price = 1.20m },
             new() { ProductName = "Calci-Yum", StoreBrand = "NewWorld", StoreName = "New World", Price = 1.49m },
             new() { ProductName = "Calci-Yum", StoreBrand = "Woolworths", StoreName = "Woolworths", Price = 1.60m }
         };
         _aggregator.Setup(a => a.SearchStoresAsync(
-                It.Is<IReadOnlyCollection<string>>(b =>
-                    b.Count == 2 && b.Contains("NewWorld") && b.Contains("Woolworths") && !b.Contains("PakNSave")),
+                It.Is<IReadOnlyCollection<string>>(b => b.Count == 3),
                 "Calci-Yum", It.IsAny<CancellationToken>(), It.IsAny<IReadOnlyDictionary<string, string>?>()))
-            .ReturnsAsync(missing);
+            .ReturnsAsync(fresh);
 
         var results = await _sut.CompareAsync("Calci-Yum");
 
@@ -153,7 +157,7 @@ public class PriceComparisonServiceTests
         Assert.Contains(results, r => r.StoreBrand == "PakNSave");
         Assert.Contains(results, r => r.StoreBrand == "NewWorld");
         Assert.Contains(results, r => r.StoreBrand == "Woolworths");
-        Assert.Equal(1.19m, results[0].Price); // sorted cheapest first
+        Assert.Equal(1.20m, results[0].Price); // sorted cheapest first
     }
 
     [Fact]

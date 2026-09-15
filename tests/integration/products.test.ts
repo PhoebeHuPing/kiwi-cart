@@ -56,9 +56,18 @@ describe('GET /api/v1/products/compare', () => {
     vi.mocked(fetchNewWorldPrices).mockResolvedValue(mockNwResults)
     vi.mocked(fetchWoolworthsPrices).mockResolvedValue([])
     vi.mocked(db.getComparePrices).mockResolvedValue([])
+    vi.mocked(db.getNearestStoreWithExternalId).mockResolvedValue({
+      id: 1,
+      name: 'Test Store',
+      brand: 'PakNSave',
+      external_store_id: '123',
+      address: 'Test Addr',
+      latitude: -36.0,
+      longitude: 174.0,
+    } as any)
     vi.mocked(db.upsertPrice).mockResolvedValue()
 
-    const response = await request(server).get('/api/v1/products/compare?q=Milk')
+    const response = await request(server).get('/api/v1/products/compare?q=Milk&lat=-36.8485&lng=174.7633')
 
     expect(response.status).toBe(200)
     expect(response.body).toHaveLength(2)

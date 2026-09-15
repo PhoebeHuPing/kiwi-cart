@@ -121,8 +121,9 @@ public class WoolworthsClient : StoreApiClient
             && priceObj.TryGetProperty("salePrice", out var salePrice)
             ? salePrice.GetDecimal() : 0m;
 
-        // Extract brand from API.
-        var brand = p.TryGetProperty("brand", out var br) ? br.GetString() : null;
+        // Woolworths normally returns brand as a string, but some responses
+        // return an object such as { "name": "Lewis Road Creamery" }.
+        var brand = ExtractBrand(p);
 
         // Extract Woolworths stable ids: sku (product id) and barcode (GTIN).
         var sku = p.TryGetProperty("sku", out var skuEl) ? skuEl.GetString() : null;
@@ -143,6 +144,7 @@ public class WoolworthsClient : StoreApiClient
                 if (cupPriceVal > 0 && !string.IsNullOrEmpty(cupMeasureStr))
                     unitPrice = $"${cupPriceVal:F2}/{cupMeasureStr}";
             }
+
         }
 
         // Normalize product name by prepending brand if needed.
@@ -177,5 +179,21 @@ public class WoolworthsClient : StoreApiClient
             UnitPrice = unitPrice,
             RetrievedAt = DateTime.UtcNow
         };
+    }
+
+    private static string? ExtractBrand(JsonElement product)
+    {
+        if (!product.TryGetProperty("brand", out var brand))
+            return null;
+
+        if (brand.ValueKind == JsonValueKind.String)
+            return brand.GetString()?.Trim();
+
+        if (brand.ValueKind == JsonValueKind.Object
+            && brand.TryGetProperty("name", out var name)
+            && name.ValueKind == JsonValueKind.String)
+            return name.GetString()?.Trim();
+
+        return null;
     }
 }

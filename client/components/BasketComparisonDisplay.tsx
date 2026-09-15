@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BasketComparisonResult } from '../../models/products'
 import PriceDisplay from './ui/PriceDisplay'
+import { stripLeadingBrand, toTitleCase } from '../utils/productName'
 
 interface Props {
 
@@ -175,7 +176,23 @@ export default function BasketComparisonDisplay({ results, onClose }: Props) {
                           className="grid grid-cols-4 px-2 py-2.5 sm:py-3 bg-gray-50 rounded-lg text-sm sm:text-base"
                         >
                           <div className="col-span-2 font-bold text-kiwi-dark truncate pr-2">
-                            {item.name}
+                            <div className="text-xs font-black uppercase tracking-wide text-gray-500 truncate">
+                              {item.brand ? toTitleCase(item.brand) : '\u00a0'}
+                            </div>
+                            <div>
+                              {toTitleCase(
+                                stripLeadingBrand(
+                                  item.matched_product_name || item.name,
+                                  item.brand,
+                                ),
+                              )}
+                            </div>
+                            {item.matched_product_name &&
+                              item.matched_product_name !== item.name && (
+                                <div className="text-[10px] font-bold text-gray-500 normal-case truncate">
+                                  Matched from: {toTitleCase(item.name)}
+                                </div>
+                              )}
                           </div>
                           <div className="text-center text-gray-800 font-bold">
                             ×{item.quantity}

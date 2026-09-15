@@ -3,6 +3,13 @@ import { useBasket } from '../contexts/BasketContext'
 import { compareBasket } from '../apis/products'
 import { BasketComparisonResult } from '../../models/products'
 import BasketComparisonDisplay from './BasketComparisonDisplay'
+import { stripLeadingBrand } from '../utils/productName'
+
+function toTitleCase(input: string): string {
+  return input.replace(/\S+/g, (word) =>
+    /[A-Z]/.test(word) ? word : word.charAt(0).toUpperCase() + word.slice(1),
+  )
+}
 
 export default function BasketDrawer() {
   const {
@@ -27,7 +34,12 @@ export default function BasketDrawer() {
     try {
       setIsComparing(true)
       const results = await compareBasket(
-        basket.map((i) => ({ name: i.name, quantity: i.quantity })),
+        basket.map((i) => ({
+          name: i.name,
+          quantity: i.quantity,
+          gtins: i.gtins,
+          product_ids: i.product_ids,
+        })),
       )
       setComparisonResults(results)
     } catch (err) {
@@ -99,8 +111,18 @@ export default function BasketDrawer() {
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-black text-lg text-kiwi-dark truncate">
-                            {item.name}
+                          <h4 className="font-black text-lg text-kiwi-dark min-h-[4.5rem]">
+                            <span className="block min-h-[1.25rem] text-sm uppercase tracking-widest text-kiwi">
+                              {item.brand ? toTitleCase(item.brand) : '\u00a0'}
+                            </span>
+                            <span className="block line-clamp-2">
+                              {toTitleCase(
+                                stripLeadingBrand(
+                                  item.product_name || item.display_name || item.name,
+                                  item.brand,
+                                ),
+                              )}
+                            </span>
                           </h4>
                           <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-4">
                             <div className="flex items-center bg-white border border-gray-200 rounded-xl overflow-hidden h-10 shadow-sm">

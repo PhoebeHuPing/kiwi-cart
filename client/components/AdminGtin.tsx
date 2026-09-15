@@ -9,11 +9,15 @@ import {
 
 // Auth0 namespaced roles claim (matches the backend RoleClaimType).
 const ROLES_CLAIM = 'https://kiwicart.co.nz/roles'
+const ADMIN_EMAIL = 'phoebe.ping.hu@gmail.com'
 
 function useIsAdmin(): boolean {
   const { user } = useAuth0()
   const roles = (user?.[ROLES_CLAIM] as string[] | undefined) ?? []
-  return roles.includes('admin')
+  return (
+    roles.includes('admin') ||
+    user?.email?.trim().toLowerCase() === ADMIN_EMAIL
+  )
 }
 
 /** Renders a backfill result summary. */

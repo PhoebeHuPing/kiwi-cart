@@ -70,7 +70,7 @@ describe('ProductComparison Component', () => {
       {
         product_name: 'Apple',
         price: 3.5,
-        supermarket_name: 'Woolworths',
+        supermarket_name: 'Woolworths 123 Street',
         image_url: 'apple.jpg',
         logo_url: 'logo.png',
         address: '123 Street',
@@ -87,7 +87,7 @@ describe('ProductComparison Component', () => {
     fireEvent.click(viewAllPricesButton)
 
     expect(screen.getByText('Available Store Prices')).toBeDefined()
-    expect(screen.getAllByText('Woolworths')).toBeDefined()
-    expect(screen.getByText(/123 Street/)).toBeDefined()
+    expect(screen.getAllByText(/Woolworths/)).toBeDefined()
+    expect(screen.getAllByText(/123 Street/)).toBeDefined()
   })
 })

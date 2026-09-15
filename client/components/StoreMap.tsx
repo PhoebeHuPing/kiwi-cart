@@ -29,6 +29,14 @@ declare global {
   }
 }
 
+function getStoreMarkerIcon(storeName: string) {
+  const normalizedName = storeName.toLowerCase()
+
+  if (normalizedName.includes('pak')) return '/images/ps.png'
+  if (normalizedName.includes('new')) return '/images/nw.png'
+  return '/images/ww.png'
+}
+
 /**
  * StoreMap Component: Renders a Google Map with the user's location and the
  * stores from the current price comparison.
@@ -40,7 +48,6 @@ declare global {
  */
 export default function StoreMap({ resultStores, userLocation }: StoreMapProps = {}) {
   const mapRef = useRef<HTMLDivElement>(null)
-  const searchInputRef = useRef<HTMLInputElement>(null)
   const [mapInstance, setMapInstance] = useState<any>(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [mapError, setMapError] = useState('')
@@ -64,7 +71,7 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
     }
 
     const script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`
     script.async = true
     script.defer = true
     script.onload = () => setIsLoaded(true)
@@ -72,12 +79,14 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
     document.head.appendChild(script)
   }, [])
 
-  // 2. Initialize Google Map Instance & Places Autocomplete
+  // 2. Initialize the map with only the controls needed for the store view.
   useEffect(() => {
     if (isLoaded && mapRef.current && !mapInstance) {
       const map = new window.google.maps.Map(mapRef.current, {
         center: DEFAULT_LOCATION, // Auckland CBD until the user location resolves
         zoom: 12,
+        disableDefaultUI: true,
+        zoomControl: true,
         mapTypeControl: false,
         fullscreenControl: false,
         styles: [
@@ -89,24 +98,6 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
         ],
       })
       setMapInstance(map)
-
-      if (searchInputRef.current) {
-        const autocomplete = new window.google.maps.places.Autocomplete(searchInputRef.current)
-        autocomplete.bindTo('bounds', map)
-
-        // Recenter the map when the user picks a place from autocomplete.
-        autocomplete.addListener('place_changed', () => {
-          const place = autocomplete.getPlace()
-          if (!place.geometry || !place.geometry.location) return
-
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport)
-          } else {
-            map.setCenter(place.geometry.location)
-            map.setZoom(15)
-          }
-        })
-      }
     }
   }, [isLoaded, mapInstance])
 
@@ -162,11 +153,8 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
         map: mapInstance,
         title: store.name,
         icon: {
-          url: store.name.toLowerCase().includes('pak')
-            ? '/images/pak-n-save.webp'
-            : store.name.toLowerCase().includes('new')
-              ? '/images/new-world.webp'
-              : '/images/woolworths.webp',
+          url: getStoreMarkerIcon(store.name),
+
           scaledSize: new window.google.maps.Size(30, 30),
         },
       })
@@ -195,27 +183,7 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
 
   return (
     <div className="w-full h-full relative flex flex-col overflow-hidden">
-      {/* Search row: sits above the map in normal flow so it never
-          overlaps the map content or the card title. */}
-      <div className="flex-shrink-0 p-3">
-        <div className="relative group">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-kiwi transition-colors" aria-hidden="true">
-            📍
-          </span>
-          <input
-            ref={searchInputRef}
-            type="text"
-            aria-label="Search for a location"
-            placeholder="Search for a location..."
-            className="w-full pl-9 pr-4 py-2.5 bg-white rounded-xl shadow-sm border border-gray-200 focus:ring-2 focus:ring-kiwi/20 focus:border-kiwi outline-none text-sm transition-all placeholder:text-gray-600"
-          />
-        </div>
-      </div>
-
-      {/* Map fills the remaining space below the search row. */}
-      <div className="relative flex-1 min-h-0">
-        <div ref={mapRef} className="w-full h-full" />
-      </div>
+      <div ref={mapRef} className="w-full h-full" />
 
       {(!isLoaded || mapError) && (
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-gray-100/90 backdrop-blur-[2px] z-20">
@@ -223,7 +191,6 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
             <>
               <div className="text-3xl mb-3" aria-hidden="true">⚠️</div>
               <p className="text-red-600 font-bold text-sm">{mapError}</p>
-              <p className="text-xs text-gray-600 mt-2 uppercase tracking-widest">Check your .env and API console</p>
             </>
           ) : (
             <>
