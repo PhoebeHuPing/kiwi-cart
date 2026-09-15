@@ -51,7 +51,12 @@ public class GeminiClient : IGeminiClient
             generationConfig = new
             {
                 maxOutputTokens = _options.MaxOutputTokens,
-                temperature = _options.Temperature
+                temperature = _options.Temperature,
+                // Gemini 2.5 models enable "thinking" by default, which consumes
+                // output tokens on internal reasoning and can truncate/empty the
+                // actual response. Disable it so the full token budget goes to
+                // the visible output (we need a clean JSON array back).
+                thinkingConfig = new { thinkingBudget = 0 }
             }
         };
 

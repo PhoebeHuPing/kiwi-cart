@@ -51,6 +51,23 @@ public class ProductsController : ControllerBase
         return Ok(results);
     }
 
+    [HttpGet("compare-by-gtin")]
+    [EnableRateLimiting("compare")]
+    [OutputCache(Duration = 300)]
+    [ProducesResponseType(typeof(IReadOnlyList<PriceResult>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<PriceResult>>> CompareByGtin(
+        [FromQuery] string gtin,
+        CancellationToken ct,
+        [FromQuery] double? lat = null,
+        [FromQuery] double? lng = null)
+    {
+        if (string.IsNullOrWhiteSpace(gtin))
+            return Ok(Array.Empty<PriceResult>());
+
+        var results = await _priceComparison.CompareByGtinAsync(gtin.Trim(), ct, lat, lng);
+        return Ok(results);
+    }
+
     [HttpPost("compare-bucket")]
     [EnableRateLimiting("bucket")]
     [ProducesResponseType(typeof(IReadOnlyList<BucketCompareResult>), StatusCodes.Status200OK)]
@@ -99,6 +116,17 @@ public class ProductsController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("favorites-with-gtin")]
+    [ProducesResponseType(typeof(IReadOnlyList<FavoriteWithGtin>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IReadOnlyList<FavoriteWithGtin>>> GetFavoritesWithGtin(CancellationToken ct)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
+        var favorites = await _favoritesService.GetFavoritesWithGtinAsync(userId, ct);
+        var result = favorites.Select(f => new FavoriteWithGtin { Name = f.Name, Gtin = f.Gtin }).ToList();
+        return Ok(result);
+    }
+
+    [Authorize]
     [HttpPost("favorites")]
     public async Task<ActionResult<object>> ToggleFavorite(
         [FromBody] FavoriteRequest request, CancellationToken ct)
@@ -107,7 +135,7 @@ public class ProductsController : ControllerBase
             return Problem("Product name is required.", statusCode: 400);
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "";
-        var (action, name) = await _favoritesService.ToggleAsync(userId, request.Name, ct);
+        var (action, name) = await _favoritesService.ToggleAsync(userId, request.Name, request.Gtin, ct);
         return Ok(new { action, name });
     }
 
@@ -129,4 +157,11 @@ public class ProductsController : ControllerBase
 public class FavoriteRequest
 {
     public string Name { get; set; } = string.Empty;
+    public string? Gtin { get; set; }
+}
+
+public class FavoriteWithGtin
+{
+    public string Name { get; set; } = string.Empty;
+    public string? Gtin { get; set; }
 }

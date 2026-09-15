@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using KiwiCart.Core.DTOs;
+using KiwiCart.Core.Exceptions;
 using KiwiCart.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -49,8 +50,21 @@ public class SuggestionService : ISuggestionService
         }
 
         // Step 1: AI proposes product names + reasons as JSON. It only sees the
-        // favorite names (intent), never prices.
-        var raw = await _gemini.GenerateContentAsync(BuildPrompt(favorites), ct);
+        // favorite names (intent), never prices. If the AI call fails (e.g. the
+        // Gemini free-tier quota is exhausted and returns 429), degrade
+        // gracefully to no suggestions rather than surfacing a 5xx error — the
+        // rest of My Kitchen must still render.
+        string raw;
+        try
+        {
+            raw = await _gemini.GenerateContentAsync(BuildPrompt(favorites), ct);
+        }
+        catch (GeminiApiException ex)
+        {
+            _logger.LogWarning(ex, "Gemini call failed; returning no suggestions.");
+            return new SuggestionsResponse { Items = [], TotalPotentialSaving = 0m };
+        }
+
         var proposals = ParseProposals(raw, favorites);
 
         if (proposals.Count == 0)

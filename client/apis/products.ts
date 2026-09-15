@@ -36,6 +36,23 @@ export async function getComparePrices(
 }
 
 /**
+ * Search for products by GTIN (barcode). This provides exact cross-platform
+ * product matching across Woolworths, Pak'nSave, and New World.
+ */
+export async function getComparePricesByGtin(
+  gtin: string,
+  location?: { lat: number; lng: number },
+): Promise<PriceComparisonData[]> {
+  const query: Record<string, string | number> = { gtin }
+  if (location) {
+    query.lat = location.lat
+    query.lng = location.lng
+  }
+  const response = await request.get(`${rootURL}/compare-by-gtin`).query(query)
+  return response.body
+}
+
+/**
  * Compares the total price of a basket across different supermarkets.
  */
 export async function compareBasket(
@@ -93,15 +110,29 @@ export async function getFavorites(token: string): Promise<string[]> {
 }
 
 /**
+ * Fetches the list of favorited products with their GTINs for the current user.
+ * Used for GTIN-based price comparison across supermarkets.
+ */
+export async function getFavoritesWithGtin(
+  token: string,
+): Promise<Array<{ name: string; gtin?: string }>> {
+  const response = await request
+    .get(`${rootURL}/favorites-with-gtin`)
+    .set('Authorization', `Bearer ${token}`)
+  return response.body
+}
+
+/**
  * Toggles a product in the user's favorites list.
  */
 export async function toggleFavorite(
   name: string,
   token: string,
+  gtin?: string,
 ): Promise<{ action: 'added' | 'removed'; name: string }> {
   const response = await request
     .post(`${rootURL}/favorites`)
     .set('Authorization', `Bearer ${token}`)
-    .send({ name })
+    .send({ name, gtin })
   return response.body
 }

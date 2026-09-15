@@ -196,4 +196,16 @@ public class WoolworthsClient : StoreApiClient
 
         return null;
     }
+
+    /// <summary>
+    /// Search for a product by GTIN. Woolworths returns the GTIN in the "barcode"
+    /// field, so we can search directly for it using the barcode value.
+    /// </summary>
+    protected override async Task<IReadOnlyList<PriceResult>?> ExecuteSearchByGtinAsync(
+        string gtin, string token, CancellationToken ct, string? storeId = null)
+    {
+        // Search using the GTIN as the search term - products with this GTIN
+        // should be returned by Woolworths' search API.
+        return await ExecuteSearchAsync(gtin, token, ct, storeId);
+    }
 }

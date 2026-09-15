@@ -33,16 +33,14 @@
 @keyframes basket-fly {
   0% {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
+    transform: translate(0, 0) scale(1) rotate(0deg);
   }
   65% {
     opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--basket-distance-x), var(--basket-distance-y), 0)
-      scale(0.45)
-      rotate(20deg);
+    transform: translate(var(--basket-distance-x), var(--basket-distance-y)) scale(0.45) rotate(20deg);
   }
 }
 

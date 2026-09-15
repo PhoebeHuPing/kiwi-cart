@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useAuth0 } from '@auth0/auth0-react'
 import toast from 'react-hot-toast'
 import { getSuggestions } from '../apis/ai'
+import { getFavoritesWithGtin } from '../apis/products'
 import { SuggestionsResponse } from '../../models/products'
 import { useBasket } from '../contexts/BasketContext'
 
@@ -25,6 +26,18 @@ export default function SuggestionCards() {
     // fresh for a few minutes rather than refetching on every focus.
     staleTime: 5 * 60 * 1000,
     retry: false,
+  })
+
+  // Whether the user has any favorites — used to tailor the empty-state copy:
+  // no favorites vs. favorites present but the AI produced nothing (e.g. the
+  // Gemini quota is temporarily exhausted).
+  const { data: favorites = [] } = useQuery({
+    queryKey: ['favoritesWithGtin'],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently()
+      return getFavoritesWithGtin(token)
+    },
+    staleTime: 5 * 60 * 1000,
   })
 
   // Loading state.
@@ -63,7 +76,8 @@ export default function SuggestionCards() {
 
   const items = data?.items ?? []
 
-  // Empty state: no favorites yet or the AI returned nothing usable.
+  // Empty state: distinguish "no favorites yet" from "has favorites but the AI
+  // returned nothing" (e.g. Gemini quota temporarily exhausted).
   if (items.length === 0) {
     return (
       <section
@@ -72,8 +86,9 @@ export default function SuggestionCards() {
       >
         <SuggestionsHeader />
         <p className="mt-4 text-sm font-medium text-kiwi-dark/70">
-          Favorite a few products and we&apos;ll suggest personalized picks and
-          savings here.
+          {favorites.length > 0
+            ? 'Personalized picks are taking a break right now — check back soon for fresh suggestions.'
+            : "Favorite a few products and we'll suggest personalized picks and savings here."}
         </p>
       </section>
     )
