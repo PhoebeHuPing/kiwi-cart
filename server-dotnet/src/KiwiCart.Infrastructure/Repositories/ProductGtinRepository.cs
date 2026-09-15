@@ -206,4 +206,30 @@ public class ProductGtinRepository : IProductGtinRepository
         }
         return result;
     }
+
+    public async Task<IReadOnlyList<ProductGtin>> GetByGtinAsync(string gtin, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(gtin))
+            return [];
+
+        // Match against both the raw input and its normalized 14-digit form so
+        // callers can pass either an 8/13-digit GTIN or the padded canonical one.
+        var normalized = GtinNormalizer.Normalize(gtin);
+        var candidates = new List<string> { gtin.Trim() };
+        if (normalized is not null && normalized != gtin.Trim())
+            candidates.Add(normalized);
+
+        await using var connection = new NpgsqlConnection(_connectionString);
+        var rows = await connection.QueryAsync<ProductGtin>(
+            @"SELECT id AS Id, store_brand AS StoreBrand, external_product_id AS ExternalProductId,
+                     gtin AS Gtin, product_name AS ProductName, product_brand AS ProductBrand,
+                     product_size AS ProductSize, need_confirm AS NeedConfirm,
+                     gtin_lookup_attempted AS GtinLookupAttempted,
+                     created_at AS CreatedAt, updated_at AS UpdatedAt
+              FROM product_gtins
+              WHERE gtin = ANY(@Candidates)",
+            new { Candidates = candidates.ToArray() });
+
+        return rows.ToList();
+    }
 }

@@ -196,6 +196,88 @@ public class PriceComparisonService : IPriceComparisonService
     }
 
     /// <summary>
+    /// Compare prices by exact GTIN (barcode) match across all supermarkets.
+    /// Primary path: join product_gtins -> products -> prices from the cache,
+    /// which maps one GTIN to each brand's external_product_id and its latest
+    /// cached price. Fallback: when the cache has no rows for this GTIN, resolve
+    /// the product name(s) from product_gtins and run a live name search to
+    /// populate the cache.
+    /// </summary>
+    public async Task<IReadOnlyList<PriceResult>> CompareByGtinAsync(
+        string gtin, CancellationToken ct = default,
+        double? lat = null, double? lng = null)
+    {
+        _logger.LogInformation("CompareByGtinAsync: gtin={Gtin}, lat={Lat}, lng={Lng}", gtin, lat, lng);
+
+        // Primary: resolve prices directly from cache via the GTIN join.
+        var cached = await _cache.GetCachedPricesByGtinAsync(gtin, ct);
+        if (cached.Count > 0)
+        {
+            _logger.LogInformation("GTIN {Gtin}: {Count} cached prices found", gtin, cached.Count);
+            ApplyStoreMapping(cached);
+            return cached.OrderBy(r => r.Price).ToList();
+        }
+
+        // Fallback: no cached prices. Look up the product name(s) recorded for
+        // this GTIN and run a normal name-based search to populate the cache.
+        _logger.LogInformation("GTIN {Gtin}: no cached prices; falling back to name search", gtin);
+        var gtinRows = await _gtins.GetByGtinAsync(gtin, ct);
+        var productName = gtinRows
+            .Select(r => r.ProductName)
+            .FirstOrDefault(n => !string.IsNullOrWhiteSpace(n));
+
+        if (string.IsNullOrWhiteSpace(productName))
+        {
+            _logger.LogWarning("GTIN {Gtin}: no product name recorded; cannot fall back", gtin);
+            return [];
+        }
+
+        // Run a normal search (this also caches results), then re-query the
+        // cache by GTIN so we return only rows matching this exact product.
+        await CompareAsync(productName, ct, lat, lng);
+        var afterSearch = await _cache.GetCachedPricesByGtinAsync(gtin, ct);
+        ApplyStoreMapping(afterSearch);
+        return afterSearch.OrderBy(r => r.Price).ToList();
+    }
+
+    /// <summary>
+    /// Apply store display mapping (name/address/coords) to results, honoring
+    /// any location-selected store for dynamic-store brands.
+    /// </summary>
+    private void ApplyStoreMapping(IReadOnlyList<PriceResult> results)
+    {
+        var storeMapping = new Dictionary<string, (string name, string address, double lat, double lng)>
+        {
+            { "PakNSave", ("PAK'nSAVE Mt Albert", "Mt Albert", -36.89305, 174.70624) },
+            { "NewWorld", ("New World Mt Roskill", "Mt Roskill", -36.908622, 174.734362) },
+            { "Woolworths", ("Mount Roskill Woolworths", "Mt Roskill", -36.9042, 174.727) }
+        };
+
+        foreach (var (brand, store) in _selectedStores)
+        {
+            storeMapping[brand] = (store.Name, store.Address, store.Latitude, store.Longitude);
+        }
+
+        foreach (var r in results)
+        {
+            // Only override when the cache did not already carry a real store name.
+            if (storeMapping.TryGetValue(r.StoreBrand, out var storeInfo)
+                && string.IsNullOrEmpty(r.StoreName))
+            {
+                r.StoreName = storeInfo.name;
+                r.Address = storeInfo.address;
+                r.Lat = storeInfo.lat;
+                r.Lng = storeInfo.lng;
+            }
+
+            if (string.IsNullOrEmpty(r.DisplayProductName))
+            {
+                r.DisplayProductName = r.ProductName;
+            }
+        }
+    }
+
+    /// <summary>
     /// From the user's location, pick the nearest priceable store for each
     /// dynamic-store brand (Pak'nSave, New World) and return a brand→storeId map
     /// for the live fetch. For display-only brands (Woolworths) it resolves the

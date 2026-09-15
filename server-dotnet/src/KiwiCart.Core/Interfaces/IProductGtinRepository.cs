@@ -50,6 +50,14 @@ public interface IProductGtinRepository
     Task<IReadOnlyDictionary<string, string>> GetGtinsForAsync(
         IReadOnlyCollection<(string StoreBrand, string ExternalProductId)> keys,
         CancellationToken ct = default);
+
+    /// <summary>
+    /// Reverse lookup: given a GTIN, return all (store brand, product id) rows
+    /// that share that GTIN. This is the cross-platform mapping used to price a
+    /// single product across every supermarket that stocks it. The GTIN is
+    /// normalized before matching. Returns an empty list when none is found.
+    /// </summary>
+    Task<IReadOnlyList<ProductGtin>> GetByGtinAsync(string gtin, CancellationToken ct = default);
 }
 
 /// <summary>Result of a single backfill upsert.</summary>

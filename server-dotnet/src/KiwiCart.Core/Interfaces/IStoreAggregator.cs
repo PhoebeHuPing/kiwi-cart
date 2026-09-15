@@ -15,4 +15,9 @@ public interface IStoreAggregator
     Task<IReadOnlyList<PriceResult>> SearchStoresAsync(
         IReadOnlyCollection<string> storeBrands, string term, CancellationToken ct = default,
         IReadOnlyDictionary<string, string>? storeIdsByBrand = null);
+
+    /// <summary>Search for a product by exact GTIN (barcode) across specified store brands.</summary>
+    Task<IReadOnlyList<PriceResult>> SearchByGtinAsync(
+        IReadOnlyCollection<string> storeBrands, string gtin, CancellationToken ct = default,
+        IReadOnlyDictionary<string, string>? storeIdsByBrand = null);
 }

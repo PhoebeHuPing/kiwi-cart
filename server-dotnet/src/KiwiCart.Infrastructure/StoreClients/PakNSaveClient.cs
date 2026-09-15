@@ -209,4 +209,16 @@ public class PakNSaveClient : StoreApiClient, IGtinLookupClient
             return [];
         }
     }
+
+    /// <summary>
+    /// Search for a product by GTIN. For Foodstuffs (Pak'nSave), we search using
+    /// the GTIN as the search term. The barcode is available in the product data,
+    /// so this should find products matching that GTIN.
+    /// </summary>
+    protected override async Task<IReadOnlyList<PriceResult>?> ExecuteSearchByGtinAsync(
+        string gtin, string token, CancellationToken ct, string? storeId = null)
+    {
+        // Search using the GTIN/barcode as the search term
+        return await ExecuteSearchAsync(gtin, token, ct, storeId);
+    }
 }

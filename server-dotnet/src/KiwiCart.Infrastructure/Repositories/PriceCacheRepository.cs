@@ -51,6 +51,53 @@ public class PriceCacheRepository : IPriceCacheRepository
         return resultList;
     }
 
+    public async Task<IReadOnlyList<PriceResult>> GetCachedPricesByGtinAsync(string gtin, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(gtin))
+            return [];
+
+        await using var connection = new NpgsqlConnection(_connectionString);
+
+        // Join GTIN -> per-brand external_product_id -> products -> prices.
+        // The `s.brand = pg.store_brand` constraint prevents Foodstuffs' shared
+        // external_product_id (same id for PakNSave and NewWorld) from
+        // cross-matching to the wrong store. DISTINCT ON keeps the most recent
+        // price per store brand within the 24h cache window.
+        var results = await connection.QueryAsync<PriceResult>(
+            @"SELECT DISTINCT ON (s.brand)
+                     p.name AS ProductName, p.brand AS Brand, p.image_url AS ImageUrl,
+                     p.external_product_id AS ProductId, pg.gtin AS Gtin,
+                     s.name AS StoreName, s.brand AS StoreBrand,
+                     s.address AS Address, s.latitude AS Lat, s.longitude AS Lng,
+                     CASE s.brand
+                        WHEN 'PakNSave'   THEN '/images/pak-n-save.webp'
+                        WHEN 'NewWorld'   THEN '/images/new-world.webp'
+                        WHEN 'Woolworths' THEN '/images/woolworths.webp'
+                        ELSE NULL
+                     END AS LogoUrl,
+                     pr.amount AS Price, pr.retrieved_at AS RetrievedAt,
+                     pr.volume AS Volume, pr.unit_price AS UnitPrice
+              FROM product_gtins pg
+              JOIN products p ON p.external_product_id = pg.external_product_id
+              JOIN prices pr ON pr.product_id = p.id
+              JOIN stores s ON s.id = pr.store_id AND s.brand = pg.store_brand
+              WHERE pg.gtin = @Gtin
+                AND pr.retrieved_at > @Cutoff
+              ORDER BY s.brand, pr.retrieved_at DESC",
+            new { Gtin = gtin, Cutoff = DateTime.UtcNow.AddHours(-24) });
+
+        var resultList = results.ToList();
+        foreach (var r in resultList)
+        {
+            if (string.IsNullOrEmpty(r.DisplayProductName))
+            {
+                r.DisplayProductName = BuildDisplayName(r.ProductName, r.Brand);
+            }
+        }
+
+        return resultList;
+    }
+
     /// <summary>
     /// Build the display name for a cached product by prefixing the brand when
     /// the stored product name does not already start with it. Uses StartsWith

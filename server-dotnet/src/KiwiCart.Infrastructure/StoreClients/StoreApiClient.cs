@@ -47,6 +47,32 @@ public abstract class StoreApiClient
         }
     }
 
+    public async Task<IReadOnlyList<PriceResult>> SearchByGtinAsync(
+        string gtin, CancellationToken ct = default, string? storeId = null)
+    {
+        try
+        {
+            var token = await _tokenProvider.GetTokenAsync(ct);
+            var results = await ExecuteSearchByGtinAsync(gtin, token, ct, storeId);
+
+            // Retry once on 401 with fresh token
+            if (results is null)
+            {
+                _logger.LogWarning("{Store}: Token expired during GTIN search, refreshing...", StoreName);
+                await _tokenProvider.InvalidateTokenAsync(_tokenProvider.StoreName, ct);
+                token = await _tokenProvider.GetTokenAsync(ct);
+                results = await ExecuteSearchByGtinAsync(gtin, token, ct, storeId);
+            }
+
+            return results ?? [];
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "{Store}: GTIN search failed for '{Gtin}'", StoreName, gtin);
+            return [];
+        }
+    }
+
     /// <summary>
     /// Execute search. Return null to signal 401 (token expired) for retry.
     /// <paramref name="storeId"/> optionally overrides the store to query
@@ -55,6 +81,19 @@ public abstract class StoreApiClient
     /// </summary>
     protected abstract Task<IReadOnlyList<PriceResult>?> ExecuteSearchAsync(
         string term, string token, CancellationToken ct, string? storeId = null);
+
+    /// <summary>
+    /// Execute GTIN-based search. Return null to signal 401 (token expired) for retry.
+    /// Default implementation returns empty list (not supported by this store).
+    /// Override in derived classes that support GTIN lookup.
+    /// </summary>
+    protected virtual Task<IReadOnlyList<PriceResult>?> ExecuteSearchByGtinAsync(
+        string gtin, string token, CancellationToken ct, string? storeId = null)
+    {
+        // Default: GTIN search not implemented
+        _logger.LogInformation("{Store}: GTIN search not implemented, returning empty results", StoreName);
+        return Task.FromResult<IReadOnlyList<PriceResult>?>(Array.Empty<PriceResult>());
+    }
 
     /// <summary>
     /// Obtain a store token for use by derived clients on non-search endpoints
