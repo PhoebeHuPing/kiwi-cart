@@ -6,8 +6,8 @@ export default defineConfig(({ mode }) => {
   // Load env files based on mode
   const env = loadEnv(mode, process.cwd(), '')
   
-  // Priority: process.env > .env file > default 3000
-  const serverPort = process.env.VITE_SERVER_PORT || env.VITE_SERVER_PORT || '3000'
+  // Priority: process.env > .env file > default 5000 (.NET backend)
+  const serverPort = process.env.VITE_SERVER_PORT || env.VITE_SERVER_PORT || '5000'
   
   console.log(`Proxy target: http://localhost:${serverPort}`)
   

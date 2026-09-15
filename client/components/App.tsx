@@ -151,6 +151,7 @@ function App() {
             )}
 
             <button
+              id="basket-nav-button"
               onClick={() => setIsDrawerOpen(true)}
               className="group relative flex items-center gap-3 bg-kiwi-dark text-white px-6 py-3 rounded-2xl shadow-lg shadow-kiwi-dark/20 hover:scale-105 transition-all border-none cursor-pointer"
               aria-label="Open basket comparison"
