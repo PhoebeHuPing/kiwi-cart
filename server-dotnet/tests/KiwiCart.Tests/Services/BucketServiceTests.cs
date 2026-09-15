@@ -98,4 +98,45 @@ public class BucketServiceTests
 
         Assert.Equal("Full", results[0].StoreName); // 2 items found > 1
     }
+
+    [Fact]
+    public async Task CompareAsync_DoesNotChooseCheaperProductWithoutMatchingIdentity()
+    {
+        _aggregator.Setup(a => a.SearchAllStoresAsync(
+                "Half & Half Jersey Milk",
+                It.IsAny<CancellationToken>(),
+                It.IsAny<IReadOnlyDictionary<string, string>?>()))
+            .ReturnsAsync(new List<PriceResult>
+            {
+                new()
+                {
+                    ProductName = "Meadow Fresh Calci Strong Flavoured Milk Strawberry UHT",
+                    StoreName = "Woolworths",
+                    Price = 1.20m,
+                    Gtin = "00000000000001"
+                },
+                new()
+                {
+                    ProductName = "Lewis Road Creamery Milk Half & Half",
+                    StoreName = "Woolworths",
+                    Price = 7.85m,
+                    Gtin = "09415262722026"
+                }
+            });
+
+        var results = await _sut.CompareAsync(
+        [
+            new()
+            {
+                Name = "Half & Half Jersey Milk",
+                Gtins = ["09415262722026"],
+                Quantity = 1
+            }
+        ]);
+
+        var woolworths = results.Single(r => r.StoreName == "Woolworths");
+        Assert.Equal(7.85m, woolworths.TotalPrice);
+        Assert.Equal("Lewis Road Creamery Milk Half & Half", woolworths.Details[0].MatchedProductName);
+        Assert.Equal("gtin", woolworths.Details[0].MatchType);
+    }
 }

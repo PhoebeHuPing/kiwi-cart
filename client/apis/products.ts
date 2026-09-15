@@ -39,7 +39,12 @@ export async function getComparePrices(
  * Compares the total price of a basket across different supermarkets.
  */
 export async function compareBasket(
-  items: { name: string; quantity: number }[],
+  items: {
+    name: string
+    quantity: number
+    gtins?: string[]
+    product_ids?: string[]
+  }[],
 ): Promise<BasketComparisonResult[]> {
   const response = await request
     .post(`${rootURL}/compare-bucket`)

@@ -1,5 +1,6 @@
 using KiwiCart.Core.DTOs;
 using KiwiCart.Core.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace KiwiCart.Infrastructure.Services;
 
@@ -51,6 +52,7 @@ public class BucketService : IBucketService
                 // Pick cheapest match for this item at this store
                 var match = results
                     .Where(r => r.StoreName == store)
+                    .Where(r => IsReliableMatch(item, r))
                     .OrderBy(r => r.Price)
                     .FirstOrDefault();
 
@@ -62,6 +64,9 @@ public class BucketService : IBucketService
                     result.Details.Add(new BucketItemDetail
                     {
                         Name = item.Name,
+                        MatchedProductName = match.ProductName,
+                        MatchType = GetMatchType(item, match),
+                        Brand = match.Brand,
                         Price = match.Price,
                         Quantity = item.Quantity,
                         Subtotal = subtotal
@@ -81,4 +86,37 @@ public class BucketService : IBucketService
             .ThenBy(r => r.TotalPrice)
             .ToList();
     }
+
+    private static bool IsReliableMatch(BucketItemInput item, PriceResult result)
+    {
+        var hasIdentity = item.Gtins.Count > 0 || item.ProductIds.Count > 0;
+        if (hasIdentity)
+        {
+            var gtinMatch = !string.IsNullOrWhiteSpace(result.Gtin)
+                && item.Gtins.Contains(result.Gtin, StringComparer.OrdinalIgnoreCase);
+            var productIdMatch = !string.IsNullOrWhiteSpace(result.ProductId)
+                && item.ProductIds.Contains(result.ProductId, StringComparer.OrdinalIgnoreCase);
+            return gtinMatch || productIdMatch;
+        }
+
+        var requestedWords = Words(item.Name);
+        var resultWords = Words($"{result.ProductName} {result.DisplayProductName}");
+        return requestedWords.All(resultWords.Contains);
+    }
+
+    private static string GetMatchType(BucketItemInput item, PriceResult result)
+    {
+        if (!string.IsNullOrWhiteSpace(result.Gtin)
+            && item.Gtins.Contains(result.Gtin, StringComparer.OrdinalIgnoreCase))
+            return "gtin";
+        if (!string.IsNullOrWhiteSpace(result.ProductId)
+            && item.ProductIds.Contains(result.ProductId, StringComparer.OrdinalIgnoreCase))
+            return "product_id";
+        return "name";
+    }
+
+    private static HashSet<string> Words(string value)
+        => Regex.Split(value.ToLowerInvariant(), @"[^a-z0-9]+")
+            .Where(word => word.Length > 1)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
 }

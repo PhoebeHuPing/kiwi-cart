@@ -9,4 +9,6 @@ public class BucketItemInput
 {
     public string Name { get; set; } = string.Empty;
     public int Quantity { get; set; } = 1;
+    public List<string> Gtins { get; set; } = [];
+    public List<string> ProductIds { get; set; } = [];
 }

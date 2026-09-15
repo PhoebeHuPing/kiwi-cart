@@ -12,6 +12,8 @@ public class PakNSaveClient : StoreApiClient, IGtinLookupClient
 {
     private readonly IHttpClientFactory _httpClientFactory;
     private const string StoreId = "65defcf2-bc15-490e-a84f-1f13b769cd22";
+    private const int PageSize = 50;
+    private const int MaxPages = 2;
 
     public PakNSaveClient(
         CachedTokenProvider tokenProvider,
@@ -32,61 +34,57 @@ public class PakNSaveClient : StoreApiClient, IGtinLookupClient
         // Use the caller-provided store (nearest to the user) when available,
         // otherwise fall back to the default store.
         var effectiveStoreId = string.IsNullOrEmpty(storeId) ? StoreId : storeId;
-        using var request = new HttpRequestMessage(HttpMethod.Post,
-            "/v1/edge/search/paginated/products");
-        request.Headers.Authorization = new("Bearer", token);
-        request.Content = JsonContent.Create(new
+        var results = new List<PriceResult>();
+        for (var page = 0; page < MaxPages; page++)
         {
-            algoliaQuery = new { query = term },
-            storeId = effectiveStoreId,
-            hitsPerPage = 50,
-            page = 0,
-            sortOrder = "NI_POPULARITY_ASC"
-        });
-
-        var response = await client.SendAsync(request, ct);
-
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            response.Dispose();
-            return null; // Signal token refresh
-        }
-
-        using (response)
-        {
-            response.EnsureSuccessStatusCode();
-
-            using var doc = await JsonDocument.ParseAsync(
-                await response.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
-
-            if (!doc.RootElement.TryGetProperty("products", out var products))
-                return [];
-
-            var results = new List<PriceResult>();
-
-            foreach (var p in products.EnumerateArray())
+            using var request = new HttpRequestMessage(HttpMethod.Post,
+                "/v1/edge/search/paginated/products");
+            request.Headers.Authorization = new("Bearer", token);
+            request.Content = JsonContent.Create(new
             {
-                var name = p.GetProperty("name").GetString() ?? "";
-                var priceInCents = p.TryGetProperty("singlePrice", out var sp)
-                    && sp.TryGetProperty("price", out var priceEl)
-                    ? priceEl.GetDecimal() : 0m;
-                var price = priceInCents / 100m;
+                algoliaQuery = new { query = term },
+                storeId = effectiveStoreId,
+                hitsPerPage = PageSize,
+                page,
+                sortOrder = "NI_POPULARITY_ASC"
+            });
 
-                // Extract productId, displayName (volume), and brand
-                var productId = p.TryGetProperty("productId", out var pid) ? pid.GetString() : null;
-                var displayName = p.TryGetProperty("displayName", out var dn) ? dn.GetString() : null;
-                var brand = p.TryGetProperty("brand", out var br) ? br.GetString() : null;
+            var response = await client.SendAsync(request, ct);
 
-                // Normalize product name by prepending brand if needed
-                var displayProductName = NormalizeProductName(name, brand);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                response.Dispose();
+                return page == 0 ? null : results; // Signal token refresh on first page
+            }
 
-                // Extract unit price from singlePrice.comparativePrice object
-                string? unitPrice = null;
-                if (p.TryGetProperty("singlePrice", out var singlePrice)
-                    && singlePrice.TryGetProperty("comparativePrice", out var compPrice))
+            using (response)
+            {
+                response.EnsureSuccessStatusCode();
+
+                using var doc = await JsonDocument.ParseAsync(
+                    await response.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
+
+                if (!doc.RootElement.TryGetProperty("products", out var products))
+                    break;
+
+                var rawInPage = products.GetArrayLength();
+                foreach (var p in products.EnumerateArray())
                 {
-                    // comparativePrice is an object with pricePerUnit, unitQuantityUom, measureDescription
-                    if (compPrice.ValueKind == System.Text.Json.JsonValueKind.Object
+                    var name = p.GetProperty("name").GetString() ?? "";
+                    var priceInCents = p.TryGetProperty("singlePrice", out var sp)
+                        && sp.TryGetProperty("price", out var priceEl)
+                        ? priceEl.GetDecimal() : 0m;
+                    var price = priceInCents / 100m;
+
+                    var productId = p.TryGetProperty("productId", out var pid) ? pid.GetString() : null;
+                    var displayName = p.TryGetProperty("displayName", out var dn) ? dn.GetString() : null;
+                    var brand = p.TryGetProperty("brand", out var br) ? br.GetString() : null;
+                    var displayProductName = NormalizeProductName(name, brand);
+
+                    string? unitPrice = null;
+                    if (p.TryGetProperty("singlePrice", out var singlePrice)
+                        && singlePrice.TryGetProperty("comparativePrice", out var compPrice)
+                        && compPrice.ValueKind == JsonValueKind.Object
                         && compPrice.TryGetProperty("pricePerUnit", out var ppu)
                         && compPrice.TryGetProperty("measureDescription", out var md))
                     {
@@ -95,43 +93,43 @@ public class PakNSaveClient : StoreApiClient, IGtinLookupClient
                         var measure = md.GetString() ?? "1L";
                         unitPrice = $"${ppuInDollars:F2}/{measure}";
                     }
+
+                    var simpleId = productId?.Split('-')[0] ?? "";
+                    string? imageUrl = null;
+                    if (p.TryGetProperty("images", out var images)
+                        && images.TryGetProperty("primaryImages", out var primary)
+                        && primary.TryGetProperty("400px", out var img400))
+                        imageUrl = img400.GetString();
+                    imageUrl ??= string.IsNullOrEmpty(simpleId)
+                        ? null
+                        : $"https://a.fsimg.co.nz/product/retail/fan/image/400x400/{simpleId}.png";
+
+                    results.Add(new PriceResult
+                    {
+                        ProductName = name,
+                        DisplayProductName = displayProductName,
+                        ImageUrl = imageUrl,
+                        StoreName = StoreName,
+                        StoreBrand = "PakNSave",
+                        Brand = brand,
+                        LogoUrl = "/images/pak-n-save.webp",
+                        Address = "Henderson, West Auckland",
+                        Lat = -36.8819,
+                        Lng = 174.6336,
+                        Price = price,
+                        ProductId = productId,
+                        Volume = displayName,
+                        UnitPrice = unitPrice,
+                        RetrievedAt = DateTime.UtcNow
+                    });
                 }
 
-                // Extract image URL from API response (fallback to fsimg CDN)
-                var simpleId = productId?.Split('-')[0] ?? "";
-                string? imageUrl = null;
-                if (p.TryGetProperty("images", out var images)
-                    && images.TryGetProperty("primaryImages", out var primary)
-                    && primary.TryGetProperty("400px", out var img400))
-                {
-                    imageUrl = img400.GetString();
-                }
-                imageUrl ??= string.IsNullOrEmpty(simpleId)
-                    ? null
-                    : $"https://a.fsimg.co.nz/product/retail/fan/image/400x400/{simpleId}.png";
-
-                results.Add(new PriceResult
-                {
-                    ProductName = name,
-                    DisplayProductName = displayProductName,
-                    ImageUrl = imageUrl,
-                    StoreName = StoreName,
-                    StoreBrand = "PakNSave",
-                    Brand = brand, // Store the actual product brand
-                    LogoUrl = "/images/pak-n-save.webp",
-                    Address = "Henderson, West Auckland",
-                    Lat = -36.8819,
-                    Lng = 174.6336,
-                    Price = price,
-                    ProductId = productId,
-                    Volume = displayName,
-                    UnitPrice = unitPrice,
-                    RetrievedAt = DateTime.UtcNow
-                });
+                if (rawInPage < PageSize)
+                    break;
             }
-
-            return results;
         }
+
+        return results;
     }
 
     /// <summary>

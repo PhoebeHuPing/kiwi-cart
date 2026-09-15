@@ -25,6 +25,12 @@ public class BucketCompareResult
 public class BucketItemDetail
 {
     public string Name { get; set; } = string.Empty;
+    [JsonPropertyName("matched_product_name")]
+    public string MatchedProductName { get; set; } = string.Empty;
+    [JsonPropertyName("match_type")]
+    public string MatchType { get; set; } = string.Empty;
+    [JsonPropertyName("brand")]
+    public string? Brand { get; set; }
     public decimal Price { get; set; }
     public int Quantity { get; set; }
     public decimal Subtotal { get; set; }

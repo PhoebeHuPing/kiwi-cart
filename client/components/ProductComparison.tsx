@@ -1,4 +1,10 @@
-import { useState, useEffect } from 'react'
+import {
+  useState,
+  useEffect,
+  useMemo,
+  type CSSProperties,
+  type MouseEvent,
+} from 'react'
 import {
   useQuery,
   useQueries,
@@ -19,9 +25,11 @@ import AiAssistant from './AiAssistant'
 import { PriceComparisonData } from '../../models/products'
 import { useBasket } from '../contexts/BasketContext'
 import { DEFAULT_LOCATION } from '../constants/location'
+import { stripLeadingBrand } from '../utils/productName'
 
 interface GroupedProduct {
   product_name: string
+  brand?: string
   image_url: string
   product_id?: string
   gtin?: string
@@ -71,6 +79,14 @@ function normalizeVolume(volume: string | undefined): string | undefined {
 // another batch of this size.
 const PRODUCTS_PER_PAGE = 30
 
+interface FlyingBasketItem {
+  imageUrl: string
+  startX: number
+  startY: number
+  targetX: number
+  targetY: number
+}
+
 function ProductComparison() {
   const { getAccessTokenSilently, isAuthenticated, loginWithRedirect } =
     useAuth0()
@@ -79,12 +95,36 @@ function ProductComparison() {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
   const [showDropdown, setShowDropdown] = useState(false)
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
+  const [flyingBasketItem, setFlyingBasketItem] =
+    useState<FlyingBasketItem | null>(null)
   // How many product cards are currently shown; grows via the "Load more"
   // button so a broad search does not render hundreds of cards at once.
   const [visibleCount, setVisibleCount] = useState(PRODUCTS_PER_PAGE)
   const { basket, addToBasket, isInBasket, removeFromBasket, setIsDrawerOpen } =
     useBasket()
-  const featuredProducts = ['Milk', 'Bread', 'Eggs', 'Butter']
+  const featuredProducts = ['Milk', 'Bread', 'Eggs']
+
+  const animateBasketItem = (
+    event: MouseEvent<HTMLButtonElement>,
+    imageUrl: string,
+  ) => {
+    const basketTrigger = document.getElementById('basket-target')
+    if (!basketTrigger) return
+
+    const source = event.currentTarget.getBoundingClientRect()
+    const target = basketTrigger.getBoundingClientRect()
+    const size = 40
+
+    setFlyingBasketItem({
+      imageUrl,
+      startX: source.left + (source.width - size) / 2,
+      startY: source.top + (source.height - size) / 2,
+      targetX: target.left + (target.width - size) / 2,
+      targetY: target.top + (target.height - size) / 2,
+    })
+
+    window.setTimeout(() => setFlyingBasketItem(null), 700)
+  }
 
   // Resolve the user's location once on mount: use geolocation when allowed,
   // otherwise fall back to Auckland Central. Price queries wait for this so the
@@ -125,8 +165,17 @@ function ProductComparison() {
     })),
   })
 
-  const featuredResults = featuredQueries.flatMap((query) => query.data ?? [])
-  const displayedProducts = debouncedSearchTerm ? products : featuredResults
+  const featuredResults = useMemo(() => {
+    return featuredQueries.flatMap((query) => query.data ?? [])
+  }, [
+    featuredQueries[0]?.data,
+    featuredQueries[1]?.data,
+    featuredQueries[2]?.data,
+  ])
+  const displayedProducts = useMemo(
+    () => (debouncedSearchTerm ? products : featuredResults),
+    [debouncedSearchTerm, featuredResults, products],
+  )
   // Until the user's location is resolved we deliberately fire no price queries
   // (see `enabled: location !== null` above), so treat that window as loading
   // rather than showing empty/default results.
@@ -140,7 +189,7 @@ function ProductComparison() {
   // Only derived once the user's location is resolved. Until then the featured
   // and search queries are disabled, so the backend's default (Auckland
   // Central) stores from the no-location code path never reach the map.
-  const resultStores = (() => {
+  const resultStores = useMemo(() => {
     if (!location) return []
     const map = new Map<
       string,
@@ -163,7 +212,7 @@ function ProductComparison() {
       }
     }
     return Array.from(map.values())
-  })()
+  }, [displayedProducts, location])
 
   // Fetch favorites only if authenticated
   const { data: favorites = [] } = useQuery({
@@ -271,6 +320,9 @@ function ProductComparison() {
       }
 
       if (existingProduct) {
+        if (!existingProduct.brand && current.brand) {
+          existingProduct.brand = current.brand
+        }
         const existingOptionIndex = existingProduct.options.findIndex(
           (opt) => opt.supermarket_name === current.supermarket_name,
         )
@@ -290,6 +342,7 @@ function ProductComparison() {
       } else {
         acc.push({
           product_name: current.product_name,
+          brand: current.brand,
           image_url: current.image_url,
           product_id: current.product_id,
           gtin: current.gtin,
@@ -332,18 +385,41 @@ function ProductComparison() {
 
   return (
     <div className="min-h-screen bg-background pb-12">
+      {flyingBasketItem && (
+        <img
+          src={flyingBasketItem.imageUrl}
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none fixed z-[100] h-10 w-10 rounded-xl bg-white p-1 shadow-xl animate-basket-fly"
+          style={
+            {
+              left: `${flyingBasketItem.startX}px`,
+              top: `${flyingBasketItem.startY}px`,
+              '--basket-distance-x': `${flyingBasketItem.targetX - flyingBasketItem.startX}px`,
+              '--basket-distance-y': `${flyingBasketItem.targetY - flyingBasketItem.startY}px`,
+            } as CSSProperties
+          }
+        />
+      )}
       <div className="py-8">
         {/* Search and Navigation Header (Sticky) */}
-        <div className="sticky top-0 z-40 -mx-4 px-4 py-3 mb-12 bg-background/95 backdrop-blur-md border-b border-transparent transition-all data-[stuck]:border-gray-100">
+        <div id="product-search" className="sticky top-0 z-40 -mx-4 px-4 py-3 mb-12 bg-background/95 backdrop-blur-md border-b border-transparent transition-all data-[stuck]:border-gray-100">
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4 bg-white p-6 rounded-3xl shadow-sm border border-gray-100 focus-within:ring-4 focus-within:ring-kiwi/10 transition-all relative">
-              <span className="text-3xl ml-2" aria-hidden="true">
+            <form
+              className="flex items-center gap-3 bg-white p-3 rounded-2xl shadow-sm border border-gray-100 focus-within:ring-4 focus-within:ring-kiwi/10 transition-all relative z-50"
+              onSubmit={(e) => {
+                e.preventDefault()
+                setSearchTerm(searchTerm.trim())
+                setShowDropdown(false)
+              }}
+            >
+              <span className="text-2xl ml-1" aria-hidden="true">
                 🔍
               </span>
               <input
                 type="text"
                 aria-label="Search for products"
-                className="flex-1 bg-transparent border-none focus:ring-0 text-xl font-medium outline-none placeholder:text-gray-600"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-lg font-medium outline-none placeholder:text-gray-600"
                 placeholder="Search for a product (e.g. Milk, Bread, Steak)..."
                 value={searchTerm}
                 onFocus={() => setShowDropdown(true)}
@@ -393,7 +469,7 @@ function ProductComparison() {
                             </div>
                             <div>
                               <h4 className="font-bold text-sm text-kiwi-dark line-clamp-1">
-                                {toTitleCase(item.display_product_name || item.product_name)}
+                                {toTitleCase(item.product_name)}
                               </h4>
                               <div className="flex items-center gap-1.5 mt-0.5">
                                 <img
@@ -438,7 +514,7 @@ function ProductComparison() {
                   )}
                 </div>
               )}
-            </div>
+            </form>
 
             {/* Trending Categories Quick Tags - Optimized for Mobile */}
             <div className="flex flex-nowrap md:flex-wrap gap-2 md:gap-4 overflow-x-auto pb-2 md:pb-0 scrollbar-hide -mx-2 px-2 md:mx-0 md:px-0">
@@ -461,7 +537,7 @@ function ProductComparison() {
           <div
             role="presentation"
             aria-hidden="true"
-            className="fixed inset-0 z-40 cursor-default"
+            className="fixed inset-0 z-30 cursor-default"
             onClick={() => setShowDropdown(false)}
           ></div>
         )}
@@ -547,8 +623,15 @@ function ProductComparison() {
                       {/* Content Area */}
                       <div className="p-4 sm:p-6 flex flex-col flex-1">
                         <div className="flex-1">
-                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 line-clamp-2 tracking-tight mb-2 min-h-[3.5rem] sm:min-h-[4rem]">
-                            {toTitleCase(group.options[0]?.display_product_name || group.product_name)}
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 tracking-tight mb-2 min-h-[5.25rem] sm:min-h-[6rem]">
+                            <span className="block min-h-[1.75rem] text-sm uppercase tracking-widest text-kiwi">
+                              {group.brand ? toTitleCase(group.brand) : '\u00a0'}
+                            </span>
+                            <span className="block line-clamp-2">
+                              {toTitleCase(
+                                stripLeadingBrand(group.product_name, group.brand),
+                              )}
+                            </span>
                           </h3>
                           {/* Volume Display */}
                           {bestOption.volume && (
@@ -593,9 +676,32 @@ function ProductComparison() {
                                 if (isInBasket(group.product_name)) {
                                   removeFromBasket(group.product_name)
                                 } else {
+                                  animateBasketItem(e, group.image_url)
                                   addToBasket({
                                     name: group.product_name,
+                                    display_name:
+                                      toTitleCase(
+                                        stripLeadingBrand(
+                                          group.product_name,
+                                          group.brand,
+                                        ),
+                                      ),
+                                    brand: group.brand,
+                                    product_name: toTitleCase(
+                                      stripLeadingBrand(
+                                        group.product_name,
+                                        group.brand,
+                                      ),
+                                    ),
                                     image_url: group.image_url,
+                                    gtins: group.options
+                                      .map((option) => option.gtin)
+                                      .filter((gtin): gtin is string => Boolean(gtin)),
+                                    product_ids: group.options
+                                      .map((option) => option.product_id)
+                                      .filter((productId): productId is string =>
+                                        Boolean(productId),
+                                      ),
                                   })
                                 }
                               }}
@@ -752,8 +858,26 @@ function ProductComparison() {
             </div>
 
             {/* Your Basket - always visible, shows an empty state when empty */}
-            <div className="bg-kiwi-dark rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-kiwi-dark/20">
-              <div className="flex items-center gap-4 mb-6">
+            <div
+              id="basket-target"
+              role="button"
+              tabIndex={0}
+              aria-label="Open basket comparison"
+              onClick={() => setIsDrawerOpen(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setIsDrawerOpen(true)
+                }
+              }}
+              className="bg-kiwi-dark rounded-3xl p-5 sm:p-8 text-white shadow-xl shadow-kiwi-dark/20 cursor-pointer"
+            >
+              <button
+                type="button"
+                onClick={() => setIsDrawerOpen(true)}
+                aria-label="Open basket comparison"
+                className="w-full flex items-center gap-4 mb-6 text-left text-white bg-transparent border-none p-0 cursor-pointer"
+              >
                 <div className="bg-white/10 text-white p-3 rounded-2xl text-2xl shadow-lg">
                   🛒
                 </div>
@@ -766,7 +890,7 @@ function ProductComparison() {
                     Selected
                   </p>
                 </div>
-              </div>
+              </button>
 
               {basket.length > 0 ? (
                 <>
@@ -796,7 +920,10 @@ function ProductComparison() {
                   </div>
 
                   <button
-                    onClick={() => setIsDrawerOpen(true)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setIsDrawerOpen(true)
+                    }}
                     className="w-full py-4 bg-white text-kiwi-dark rounded-2xl font-black text-base shadow-lg hover:bg-kiwi-light transition-all border-none cursor-pointer"
                   >
                     Compare Total Prices

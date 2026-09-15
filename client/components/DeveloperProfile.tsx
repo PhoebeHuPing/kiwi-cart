@@ -65,9 +65,11 @@ function DeveloperProfile() {
                   <span className="text-3xl">🚀</span> Mission
                 </h3>
                 <p className="text-gray-600 leading-relaxed text-xl font-medium">
-                  KiwiCart was born from a simple observation: grocery prices in New Zealand are confusing and often unfairly high. 
-                  My mission is to leverage technology to provide transparency and help Kiwi families make better financial decisions 
-                  during the cost-of-living crisis.
+                  KiwiCart began with a simple observation: grocery prices in New Zealand
+                  can be difficult to compare, especially when every dollar matters.
+                  My mission is to use technology to make pricing more transparent and
+                  help Kiwi families make confident, informed choices about their
+                  everyday shopping.
                 </p>
               </section>
 
@@ -101,15 +103,15 @@ function DeveloperProfile() {
                 <ul className="space-y-6">
                   <li className="flex items-start gap-4">
                     <span className="text-kiwi text-xl mt-0.5">✓</span>
-                    <span className="text-lg font-black text-kiwi-dark">KiwiCart .NET Migration</span>
+                    <span className="text-lg font-black text-kiwi-dark">Customized Store Finder</span>
                   </li>
                   <li className="flex items-start gap-4">
                     <span className="text-kiwi text-xl mt-0.5">✓</span>
-                    <span className="text-lg font-black text-kiwi-dark">5km Radius Store Finder</span>
+                    <span className="text-lg font-black text-kiwi-dark">Community Price Sharing</span>
                   </li>
                   <li className="flex items-start gap-4">
                     <span className="text-kiwi text-xl mt-0.5">○</span>
-                    <span className="text-lg text-gray-400 font-bold">Community Price Sharing</span>
+                    <span className="text-lg text-gray-400 font-bold">Price History</span>
                   </li>
                 </ul>
               </div>

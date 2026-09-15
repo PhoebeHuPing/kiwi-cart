@@ -1,4 +1,5 @@
 using KiwiCart.Core.Interfaces;
+using KiwiCart.Api.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,7 @@ namespace KiwiCart.Api.Controllers;
 [ApiController]
 [Route("api/v1/admin/stores")]
 [Produces("application/json")]
-[Authorize(Roles = "admin")]
+[Authorize(Policy = AdminAuthorization.PolicyName)]
 public class AdminStoresController : ControllerBase
 {
     private readonly IStoreSyncService _sync;

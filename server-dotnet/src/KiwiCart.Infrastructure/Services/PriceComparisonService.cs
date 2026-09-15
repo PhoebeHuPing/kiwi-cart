@@ -7,6 +7,7 @@ namespace KiwiCart.Infrastructure.Services;
 
 public class PriceComparisonService : IPriceComparisonService
 {
+    private const int MinimumCachedResultsPerStore = 100;
     private readonly IPriceCacheRepository _cache;
     private readonly IStoreAggregator _aggregator;
     private readonly IPriceCalculator _calculator;
@@ -86,74 +87,43 @@ public class PriceComparisonService : IPriceComparisonService
             }
         }
 
-        // Determine which stores are already represented in the cache. If every
-        // known store has at least one cached row for this term, the cache is
-        // considered complete and we serve it directly (fast path).
-        var cachedBrands = cached
+        // The set of brands we expect results from. Brands dropped for this
+        // request (location given, none within range) are excluded from the
+        // live search.
+        var expectedBrands = _droppedBrands.Count > 0
+            ? (_aggregator.KnownStoreBrands ?? [])
+                .Where(b => !_droppedBrands.Contains(b))
+                .ToList()
+            : (_aggregator.KnownStoreBrands ?? []).ToList();
+
+        var cacheIsComplete = expectedBrands.All(brand =>
+            cached.Count(result =>
+                string.Equals(result.StoreBrand, brand, StringComparison.OrdinalIgnoreCase))
+            >= MinimumCachedResultsPerStore);
+
+        if (cacheIsComplete)
+        {
+            await EnrichWithGtinsAsync(cached, ct);
+            return cached.OrderBy(r => r.Price).ToList();
+        }
+
+        _logger.LogInformation(
+            "Cache below {Minimum} results per store for '{Term}'; fetching live results from [{Fetch}]",
+            MinimumCachedResultsPerStore, searchTerm, string.Join(", ", expectedBrands));
+
+        var live = await _aggregator.SearchStoresAsync(expectedBrands, searchTerm, ct, storeIdsByBrand)
+            ?? [];
+
+        // Use cached rows only as a per-store fallback when a live client
+        // returned no results. A partial cache must never hide live pages.
+        var liveBrands = live
             .Select(r => r.StoreBrand)
             .Where(b => !string.IsNullOrEmpty(b))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-        // The set of brands we expect results from. Brands dropped for this
-        // request (location given, none within range) are excluded so the fast
-        // path and fetch don't wait for them.
-        var expectedBrands = _droppedBrands.Count > 0
-            ? _aggregator.KnownStoreBrands
-                .Where(b => !_droppedBrands.Contains(b))
-                .ToList()
-            : _aggregator.KnownStoreBrands.ToList();
-
-        var missingBrands = expectedBrands
-            .Where(b => !cachedBrands.Contains(b))
+        var merged = (cached ?? [])
+            .Where(r => !liveBrands.Contains(r.StoreBrand))
+            .Concat(live)
             .ToList();
-
-        if (cached.Count > 0 && missingBrands.Count == 0)
-        {
-            // Cache hit: build storeMapping with selected stores and apply
-            var cachStoreMapping = new Dictionary<string, (string name, string address, double lat, double lng)>
-            {
-                { "PakNSave", ("PAK'nSAVE Mt Albert", "Mt Albert", -36.89305, 174.70624) },
-                { "NewWorld", ("New World Mt Roskill", "Mt Roskill", -36.908622, 174.734362) },
-                { "Woolworths", ("Mount Roskill Woolworths", "Mt Roskill", -36.9042, 174.727) }
-            };
-            
-            foreach (var (brand, store) in _selectedStores)
-            {
-                cachStoreMapping[brand] = (store.Name, store.Address, store.Latitude, store.Longitude);
-            }
-            
-            var cacheResult = cached.OrderBy(r => r.Price).ToList();
-            foreach (var r in cacheResult)
-            {
-                if (cachStoreMapping.TryGetValue(r.StoreBrand, out var storeInfo))
-                {
-                    r.StoreName = storeInfo.name;
-                    r.Address = storeInfo.address;
-                    r.Lat = storeInfo.lat;
-                    r.Lng = storeInfo.lng;
-                }
-            }
-            
-            await EnrichWithGtinsAsync(cacheResult, ct);
-            return cacheResult;
-        }
-
-        // Otherwise, live-fetch the stores missing from the cache (or every
-        // store on a full cache miss) and merge with the cached rows. This
-        // prevents one store's cached rows from masking the others, which
-        // previously made products look store-exclusive (e.g. a product cached
-        // only for Pak'nSave appeared to be sold only at Pak'nSave).
-        var brandsToFetch = cached.Count == 0 ? expectedBrands : missingBrands;
-
-        _logger.LogInformation(
-            "Cache incomplete for '{Term}' (have: [{Have}], fetching: [{Fetch}])",
-            searchTerm, string.Join(", ", cachedBrands), string.Join(", ", brandsToFetch));
-
-        var live = await _aggregator.SearchStoresAsync(brandsToFetch, searchTerm, ct, storeIdsByBrand);
-
-        // Merge: cached rows for stores already present + freshly fetched rows.
-        var merged = new List<PriceResult>(cached);
-        merged.AddRange(live);
 
         // Map store brand to correct store details (fix hardcoded values from clients)
         var storeMapping = new Dictionary<string, (string name, string address, double lat, double lng)>

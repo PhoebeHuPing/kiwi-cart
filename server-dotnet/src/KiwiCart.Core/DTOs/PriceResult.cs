@@ -7,7 +7,7 @@ public class PriceResult
     [JsonPropertyName("product_name")]
     public string ProductName { get; set; } = string.Empty;
 
-    [JsonPropertyName("display_product_name")]
+    [JsonIgnore]
     public string DisplayProductName { get; set; } = string.Empty;
 
     [JsonPropertyName("image_url")]
@@ -45,7 +45,7 @@ public class PriceResult
     [JsonIgnore]
     public string StoreBrand { get; set; } = string.Empty;
 
-    [JsonIgnore]
+    [JsonPropertyName("brand")]
     public string? Brand { get; set; } // Product brand (e.g., "Anchor", "Fonterra")
 
     [JsonPropertyName("gtin")]

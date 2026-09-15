@@ -30,6 +30,27 @@
   animation: spin 2s linear infinite;
 }
 
+@keyframes basket-fly {
+  0% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  65% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--basket-distance-x), var(--basket-distance-y), 0)
+      scale(0.45)
+      rotate(20deg);
+  }
+}
+
+.animate-basket-fly {
+  animation: basket-fly 1200ms cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
 /* Hide scrollbars while keeping scroll functionality.
    Used by the category filter row and the sticky product sidebar. */
 .scrollbar-hide {

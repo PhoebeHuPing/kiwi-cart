@@ -17,6 +17,7 @@ using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Extensions.Http;
 using Serilog;
+using KiwiCart.Api.Authorization;
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
@@ -322,7 +323,13 @@ builder.Services.AddAuthentication("Bearer")
         options.Audience = builder.Configuration["Auth0:Audience"];
         options.TokenValidationParameters.RoleClaimType = "https://kiwicart.co.nz/roles";
     });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    var isDevelopment = builder.Environment.IsDevelopment();
+    options.AddPolicy(AdminAuthorization.PolicyName, policy =>
+        policy.RequireAssertion(context =>
+            isDevelopment || AdminAuthorization.IsAdmin(context.User)));
+});
 
 builder.Services.AddOutputCache();
 
