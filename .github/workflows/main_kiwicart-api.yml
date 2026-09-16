@@ -37,13 +37,6 @@ jobs:
         env:
           ConnectionStrings__DefaultConnection: "Host=${{ secrets.DB_HOST }};Port=${{ secrets.DB_PORT }};Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }};SSL Mode=Require"
 
-      - name: Import GTIN seed data
-        run: |
-          dotnet run -- seed-gtins
-        working-directory: ./server-dotnet/src/KiwiCart.Api
-        env:
-          ConnectionStrings__DefaultConnection: "Host=${{ secrets.DB_HOST }};Port=${{ secrets.DB_PORT }};Database=${{ secrets.DB_NAME }};Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }};SSL Mode=Require"
-
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
         working-directory: ./server-dotnet/src/KiwiCart.Api
