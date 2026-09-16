@@ -37,6 +37,45 @@ function getStoreMarkerIcon(storeName: string) {
   return '/images/ww.png'
 }
 
+function getMarkerOffsets(stores: ResultStore[]) {
+  const offsets = stores.map(() => 0)
+  const visited = new Set<number>()
+  const closeDistanceKm = 0.12
+
+  const distanceKm = (a: ResultStore, b: ResultStore) => {
+    const latKm = (a.latitude - b.latitude) * 111
+    const lngKm =
+      (a.longitude - b.longitude) *
+      111 *
+      Math.cos((a.latitude * Math.PI) / 180)
+    return Math.sqrt(latKm * latKm + lngKm * lngKm)
+  }
+
+  stores.forEach((store, index) => {
+    if (visited.has(index)) return
+
+    const cluster = stores
+      .map((candidate, candidateIndex) => ({ candidate, candidateIndex }))
+      .filter(
+        ({ candidate, candidateIndex }) =>
+          !visited.has(candidateIndex) &&
+          distanceKm(store, candidate) <= closeDistanceKm,
+      )
+      .map(({ candidateIndex }) => candidateIndex)
+
+    cluster.forEach((clusterIndex) => visited.add(clusterIndex))
+    if (cluster.length < 2) return
+
+    cluster.forEach((clusterIndex, positionIndex) => {
+      // Use a fixed pixel offset so the icons remain separated at any zoom.
+      offsets[clusterIndex] =
+        (positionIndex - (cluster.length - 1) / 2) * 24
+    })
+  })
+
+  return offsets
+}
+
 /**
  * StoreMap Component: Renders a Google Map with the user's location and the
  * stores from the current price comparison.
@@ -145,9 +184,11 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
     if (!hasResultStores) return
 
     const bounds = new window.google.maps.LatLngBounds()
+    const markerOffsets = getMarkerOffsets(resultStores!)
 
-    resultStores!.forEach((store) => {
+    resultStores!.forEach((store, index) => {
       const position = { lat: store.latitude, lng: store.longitude }
+      const iconOffset = markerOffsets[index]
       const marker = new window.google.maps.Marker({
         position,
         map: mapInstance,
@@ -156,6 +197,7 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
           url: getStoreMarkerIcon(store.name),
 
           scaledSize: new window.google.maps.Size(30, 30),
+          anchor: new window.google.maps.Point(15 - iconOffset, 15),
         },
       })
 
@@ -168,7 +210,10 @@ export default function StoreMap({ resultStores, userLocation }: StoreMapProps =
       marker.addListener('click', () => infoWindow.open(mapInstance, marker))
 
       storeMarkersRef.current.push(marker)
-      bounds.extend(position)
+      bounds.extend({
+        lat: store.latitude,
+        lng: store.longitude,
+      })
     })
 
     if (userLocation) {

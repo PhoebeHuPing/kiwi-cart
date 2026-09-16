@@ -87,6 +87,8 @@ public class PriceComparisonService : IPriceComparisonService
             }
         }
 
+        ApplyLocationStoreMapping(cached, lat, lng);
+
         // The set of brands we expect results from. Brands dropped for this
         // request (location given, none within range) are excluded from the
         // live search.
@@ -125,33 +127,34 @@ public class PriceComparisonService : IPriceComparisonService
             .Concat(live)
             .ToList();
 
-        // Map store brand to correct store details (fix hardcoded values from clients)
-        var storeMapping = new Dictionary<string, (string name, string address, double lat, double lng)>
-        {
-            { "PakNSave", ("PAK'nSAVE Mt Albert", "Mt Albert", -36.89305, 174.70624) },
-            { "NewWorld", ("New World Mt Roskill", "Mt Roskill", -36.908622, 174.734362) },
-            { "Woolworths", ("Mount Roskill Woolworths", "Mt Roskill", -36.9042, 174.727) }
-        };
-
         // For any brand whose store was selected by location, reflect its real
-        // name/address/coords on the results instead of the hardcoded default.
+        // name/address/coords on the results. Do not use a hardcoded fallback
+        // store when a location was supplied: the map must only show stores
+        // within the requested radius.
         foreach (var (brand, store) in _selectedStores)
         {
-            storeMapping[brand] =
-                (store.Name, store.Address, store.Latitude, store.Longitude);
             _logger.LogInformation("storeMapping updated: {Brand} -> {Name}", brand, store.Name);
         }
 
         foreach (var r in live)
         {
-            if (storeMapping.TryGetValue(r.StoreBrand, out var storeInfo))
+            if (_selectedStores.TryGetValue(r.StoreBrand, out var store))
             {
-                _logger.LogInformation("Applying storeMapping to {Brand}: {OldName} -> {NewName}", 
-                    r.StoreBrand, r.StoreName, storeInfo.name);
-                r.StoreName = storeInfo.name;
-                r.Address = storeInfo.address;
-                r.Lat = storeInfo.lat;
-                r.Lng = storeInfo.lng;
+                _logger.LogInformation("Applying store mapping to {Brand}: {OldName} -> {NewName}",
+                    r.StoreBrand, r.StoreName, store.Name);
+                r.StoreName = store.Name;
+                r.Address = store.Address;
+                r.Lat = store.Latitude;
+                r.Lng = store.Longitude;
+            }
+            else if (lat is not null && lng is not null)
+            {
+                // The client adapters have legacy fallback coordinates. They
+                // must not create a misleading map marker when no nearby store
+                // exists for this brand.
+                r.Address = null;
+                r.Lat = null;
+                r.Lng = null;
             }
         }
 
@@ -246,33 +249,48 @@ public class PriceComparisonService : IPriceComparisonService
     /// </summary>
     private void ApplyStoreMapping(IReadOnlyList<PriceResult> results)
     {
-        var storeMapping = new Dictionary<string, (string name, string address, double lat, double lng)>
-        {
-            { "PakNSave", ("PAK'nSAVE Mt Albert", "Mt Albert", -36.89305, 174.70624) },
-            { "NewWorld", ("New World Mt Roskill", "Mt Roskill", -36.908622, 174.734362) },
-            { "Woolworths", ("Mount Roskill Woolworths", "Mt Roskill", -36.9042, 174.727) }
-        };
-
-        foreach (var (brand, store) in _selectedStores)
-        {
-            storeMapping[brand] = (store.Name, store.Address, store.Latitude, store.Longitude);
-        }
-
         foreach (var r in results)
         {
-            // Only override when the cache did not already carry a real store name.
-            if (storeMapping.TryGetValue(r.StoreBrand, out var storeInfo)
+            // Cached rows already carry the physical store selected when they
+            // were written. Only location-selected stores need overriding.
+            if (_selectedStores.TryGetValue(r.StoreBrand, out var store)
                 && string.IsNullOrEmpty(r.StoreName))
             {
-                r.StoreName = storeInfo.name;
-                r.Address = storeInfo.address;
-                r.Lat = storeInfo.lat;
-                r.Lng = storeInfo.lng;
+                r.StoreName = store.Name;
+                r.Address = store.Address;
+                r.Lat = store.Latitude;
+                r.Lng = store.Longitude;
             }
 
             if (string.IsNullOrEmpty(r.DisplayProductName))
             {
                 r.DisplayProductName = r.ProductName;
+            }
+        }
+    }
+
+    private void ApplyLocationStoreMapping(
+        IReadOnlyList<PriceResult> results,
+        double? lat,
+        double? lng)
+    {
+        if (lat is null || lng is null)
+            return;
+
+        foreach (var r in results)
+        {
+            if (_selectedStores.TryGetValue(r.StoreBrand, out var store))
+            {
+                r.StoreName = store.Name;
+                r.Address = store.Address;
+                r.Lat = store.Latitude;
+                r.Lng = store.Longitude;
+            }
+            else
+            {
+                r.Address = null;
+                r.Lat = null;
+                r.Lng = null;
             }
         }
     }
